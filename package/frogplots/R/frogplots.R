@@ -27,6 +27,7 @@ revsort<-function(x){
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}
+#' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
@@ -46,7 +47,7 @@ revsort<-function(x){
 #' }
 #' @export
 frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLabel=NULL, yLabel=NULL,
-                   plotWidth = 170, plotHeight = 150){
+                   legendTtl=FALSE, plotWidth = 170, plotHeight = 150){
 
   ## load file
   rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
@@ -156,7 +157,7 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
   }
 
   loclEnv<-environment()
-  baseplt<-ggplot(data=DfPlt, aes(x=variable, y=NrmMean,fill=as.factor(Condition)),
+  baseplt<-ggplot(data=DfPlt, aes(x=variable, y=NrmMean,fill=Condition),
                   environment = loclEnv) +
     geom_bar(position="dodge",stat="identity",color="black")+
     geom_errorbar(aes(ymin=NrmMean-NrmSEM,ymax=NrmMean+NrmSEM),width=0.2,
@@ -170,10 +171,10 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
     ylab(yLabel)+
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill=NA, size=0.5),
-          legend.position="bottom",legend.title=element_blank(),
+          legend.position="bottom",
           axis.text.x = element_text(size=10, angle=xAngle,hjust=xAlign),
           axis.text.y = element_text(size=10, hjust=0.5))+
-    scale_fill_grey(start=0,end=1)
+    scale_fill_grey(start=0)
 
   if (Tp=="Tukey"){
     pltLbl<-baseplt+
@@ -183,6 +184,10 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
     pltLbl<-baseplt+
       geom_text(aes(y = NrmMean+NrmSEM+0.06,label = Lbl), position = position_dodge(width=0.9),
                 size=6, color="black") # font size 6 and 0.06 unit higher is good for asterisks.
+  }
+
+  if (legendTtl==FALSE){
+    pltLbl<-pltLbl+theme(legend.title=element_blank())
   }
 
   if (nlevels(DfPlt$variable)==1){

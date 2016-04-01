@@ -5,8 +5,8 @@
 \title{frogplots}
 \usage{
 frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
-  Title = NULL, xLabel = NULL, yLabel = NULL, plotWidth = 170,
-  plotHeight = 150)
+  Title = NULL, xLabel = NULL, yLabel = NULL, legendTtl = FALSE,
+  plotWidth = 170, plotHeight = 150)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -22,6 +22,8 @@ frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}}
 
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}}
+
+\item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.}
 
 \item{plotWidth}{The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.}
 
