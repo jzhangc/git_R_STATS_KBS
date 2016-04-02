@@ -22,7 +22,6 @@ frogstats<-function(fileName,Tp="ANOVA"){
   rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
   cNm<-colnames(rawData)
-  require(multcomp) # found a way to take this line out of the function
 
   # below: nchar() counts the number of the characters: note the diference between length(),
   # which counts "how many" the *whole* character strings.
