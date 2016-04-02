@@ -17,7 +17,7 @@
 #' frogstats("data2.csv","t-test")
 #' }
 #' @export
-allStats<-function(fileName,Tp="ANOVA"){
+frogstats<-function(fileName,Tp="ANOVA"){
   rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
   rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 

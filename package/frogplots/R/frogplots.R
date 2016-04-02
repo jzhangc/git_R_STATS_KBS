@@ -140,7 +140,7 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
 
   colnames(MeanNrmMLT)[3]<- "NrmMean" # give unique variable names
   colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM") # give unique variable names
-  colnames(cTtMLT)[2:3]<-c("variableLbl","Lbl") # same as above
+  colnames(cTtMLT)[1:3]<-c(colnames(tstMeanNrmMLT)[1],"variableLbl","Lbl")
 
   DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by=c("id","Condition"),sort=FALSE)
   DfPlt<-merge(DfPlt,cTtMLT,by=c("id","Condition"),sort=FALSE)
