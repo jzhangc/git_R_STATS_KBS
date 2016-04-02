@@ -17,11 +17,17 @@
 #' frogstats("data2.csv","t-test")
 #' }
 #' @export
-frogstats<-function(fileName,Tp="ANOVA"){
-  rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA")
-  cNm<-colnames(rawData)
+allStats<-function(fileName,Tp="ANOVA"){
+  rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
-  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=TRUE)
+  cNm<-colnames(rawData)
+  require(multcomp) # found a way to take this line out of the function
+
+  # below: nchar() counts the number of the characters: note the diference between length(),
+  # which counts "how many" the *whole* character strings.
+  # ALSO, to use substr(), the object has to have "no quote" - use the function noquote() to achieve.
+  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=FALSE) # start the dump.
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
                function(i)tapply(rawData[[i]],rawData[1],function(x)shapiro.test(x)),
@@ -30,6 +36,7 @@ frogstats<-function(fileName,Tp="ANOVA"){
   print(sapply(cNm[-1], function(x){
     fml<-paste(x,cNm[1],sep="~")
     Mdl<-aov(formula(fml),data=rawData)
+    # below: make sure to chain if else in this way!
     if (Tp=="t-test"){
       if (nlevels(rawData[[1]])==2){
         Control<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[1])
@@ -47,6 +54,7 @@ frogstats<-function(fileName,Tp="ANOVA"){
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else if (Tp=="Dunnett"){
       if (nlevels(rawData[[1]])>2){
+        anova(Mdl)
         var <- cNm[1]
         arg<- list("Dunnett")
         names(arg)<-var
