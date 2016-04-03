@@ -13,9 +13,9 @@ frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
 
 \item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "ANOVA", "Tukey" and "Dunnett". Default is "Tukey".}
 
-\item{xAngle}{The rotation angle (degrees) of the x axis marks.Default is \code{0} - horizontal.}
+\item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 
-\item{xAlign}{The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is expecially useful when \code{xAngle = 90}.}
+\item{xAlign}{The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
