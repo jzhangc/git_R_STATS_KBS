@@ -162,10 +162,6 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
     geom_bar(position="dodge",stat="identity",color="black")+
     geom_errorbar(aes(ymin=NrmMean-NrmSEM,ymax=NrmMean+NrmSEM),width=0.2,
                   position=position_dodge(0.9))+
-    scale_y_continuous(expand = c(0, 0),
-                       breaks= seq(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5,by=0.1),
-                       labels = minor_tick(seq(0, ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5, by=0.5), 4),
-                       limits=c(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5))+
     ggtitle(Title)+
     xlab(xLabel)+
     ylab(yLabel)+
@@ -179,11 +175,19 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
   if (Tp=="Tukey"){
     pltLbl<-baseplt+
       geom_text(aes(y = NrmMean+NrmSEM+0.1,label = Lbl), position = position_dodge(width=0.9),
-                color="black") # the labels are placed 0.1 (tested optimal for letters) unit higher than the mean+SEM.
+                color="black")+ # the labels are placed 0.1 (tested optimal for letters) unit higher than the mean+SEM.
+      scale_y_continuous(expand = c(0, 0),
+                         breaks= seq(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5,by=0.1),
+                         labels = minor_tick(seq(0, ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5, by=0.5), 4),
+                         limits=c(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5))
   } else {
     pltLbl<-baseplt+
       geom_text(aes(y = NrmMean+NrmSEM+0.06,label = Lbl), position = position_dodge(width=0.9),
-                size=6, color="black") # font size 6 and 0.06 unit higher is good for asterisks.
+                size=6, color="black")+ # font size 6 and 0.06 unit higher is good for asterisks.
+      scale_y_continuous(expand = c(0, 0),
+                         breaks= seq(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5,by=0.1),
+                         labels = minor_tick(seq(0, ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5, by=0.5), 4),
+                         limits=c(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5))
   }
 
   if (legendTtl==FALSE){
