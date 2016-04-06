@@ -9,7 +9,7 @@ all_dvsr(x, i = 0)
 \arguments{
 \item{x}{The number of interest}
 
-\item{i}{Decimal scaling factor. when \code{i>0}, if the input number is an integer, the starting number will be \code{x*10^i}; if a decimal, the starting number will be \code{x*10^n*10^i} (or \code{x*10^(n+i)}).}
+\item{i}{Decimal scaling factor. If the input number is an integer, the starting number will be \code{x*10^i}; if a decimal, the starting number will be \code{x*10^n*10^i} (\code{x*10^(n+i)}), where the auto-determined \code{n} is the decimal amplification factor that transforms the decimal numbers to their corresponding minimum intergers by \code{10*n}.}
 }
 \value{
 A vector containing all the divisors for the input number
@@ -20,9 +20,9 @@ A function to find all divisors for any types of number
 \examples{
 \dontrun{
 all_dvsr(0.5)
-all_dvsr(0.6,1) # with decimal scaling factor set at 1, meaning the divisor will based on 60
+all_dvsr(0.6,1) # with decimal scaling factor set at 1, meaning the divisor will be based on 60.
 all_dvsr(2)
-all_dvsr(2,1) # with decimal scaling factor set at 1, meaning the divisor will based on 20
+all_dvsr(2,1) # with decimal scaling factor set at 1, meaning the divisor will be based on 20.
 }
 }
 
