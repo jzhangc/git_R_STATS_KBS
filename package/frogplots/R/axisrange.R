@@ -96,6 +96,7 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
 
     DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
 
+    ## setting the raw y lower limit
     ifelse(DfltZero==FALSE, Mn<-with(DfPlt,floor(min(NrmMean - NrmSEM) / 0.5) * 0.5), Mn<-0)
   }
 
@@ -113,7 +114,7 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
     SEM<-data.frame(SEM)
     SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
 
-
+    ## generate the master dataframe
     MeanMLT<-melt(Mean,id.vars = colnames(Mean)[length(colnames(Mean))])
     MeanMLT$id<-rownames(MeanMLT)
 
@@ -125,6 +126,7 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
 
     DfPlt<-merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
 
+    ## setting the raw y lower limit
     ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMEAN- plotSEM) / 0.5) * 0.5), Mn<-0)
 
   }
