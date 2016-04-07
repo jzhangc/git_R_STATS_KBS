@@ -11,7 +11,7 @@ autorange_y(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE)
 
 \item{Nrm}{When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.}
 
-\item{nMajorTicks}{Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0).}
+\item{nMajorTicks}{Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}.}
 
 \item{DfltZero}{When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.}
 }

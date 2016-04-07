@@ -48,7 +48,7 @@ all_dvsr<-function(x, i = 0){
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{frogplots}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
-#' @param nMajorTicks Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0).
+#' @param nMajorTicks Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}.
 #' @param DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options}.
@@ -57,99 +57,99 @@ all_dvsr<-function(x, i = 0){
 #' autorange_y("data.csv",Nrm = T, nMajorTicks = 8, DfltZero=FALSE)
 #' }
 #' @export
-autorange_y<-function(fileName, Nrm=TRUE, nMajorTicks=5, DfltZero=TRUE){
+autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
 
   ## load file
-  rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
+  rawData<-read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]]<-factor(rawData[[1]], levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
 
-  if (Nrm==TRUE){
+  if (Nrm == TRUE){
     ## normalize everything to control as 1
     Mean<-sapply(colnames(rawData)[-1],
-                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm=TRUE))
+                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
     Mean<-data.frame(Mean)
-    Mean$Condition<-factor(rownames(Mean),levels=c(rownames(Mean)))
+    Mean$Condition<-factor(rownames(Mean),levels = c(rownames(Mean)))
     MeanNrm<-data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                               function(i)sapply(Mean[[i]],function(j)j/Mean[[i]][1])),
-                        Condition = factor(rownames(Mean),levels=c(rownames(Mean))))
+                               function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
+                        Condition = factor(rownames(Mean),levels = c(rownames(Mean))))
 
     SEM<-sapply(colnames(rawData)[-1],
                 function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j,na.rm=TRUE)/sqrt(length(!is.na(j)))))
+                                   function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
     SEM<-data.frame(SEM)
-    SEM$Condition<-factor(rownames(SEM),levels=c(rownames(SEM)))
+    SEM$Condition<-factor(rownames(SEM), levels = c(rownames(SEM)))
     SEMNrm<-data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                              function(i)sapply(SEM[[i]],function(j)j/Mean[[i]][1])),
-                       Condition = factor(rownames(SEM),levels=c(rownames(SEM))))
+                              function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                       Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
     colnames(SEMNrm)[-length(colnames(SEMNrm))]<-sapply(colnames(rawData)[-1],
-                                                        function(x)paste(x,"SEM",sep=""))
+                                                        function(x)paste(x, "SEM", sep = ""))
 
     ## generate the master dataframe
-    MeanNrmMLT<-melt(MeanNrm,id.vars=colnames(MeanNrm)[length(colnames(MeanNrm))]) # melt mean
+    MeanNrmMLT<-melt(MeanNrm, id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
     MeanNrmMLT$id<-rownames(MeanNrmMLT)
 
-    SEMNrmMLT<-melt(SEMNrm,id.vars=colnames(SEMNrm)[length(colnames(SEMNrm))]) # melt SEM
+    SEMNrmMLT<-melt(SEMNrm, id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
     SEMNrmMLT$id<-rownames(SEMNrmMLT)
 
-    colnames(MeanNrmMLT)[3]<- "NrmMean" # give unique variable names
-    colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM") # give unique variable names
+    colnames(MeanNrmMLT)[3]<- "NrmMean"
+    colnames(SEMNrmMLT)[2:3]<-c("variableSEM", "NrmSEM")
 
-    DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by=c("id","Condition"),sort=FALSE)
+    DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
 
-    ifelse(DfltZero==FALSE, Mn<-with(DfPlt,floor(min(NrmMean-NrmSEM)/0.5)*0.5), Mn<-0) # determine the raw lower limit, if not using the default 0.
+    ifelse(DfltZero==FALSE, Mn<-with(DfPlt,floor(min(NrmMean - NrmSEM) / 0.5) * 0.5), Mn<-0)
   }
 
-  if (Nrm==FALSE) {
+  if (Nrm == FALSE) {
     ## calculate mean and SEM
     Mean<-sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1], mean, na.rm=TRUE))
     Mean<-data.frame(Mean)
-    Mean$Condition<-factor(rownames(Mean),levels=c(rownames(Mean)))
+    Mean$Condition<-factor(rownames(Mean), levels = c(rownames(Mean)))
 
 
     SEM<-sapply(colnames(rawData)[-1],
                 function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j,na.rm=TRUE)/sqrt(length(!is.na(j)))))
+                                   function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
     SEM<-data.frame(SEM)
-    SEM$Condition<-factor(rownames(SEM),levels=c(rownames(SEM)))
+    SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
 
 
-    MeanMLT<-melt(Mean,id.vars=colnames(Mean)[length(colnames(Mean))])
+    MeanMLT<-melt(Mean,id.vars = colnames(Mean)[length(colnames(Mean))])
     MeanMLT$id<-rownames(MeanMLT)
 
-    SEMMLT<-melt(SEM,id.vars=colnames(SEM)[length(colnames(SEM))])
+    SEMMLT<-melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
     SEMMLT$id<-rownames(SEMMLT)
 
     colnames(MeanMLT)[3]<- "plotMEAN"
     colnames(SEMMLT)[2:3]<-c("variableSEM","plotSEM")
 
-    DfPlt<-merge(MeanMLT,SEMMLT,by=c("id","Condition"),sort=FALSE)
+    DfPlt<-merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
 
-    ifelse(DfltZero==FALSE, Mn<-with(DfPlt,floor(min(plotMEAN-plotSEM)/0.5)*0.5), Mn<-0)
+    ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMEAN- plotSEM) / 0.5) * 0.5), Mn<-0)
 
   }
 
   ## calculate optimal lower/upper limits (lw_lmt/upr_lmt) and major tick range (rd_intvl)
   Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5
-  Rge<-Mx-Mn
-  raw_intvl<-Rge/nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
+  Rge<-Mx - Mn
+  raw_intvl<-Rge / nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
   Aa<-10^ceiling(log10(raw_intvl))
-  rd_intvl<-ceiling((raw_intvl/Aa)/0.05)*0.05*Aa
-  lw_lmt<-rd_intvl*floor(Mn/rd_intvl)
-  upr_lmt<-rd_intvl*ceiling(Mx/rd_intvl)
+  rd_intvl<-ceiling((raw_intvl / Aa) / 0.05) * 0.05 * Aa
+  lw_lmt<-rd_intvl * floor(Mn / rd_intvl)
+  upr_lmt<-rd_intvl * ceiling(Mx / rd_intvl)
 
   ## calculate minor tick options
   # set 4 as the minor tick range cutoff: it always makes sure to give at least 4 minor ticks.
   # if not, a decimal sacling factor (i=1) will be applied
-  if (max(sapply(all_dvsr(rd_intvl), function(i)rd_intvl/i-1))<4){
-    minor_tick_n<-sapply(all_dvsr(rd_intvl,1), function(i)round(rd_intvl/i-1))
+  if (max(sapply(all_dvsr(rd_intvl), function(i)rd_intvl / i-1)) < 4){
+    minor_tick_n<-sapply(all_dvsr(rd_intvl, 1), function(i)round(rd_intvl/i - 1))
   } else {
-    minor_tick_n<-sapply(all_dvsr(rd_intvl), function(i)round(rd_intvl/i-1))
+    minor_tick_n<-sapply(all_dvsr(rd_intvl), function(i)round(rd_intvl/i - 1))
   }
 
   ## results
-  Lst<-list(y_axis_range=c(lw_lmt,upr_lmt,rd_intvl),minor_tick_options=minor_tick_n)
-  names(Lst[[1]])<-c("lower_limit","upper_limit","major_tick_range")
+  Lst<-list(y_axis_range = c(lw_lmt, upr_lmt, rd_intvl),minor_tick_options = minor_tick_n)
+  names(Lst[[1]])<-c("lower_limit", "upper_limit", "major_tick_range")
 
   return(Lst)
 }
