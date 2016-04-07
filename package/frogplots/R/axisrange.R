@@ -10,7 +10,7 @@
 #' @export
 nat_dvsr<-function(x){
 tstSeq<-seq_len(abs(x))
-tstSeq[x%%tstSeq == 0] # %% does "modulus"
+tstSeq[x %% tstSeq == 0]
 }
 
 #' @title all_dvsr
