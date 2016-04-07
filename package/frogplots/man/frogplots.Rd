@@ -20,9 +20,9 @@ frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
-\item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}}
+\item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
-\item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}}
+\item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
 \item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.}
 

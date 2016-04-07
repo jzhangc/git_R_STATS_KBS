@@ -25,8 +25,8 @@ revsort<-function(x){
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
-#' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}
-#' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}
+#' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
