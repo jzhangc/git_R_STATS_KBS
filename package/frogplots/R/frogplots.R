@@ -102,7 +102,7 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
              function(i) {
                fml<-paste(i,cNm[1], sep = "~")
                Mdl<-aov(formula(fml), data = rawData)
-               # below: make sure to chain if else in this way.
+
                if (Tp == "t-test"){
                  if (nlevels(rawData[[1]]) == 2){
                    Control<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
@@ -117,8 +117,8 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
                  if (nlevels(rawData[[1]])>2){
                    Sts<-TukeyHSD(Mdl)
                    Tkp<-Sts[[1]][,4]
-                   names(Tkp)<-sapply(names(Tkp),function(j)revsort(j)) # change orders (from b-a to a-b)
-                   Tkp<-multcompLetters(Tkp)["Letters"] # from the multcompView package.
+                   names(Tkp)<-sapply(names(Tkp),function(j)revsort(j))
+                   Tkp<-multcompLetters(Tkp)["Letters"]
                    Lbl<-names(Tkp[["Letters"]])
                    Lvl<-data.frame(Lbl, Tkp[["Letters"]],
                                    stringsAsFactors = FALSE)
@@ -149,18 +149,18 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
                             function(x)paste(x,"Lbl",sep=""))
 
   ## generate the master dataframe for plotting
-  MeanNrmMLT<-melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))]) # melt mean
+  MeanNrmMLT<-melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
   MeanNrmMLT$id<-rownames(MeanNrmMLT)
 
-  SEMNrmMLT<-melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))]) # melt SEM
+  SEMNrmMLT<-melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
   SEMNrmMLT$id<-rownames(SEMNrmMLT)
 
-  cTtMLT<-melt(cTt,id.vars = colnames(cTt)[1]) # melt labels
+  cTtMLT<-melt(cTt,id.vars = colnames(cTt)[1])
   cTtMLT$id<-rownames(cTtMLT)
   cTtMLT[1]<-as.factor(cTtMLT[[1]])
 
-  colnames(MeanNrmMLT)[3]<- "NrmMean" # give unique variable names
-  colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM") # give unique variable names
+  colnames(MeanNrmMLT)[3]<- "NrmMean"
+  colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM")
   colnames(cTtMLT)[1:3]<-c(colnames(MeanNrmMLT)[1],"variableLbl","Lbl")
 
   DfPlt<-merge(MeanNrmMLT, SEMNrmMLT, by = c("id","Condition"), sort=FALSE)
@@ -180,10 +180,10 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
     y_axis_Mx<-y_upper_limit
     y_axis_Mn<-y_lower_limit
-    major_tick_range<-y_major_tick_range # determined from the optrange_t() function - major_tick_range
-    n_minor_ticks<-y_n_minor_ticks # chosen from the optrange_t() function - minor_tick_options
+    major_tick_range<-y_major_tick_range # determined by the autorange_y() function - major_tick_range
+    n_minor_ticks<-y_n_minor_ticks # chosen by the autorange_y() function - minor_tick_options
   } else {
-    y_axis_Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5 # the default y axis upper limit=max(mean+SEM+label(0.05)+0.02)
+    y_axis_Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5
     y_axis_Mn<-0
     major_tick_range<-0.5 # default
     n_minor_ticks<-4 # default
