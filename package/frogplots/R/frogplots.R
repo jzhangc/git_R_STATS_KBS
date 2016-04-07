@@ -30,6 +30,11 @@ revsort<-function(x){
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
+#' @param y_custom_tick_range To initiate setting custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
+#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{frogrange}}.
+#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{frogrange}}.
+#' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{frogrange}}.
+#' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{frogrange}}.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
@@ -39,39 +44,55 @@ revsort<-function(x){
 #' @import ggplot2
 #' @examples
 #' \dontrun{
-#' frogplots("data.csv",Tp="Tukey",yLabel="Relative fluorescence level")
-#' frogplots("data2.csv",Tp="t-test",xAngle = -90, xAlign=0,yLabel="Relative fluorescence level")
-#' frogplots("data3.csv",Tp="Tukey",yLabel="Relative fluorescence level")
-#' frogplots("data4.csv",Tp="Dunnett", yLabel="Relative fluorescence level")
-#' frogplots("data5.csv",Tp="Tukey",yLabel="Relative fluorescence level", plotWidth = 300)
+#' frogplots("data.csv", Tp = "Tukey",
+#' yLabel = "Relative fluorescence level")
+#'
+#' frogplots("data2.csv", Tp = "t-test", xAngle = -90,
+#' xAlign=0,yLabel="Relative fluorescence level")
+#'
+#' frogplots("data3.csv", Tp = "Tukey",
+#' yLabel = "Relative fluorescence level")
+#'
+#' frogplots("data4.csv", Tp = "Dunnett",
+#' yLabel = "Relative fluorescence level")
+#'
+#' frogplots("data5.csv", Tp = "Tukey",
+#' yLabel = "Relative fluorescence level", plotWidth = 300)
+#'
+#' frogplots("data8.csv", Tp = "Tukey",
+#' yLabel = "Relative fluorescence level",
+#' y_custom_tick_range = TRUE,y_upper_limit = 4,
+#' y_lower_limit = 0, y_major_tick_range = 1,
+#' y_n_minor_ticks = 4)
 #' }
 #' @export
-frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLabel=NULL, yLabel=NULL,
-                   legendTtl=FALSE, plotWidth = 170, plotHeight = 150){
+frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NULL, xLabel = NULL, yLabel = NULL,
+                   legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
+                   y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
-  rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]])))
+  rawData<-read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]]<-factor(rawData[[1]],levels = c(unique(rawData[[1]])))
 
   ## normalize everything to control as 1
   Mean<-sapply(colnames(rawData)[-1],
                function(i) tapply(rawData[[i]], rawData[1], mean, na.rm=TRUE))
   Mean<-data.frame(Mean)
-  Mean$Condition<-factor(rownames(Mean),levels=c(rownames(Mean)))
+  Mean$Condition<-factor(rownames(Mean), levels = c(rownames(Mean)))
   MeanNrm<-data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                             function(i)sapply(Mean[[i]],function(j)j/Mean[[i]][1])),
-                      Condition = factor(rownames(Mean),levels=c(rownames(Mean))))
+                             function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
+                      Condition = factor(rownames(Mean), levels=c(rownames(Mean))))
 
   SEM<-sapply(colnames(rawData)[-1],
               function(i) tapply(rawData[[i]], rawData[1],
-                                 function(j)sd(j,na.rm=TRUE)/sqrt(length(!is.na(j)))))
+                                 function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
   SEM<-data.frame(SEM)
-  SEM$Condition<-factor(rownames(SEM),levels=c(rownames(SEM)))
+  SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
   SEMNrm<-data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                            function(i)sapply(SEM[[i]],function(j)j/Mean[[i]][1])),
-                     Condition = factor(rownames(SEM),levels=c(rownames(SEM))))
+                            function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                     Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
   colnames(SEMNrm)[-length(colnames(SEMNrm))]<-sapply(colnames(rawData)[-1],
-                                                      function(x)paste(x,"SEM",sep=""))
+                                                      function(x)paste(x, "SEM", sep=""))
 
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
@@ -79,20 +100,20 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
 
   Tt<-sapply(colnames(rawData)[-1],
              function(i) {
-               fml<-paste(i,cNm[1],sep="~")
-               Mdl<-aov(formula(fml),data=rawData)
+               fml<-paste(i,cNm[1], sep = "~")
+               Mdl<-aov(formula(fml), data = rawData)
                # below: make sure to chain if else in this way.
-               if (Tp=="t-test"){
-                 if (nlevels(rawData[[1]])==2){
-                   Control<-subset(rawData[i],rawData[[1]] == levels(rawData[[1]])[1])
-                   Experimental<-subset(rawData[i],rawData[[1]] == levels(rawData[[1]])[2])
-                   Ttest<-t.test(Control,Experimental,na.rm=TRUE)
+               if (Tp == "t-test"){
+                 if (nlevels(rawData[[1]]) == 2){
+                   Control<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
+                   Experimental<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
+                   Ttest<-t.test(Control, Experimental, na.rm = TRUE)
                    Ttestp<-Ttest$p.value
-                   Lvl<- data.frame(Condition=unique(rawData[[1]]),pvalue=c(1,Ttestp))
-                   Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x<0.05,"*",""))
+                   Lvl<- data.frame(Condition=unique(rawData[[1]]),pvalue=c(1, Ttestp))
+                   Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x < 0.05, "*", ""))
                    Lvl<-Lvl[,c(1,3)]
                  } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett).")}
-               } else if (Tp=="Tukey"){
+               } else if (Tp == "Tukey"){
                  if (nlevels(rawData[[1]])>2){
                    Sts<-TukeyHSD(Mdl)
                    Tkp<-Sts[[1]][,4]
@@ -102,17 +123,17 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
                    Lvl<-data.frame(Lbl, Tkp[["Letters"]],
                                    stringsAsFactors = FALSE)
                  } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
-               } else if (Tp=="Dunnett"){
+               } else if (Tp == "Dunnett"){
                  if (nlevels(rawData[[1]])>2){
                    var <- cNm[1]
                    arg<- list("Dunnett")
                    names(arg)<-var
                    mcp<- do.call(mcp, arg)
-                   Sts<-summary(glht(Mdl, linfct=mcp))
+                   Sts<-summary(glht(Mdl, linfct = mcp))
                    Dnt<-Sts$test$pvalues
                    names(Dnt)<-names(Sts$test$coefficients)
-                   Lvl<- data.frame(Condition=unique(rawData[[1]]),pvalue=c(1,Dnt))
-                   Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x<0.05,"*",""))
+                   Lvl<- data.frame(Condition = unique(rawData[[1]]),pvalue = c(1,Dnt))
+                   Lvl$Lbl<-sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
                    Lvl<-Lvl[,c(1,3)]
                  } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
                } else {
@@ -121,20 +142,20 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
                colnames(Lvl)<-c(colnames(rawData)[1],i)
                Lvl
              },simplify = FALSE)
-  cTt <- Reduce(function(x, y) merge(x, y, all=T,
-                                     by=colnames(rawData)[1],sort=FALSE),
-                Tt, accumulate=FALSE)
+  cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
+                                     by = colnames(rawData)[1],sort = FALSE),
+                Tt, accumulate = FALSE)
   colnames(cTt)[-1]<-sapply(colnames(rawData)[-1],
                             function(x)paste(x,"Lbl",sep=""))
 
   ## generate the master dataframe for plotting
-  MeanNrmMLT<-melt(MeanNrm,id.vars=colnames(MeanNrm)[length(colnames(MeanNrm))]) # melt mean
+  MeanNrmMLT<-melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))]) # melt mean
   MeanNrmMLT$id<-rownames(MeanNrmMLT)
 
-  SEMNrmMLT<-melt(SEMNrm,id.vars=colnames(SEMNrm)[length(colnames(SEMNrm))]) # melt SEM
+  SEMNrmMLT<-melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))]) # melt SEM
   SEMNrmMLT$id<-rownames(SEMNrmMLT)
 
-  cTtMLT<-melt(cTt,id.vars=colnames(cTt)[1]) # melt labels
+  cTtMLT<-melt(cTt,id.vars = colnames(cTt)[1]) # melt labels
   cTtMLT$id<-rownames(cTtMLT)
   cTtMLT[1]<-as.factor(cTtMLT[[1]])
 
@@ -142,62 +163,70 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
   colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM") # give unique variable names
   colnames(cTtMLT)[1:3]<-c(colnames(MeanNrmMLT)[1],"variableLbl","Lbl")
 
-  DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by=c("id","Condition"),sort=FALSE)
-  DfPlt<-merge(DfPlt,cTtMLT,by=c("id","Condition"),sort=FALSE)
+  DfPlt<-merge(MeanNrmMLT, SEMNrmMLT, by = c("id","Condition"), sort=FALSE)
+  DfPlt<-merge(DfPlt, cTtMLT, by = c("id","Condition"), sort=FALSE)
 
   # dump all data into a file
-  write.csv(DfPlt,file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".plot.csv",sep=""),
-            quote=FALSE,na="NA",row.names = FALSE)
+  write.csv(DfPlt,file = paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.csv",sep=""),
+            quote = FALSE,na = "NA",row.names = FALSE)
 
   ## plotting
   # a function to add minor ticks
   minor_tick <- function(major, n_minor) {
     labs <- c( sapply(major, function(x) c(x, rep("", n_minor) ) ) )
-    labs[1:(length(labs)-n_minor)]
+    labs[1:(length(labs) - n_minor)]
+  }
+
+  if (y_custom_tick_range == TRUE){ # custome y range and tick settings
+    y_axis_Mx<-y_upper_limit
+    y_axis_Mn<-y_lower_limit
+    major_tick_range<-y_major_tick_range # determined from the optrange_t() function - major_tick_range
+    n_minor_ticks<-y_n_minor_ticks # chosen from the optrange_t() function - minor_tick_options
+  } else {
+    y_axis_Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5 # the default y axis upper limit=max(mean+SEM+label(0.05)+0.02)
+    y_axis_Mn<-0
+    major_tick_range<-0.5 # default
+    n_minor_ticks<-4 # default
   }
 
   loclEnv<-environment()
-  baseplt<-ggplot(data=DfPlt, aes(x=variable, y=NrmMean,fill=Condition),
+  baseplt<-ggplot(data=DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
                   environment = loclEnv) +
     geom_bar(position="dodge",stat="identity",color="black")+
-    geom_errorbar(aes(ymin=NrmMean-NrmSEM,ymax=NrmMean+NrmSEM),width=0.2,
-                  position=position_dodge(0.9))+
+    geom_errorbar(aes(ymin = NrmMean - NrmSEM,ymax = NrmMean + NrmSEM),width=0.2,
+                  position = position_dodge(0.9))+
+    scale_y_continuous(expand = c(0, 0),
+                       breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
+                       labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = major_tick_range), n_minor_ticks),
+                       limits = c(y_axis_Mn,y_axis_Mx))+
     ggtitle(Title)+
     xlab(xLabel)+
     ylab(yLabel)+
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
-          panel.border = element_rect(colour = "black", fill=NA, size=0.5),
-          legend.position="bottom",
-          axis.text.x = element_text(size=10, angle=xAngle,hjust=xAlign),
-          axis.text.y = element_text(size=10, hjust=0.5))+
+          panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+          legend.position = "bottom",
+          axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
+          axis.text.y = element_text(size = 10, hjust = 0.5))+
     scale_fill_grey(start=0)
 
-  if (Tp=="Tukey"){
+  if (Tp == "Tukey"){
     pltLbl<-baseplt+
-      geom_text(aes(y = NrmMean+NrmSEM+0.1,label = Lbl), position = position_dodge(width=0.9),
-                color="black")+ # the labels are placed 0.1 (tested optimal for letters) unit higher than the mean+SEM.
-      scale_y_continuous(expand = c(0, 0),
-                         breaks= seq(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5,by=0.1),
-                         labels = minor_tick(seq(0, ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5, by=0.5), 4),
-                         limits=c(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.12)/0.5)*0.5))
+      geom_text(aes(y = NrmMean + NrmSEM + 0.07,label = Lbl), position = position_dodge(width = 0.9),
+                color="black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean+SEM.
   } else {
     pltLbl<-baseplt+
-      geom_text(aes(y = NrmMean+NrmSEM+0.06,label = Lbl), position = position_dodge(width=0.9),
-                size=6, color="black")+ # font size 6 and 0.06 unit higher is good for asterisks.
-      scale_y_continuous(expand = c(0, 0),
-                         breaks= seq(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5,by=0.1),
-                         labels = minor_tick(seq(0, ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5, by=0.5), 4),
-                         limits=c(0,ceiling(with(DfPlt,max(NrmMean+NrmSEM)+0.07)/0.5)*0.5))
+      geom_text(aes(y = NrmMean + NrmSEM + 0.06,label = Lbl), position = position_dodge(width = 0.9),
+                size=6, color="black") # font size 6 and 0.06 unit higher is good for asterisks.
   }
 
-  if (legendTtl==FALSE){
-    pltLbl<-pltLbl+theme(legend.title=element_blank())
+  if (legendTtl == FALSE){
+    pltLbl<-pltLbl + theme(legend.title = element_blank())
   }
 
-  if (nlevels(DfPlt$variable)==1){
-    plt<-pltLbl+
+  if (nlevels(DfPlt$variable) == 1){
+    plt<-pltLbl +
       theme(axis.text.x = element_blank())+
-      coord_equal(ratio=0.5)+
+      coord_equal(ratio = 0.5)+
       scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
   } else {
     plt<-pltLbl
@@ -221,7 +250,7 @@ frogplots<-function(fileName, Tp="Tukey", xAngle=0, xAlign=0.5, Title=NULL, xLab
   pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
 
   # export the file and draw a preview
-  ggsave(filename=paste(substr(noquote(fileName),1,nchar(fileName)-4),".plot.pdf",sep=""),plot=pltgtb,
+  ggsave(filename=paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.pdf",sep=""),plot=pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi=600)
   grid.draw(pltgtb) # preview
 }

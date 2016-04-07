@@ -27,18 +27,18 @@ tstSeq[x%%tstSeq == 0] # %% does "modulus"
 #' all_dvsr(2,1) # with decimal scaling factor set at 1, meaning the divisor will be based on 20.
 #' }
 #' @export
-all_dvsr<-function(x,i=0){
+all_dvsr<-function(x, i = 0){
   dopt<-getOption("scipen")
   on.exit(options(scipen = dopt))
 
-  options(scipen=999)
-  if (x%%1==0){
-    smpl<-x*10^i
-    return(nat_dvsr(smpl)/10^i)
+  options(scipen = 999)
+  if (x %% 1 == 0){
+    smpl<-x * 10^i
+    return(nat_dvsr(smpl) / 10^i)
   } else {
-    n<-nchar(unlist(strsplit(as.character(x),"[.]"))[2])
-    sc<-as.integer(round(x*10^(n+i)))
+    n<-nchar(unlist(strsplit(as.character(x), "[.]"))[2])
+    sc<-as.integer(round(x* 10^(n + i)))
     sc<-abs(sc)
-    return(nat_dvsr(sc)/(10^(n+i)))
+    return(nat_dvsr(sc)/(10^(n + i)))
   }
 }

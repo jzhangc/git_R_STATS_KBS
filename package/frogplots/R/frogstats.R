@@ -17,48 +17,48 @@
 #' frogstats("data2.csv","t-test")
 #' }
 #' @export
-frogstats<-function(fileName,Tp="ANOVA"){
-  rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
+frogstats<-function(fileName, Tp = "ANOVA"){
+  rawData<-read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]]<-factor(rawData[[1]], levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
   cNm<-colnames(rawData)
 
   # below: nchar() counts the number of the characters: note the diference between length(),
   # which counts "how many" the *whole* character strings.
   # ALSO, to use substr(), the object has to have "no quote" - use the function noquote() to achieve.
-  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=FALSE) # start the dump.
+  sink(file = paste(substr(noquote(fileName), 1, nchar(fileName)-4), ".stats.txt", sep = ""), append=FALSE) # start the dump.
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
-               function(i)tapply(rawData[[i]],rawData[1],function(x)shapiro.test(x)),
+               function(i)tapply(rawData[[i]], rawData[1], function(x)shapiro.test(x)),
                simplify = FALSE))
   # below: stats
   print(sapply(cNm[-1], function(x){
-    fml<-paste(x,cNm[1],sep="~")
-    Mdl<-aov(formula(fml),data=rawData)
+    fml<-paste(x, cNm[1],sep = "~")
+    Mdl<-aov(formula(fml), data = rawData)
     # below: make sure to chain if else in this way!
-    if (Tp=="t-test"){
-      if (nlevels(rawData[[1]])==2){
+    if (Tp == "t-test"){
+      if (nlevels(rawData[[1]]) == 2){
         Control<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[1])
         Experimental<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[2])
-        t.test(Control,Experimental,na.rm=TRUE)
+        t.test(Control, Experimental, na.rm = TRUE)
       } else {"T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett)."}
-    } else if (Tp=="ANOVA"){
+    } else if (Tp == "ANOVA"){
       if (nlevels(rawData[[1]])>2){
         anova(Mdl)
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
-    } else if (Tp=="Tukey"){
-      if (nlevels(rawData[[1]])>2){
-        statsLst<-list(ANOVA=anova(Mdl), Tukey=TukeyHSD(Mdl))
+    } else if (Tp == "Tukey"){
+      if (nlevels(rawData[[1]]) > 2){
+        statsLst<-list(ANOVA = anova(Mdl), Tukey = TukeyHSD(Mdl))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
-    } else if (Tp=="Dunnett"){
-      if (nlevels(rawData[[1]])>2){
+    } else if (Tp == "Dunnett"){
+      if (nlevels(rawData[[1]]) > 2){
         anova(Mdl)
-        var <- cNm[1]
-        arg<- list("Dunnett")
+        var <-cNm[1]
+        arg<-list("Dunnett")
         names(arg)<-var
-        mcp<- do.call(mcp, arg)
-        statsLst<-list(ANOVA=anova(Mdl), Dunnett=summary(glht(Mdl, linfct=mcp)))
+        mcp<-do.call(mcp, arg)
+        statsLst<-list(ANOVA = anova(Mdl), Dunnett = summary(glht(Mdl, linfct = mcp)))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else {

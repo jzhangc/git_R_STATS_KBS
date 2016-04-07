@@ -6,7 +6,8 @@
 \usage{
 frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
   Title = NULL, xLabel = NULL, yLabel = NULL, legendTtl = FALSE,
-  plotWidth = 170, plotHeight = 150)
+  plotWidth = 170, plotHeight = 150, y_custom_tick_range = FALSE,
+  y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -28,6 +29,16 @@ frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
 \item{plotWidth}{The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.}
 
 \item{plotHeight}{The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.}
+
+\item{y_custom_tick_range}{To initiate setting custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.}
+
+\item{y_lower_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{frogrange}}.}
+
+\item{y_upper_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{frogrange}}.}
+
+\item{y_major_tick_range}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{frogrange}}.}
+
+\item{y_n_minor_ticks}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{frogrange}}.}
 }
 \value{
 Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
@@ -37,11 +48,26 @@ A simple to use function for plotting basing on the statistical analysis of choi
 }
 \examples{
 \dontrun{
-frogplots("data.csv",Tp="Tukey",yLabel="Relative fluorescence level")
-frogplots("data2.csv",Tp="t-test",xAngle = -90, xAlign=0,yLabel="Relative fluorescence level")
-frogplots("data3.csv",Tp="Tukey",yLabel="Relative fluorescence level")
-frogplots("data4.csv",Tp="Dunnett", yLabel="Relative fluorescence level")
-frogplots("data5.csv",Tp="Tukey",yLabel="Relative fluorescence level", plotWidth = 300)
+frogplots("data.csv", Tp = "Tukey",
+yLabel = "Relative fluorescence level")
+
+frogplots("data2.csv", Tp = "t-test", xAngle = -90,
+xAlign=0,yLabel="Relative fluorescence level")
+
+frogplots("data3.csv", Tp = "Tukey",
+yLabel = "Relative fluorescence level")
+
+frogplots("data4.csv", Tp = "Dunnett",
+yLabel = "Relative fluorescence level")
+
+frogplots("data5.csv", Tp = "Tukey",
+yLabel = "Relative fluorescence level", plotWidth = 300)
+
+frogplots("data8.csv", Tp = "Tukey",
+yLabel = "Relative fluorescence level",
+y_custom_tick_range = TRUE,y_upper_limit = 4,
+y_lower_limit = 0, y_major_tick_range = 1,
+y_n_minor_ticks = 4)
 }
 }
 
