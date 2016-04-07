@@ -61,7 +61,7 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
 
   ## load file
   rawData<-read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]], levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
+  rawData[[1]]<-factor(rawData[[1]], levels = c(unique(rawData[[1]])))
 
   if (Nrm == TRUE){
     ## normalize everything to control as 1
