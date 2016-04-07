@@ -148,7 +148,7 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
   }
 
   ## results
-  Lst<-list(y_axis_range = c(lw_lmt, upr_lmt, rd_intvl),minor_tick_options = minor_tick_n)
+  Lst<-list(y_axis_range = c(lw_lmt, upr_lmt, rd_intvl),minor_tick_options = sort(minor_tick_n))
   names(Lst[[1]])<-c("lower_limit", "upper_limit", "major_tick_range")
 
   return(Lst)
