@@ -43,7 +43,7 @@ all_dvsr<-function(x, i = 0){
   }
 }
 
-#' @title autorange_y
+#' @title autorange_bar_y
 #'
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{frogplots}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
@@ -54,10 +54,10 @@ all_dvsr<-function(x, i = 0){
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options}.
 #' @examples
 #' \dontrun{
-#' autorange_y("data.csv",Nrm = T, nMajorTicks = 8, DfltZero=FALSE)
+#' autorange_bar_y("data.csv",Nrm = T, nMajorTicks = 8, DfltZero=FALSE)
 #' }
 #' @export
-autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
+autorange_bar_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
 
   ## load file
   rawData<-read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
@@ -91,13 +91,10 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
     SEMNrmMLT<-melt(SEMNrm, id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
     SEMNrmMLT$id<-rownames(SEMNrmMLT)
 
-    colnames(MeanNrmMLT)[3]<- "NrmMean"
-    colnames(SEMNrmMLT)[2:3]<-c("variableSEM", "NrmSEM")
+    colnames(MeanNrmMLT)[3]<- "plotMean"
+    colnames(SEMNrmMLT)[2:3]<-c("variableSEM", "plotSEM")
 
     DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
-
-    ## setting the raw y lower limit
-    ifelse(DfltZero==FALSE, Mn<-with(DfPlt,floor(min(NrmMean - NrmSEM) / 0.5) * 0.5), Mn<-0)
   }
 
   if (Nrm == FALSE) {
@@ -121,18 +118,17 @@ autorange_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
     SEMMLT<-melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
     SEMMLT$id<-rownames(SEMMLT)
 
-    colnames(MeanMLT)[3]<- "plotMEAN"
+    colnames(MeanMLT)[3]<- "plotMean"
     colnames(SEMMLT)[2:3]<-c("variableSEM","plotSEM")
 
     DfPlt<-merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
-
-    ## setting the raw y lower limit
-    ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMEAN- plotSEM) / 0.5) * 0.5), Mn<-0)
-
   }
 
   ## calculate optimal lower/upper limits (lw_lmt/upr_lmt) and major tick range (rd_intvl)
-  Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5
+  # setting the raw y lower/upper limit
+  ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMean- plotSEM) / 0.5) * 0.5), Mn<-0)
+  Mx<-with(DfPlt, ceiling((max(plotMean + plotSEM) + 0.09) / 0.5) * 0.5)
+
   Rge<-Mx - Mn
   raw_intvl<-Rge / nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
   Aa<-10^ceiling(log10(raw_intvl))

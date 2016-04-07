@@ -31,10 +31,10 @@ revsort<-function(x){
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param y_custom_tick_range To initiate setting custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
-#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_y}}.
-#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_y}}.
-#' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_y}}.
-#' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_y}}.
+#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_bar_y}}.
+#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.
+#' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_bar_y}}.
+#' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
@@ -172,18 +172,18 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
 
   ## plotting
   # a function to add minor ticks
-  minor_tick <- function(major, n_minor) {
-    labs <- c( sapply(major, function(x) c(x, rep("", n_minor) ) ) )
+  minor_tick <- function(major, n_minor){
+    labs <- c(sapply(major, function(x) c(x, rep("", n_minor))))
     labs[1:(length(labs) - n_minor)]
   }
 
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
     y_axis_Mx<-y_upper_limit
     y_axis_Mn<-y_lower_limit
-    major_tick_range<-y_major_tick_range # determined by the autorange_y() function - major_tick_range
-    n_minor_ticks<-y_n_minor_ticks # chosen by the autorange_y() function - minor_tick_options
+    major_tick_range<-y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
+    n_minor_ticks<-y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
   } else {
-    y_axis_Mx<-ceiling(with(DfPlt, max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5
+    y_axis_Mx<-with(DfPlt, ceiling((max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5)
     y_axis_Mn<-0
     major_tick_range<-0.5 # default
     n_minor_ticks<-4 # default
@@ -207,7 +207,7 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
           legend.position = "bottom",
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
-    scale_fill_grey(start=0)
+    scale_fill_grey(start = 0, name = cNm[1])
 
   if (Tp == "Tukey"){
     pltLbl<-baseplt+
@@ -221,6 +221,8 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
 
   if (legendTtl == FALSE){
     pltLbl<-pltLbl + theme(legend.title = element_blank())
+  } else {
+    pltLbl<-pltLbl + theme(legend.title = element_text(size = 9))
   }
 
   if (nlevels(DfPlt$variable) == 1){
