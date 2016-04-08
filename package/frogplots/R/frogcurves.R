@@ -236,7 +236,7 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
-    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(tstDfPlt$Condition)))))+
+    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
                        labels = minor_tick(seq(x_axis_Mn, x_axis_Mx, by = x_mj_range), x_n_mnr),
