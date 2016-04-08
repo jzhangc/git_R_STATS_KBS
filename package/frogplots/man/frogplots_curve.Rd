@@ -58,7 +58,7 @@ A simple to use function for plotting joint-curve figures with continuous x and 
 }
 \examples{
 \dontrun{
-enzymeplot("data6.csv", legendTtl = TRUE,
+frogplots_curve("data6.csv", legendTtl = TRUE,
           y_custom_tick_range = TRUE, y_upper_limit = 45,
           y_major_tick_range = 5,
           y_n_minor_ticks = 4,
