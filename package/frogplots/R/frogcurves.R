@@ -2,9 +2,9 @@
 #'
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{frogplots_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
-#' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}.
+#' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
-#' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}.
+#' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.
 #' @param y_DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.
@@ -52,7 +52,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
   DfPlt$variable<-as.numeric(DfPlt$variable)
 
   ## calculate optimal lower/upper limits (x_lw_lmt/x_upr_lmt) and major tick range (x_rd_intvl) for x axis
-  # setting the raw y lower/upper limit
+  # setting the raw x lower/upper limit
   ifelse(x_DfltZero == FALSE, x_Mn<-with(DfPlt, floor(min(plotMean - plotSEM) / 0.5) * 0.5), x_Mn<-0)
   x_Mx<-with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)
 
@@ -63,7 +63,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
   x_lw_lmt<-x_rd_intvl * floor(x_Mn / x_rd_intvl)
   x_upr_lmt<-x_rd_intvl * ceiling(x_Mx / x_rd_intvl)
 
-  ## calculate minor tick options
+  ## calculate minor tick options for x axis
   # set 4 as the minor tick range cutoff: it always makes sure to give at least 4 minor ticks.
   # if not, a decimal sacling factor (i=1) will be applied
   if (max(sapply(all_dvsr(x_rd_intvl), function(i)x_rd_intvl / i-1)) < 4){
@@ -85,7 +85,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
   y_lw_lmt<-y_rd_intvl * floor(y_Mn / y_rd_intvl)
   y_upr_lmt<-y_rd_intvl * ceiling(y_Mx / y_rd_intvl)
 
-  ## calculate minor tick options
+  ## calculate minor tick options for y axis
   # set 4 as the minor tick range cutoff: it always makes sure to give at least 4 minor ticks.
   # if not, a decimal sacling factor (i=1) will be applied
   if (max(sapply(all_dvsr(y_rd_intvl), function(i)y_rd_intvl / i-1)) < 4){
@@ -224,6 +224,10 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
     geom_line()+
     geom_point()+
     geom_errorbar(aes(ymin = plotMean - plotSEM, ymax = plotMean + plotSEM), width = 0.2)+
+    scale_x_continuous(expand = c(0,0),
+                       breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
+                       labels = minor_tick(seq(x_axis_Mn, x_axis_Mx, by = x_mj_range), x_n_mnr),
+                       limits = c(x_axis_Mn, x_axis_Mx))+
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = y_mj_range / (y_n_mnr + 1)),
                        labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = y_mj_range), y_n_mnr),
@@ -236,11 +240,7 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
-    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
-    scale_x_continuous(expand = c(0,0),
-                       breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
-                       labels = minor_tick(seq(x_axis_Mn, x_axis_Mx, by = x_mj_range), x_n_mnr),
-                       limits = c(with(DfPlt,min(variable)) - 0.05, with(DfPlt, max(variable)) + 0.5))
+    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))
 
   if (legendTtl == FALSE){
     plt<-baseplt + theme(legend.title = element_blank())
