@@ -36,25 +36,25 @@ frogstats<-function(fileName,Tp="ANOVA"){
       if (nlevels(rawData[[1]])==2){
         Control<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[1])
         Experimental<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[2])
-        Eqv<-bartlett.test(formula(fml),data = rawData) # Barttlet equal variance test. p>0.5 means the variance between groups are unequal.
+        Eqv<-bartlett.test(formula(fml),data = rawData) # Bartlett equal variance test. p>0.5 means the variance between groups are unequal.
         tTest<-t.test(Control, Experimental, var.equal = TRUE ,na.rm = TRUE)
         statsLst<-list(EqualVariance = Eqv, ttest = tTest)
       } else {"T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett)."}
     } else if (Tp =="ANOVA"){
       if (nlevels(rawData[[1]])>2){
-        Eqv<-bartlett.test(formula(fml),data = rawData)
+        Eqv<-bartlett.test(formula(fml),data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups are unequal.
         statsLst<-list(EqualVariance = Eqv, ANOVA = anova(Mdl))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else if (Tp =="Tukey"){
       if (nlevels(rawData[[1]])>2){
-        Eqv<-bartlett.test(formula(fml),data = rawData)
+        Eqv<-bartlett.test(formula(fml),data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups are unequal.
         statsLst<-list(EqualVariance = Eqv, ANOVA = anova(Mdl), Tukey = TukeyHSD(Mdl))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else if (Tp =="Dunnett"){
       if (nlevels(rawData[[1]])>2){
-        Eqv<-bartlett.test(formula(fml),data = rawData)
+        Eqv<-bartlett.test(formula(fml),data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups are unequal.
         var<-cNm[1]
         arg<-list("Dunnett")
         names(arg)<-var
