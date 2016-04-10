@@ -54,7 +54,7 @@ frogplots_curve(fileName, xAngle = 0, xAlign = 0.5, Title = NULL,
 Outputs a \code{.csv} file with detailed metrics for the plot, including Mean and SEM, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 }
 \description{
-A simple to use function for plotting joint-curve figures with continuous x and y axises values.
+A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 }
 \examples{
 \dontrun{

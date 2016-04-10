@@ -106,7 +106,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 
 #' @title frogplots_curve
 #'
-#' @description A simple to use function for plotting joint-curve figures with continuous x and y axises values.
+#' @description A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
