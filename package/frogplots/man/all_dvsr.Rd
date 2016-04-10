@@ -15,7 +15,7 @@ all_dvsr(x, i = 0)
 A vector containing all the divisors for the input number
 }
 \description{
-A function to find all divisors for any types of number
+A function to find all divisors for any types of number.
 }
 \examples{
 \dontrun{

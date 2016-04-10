@@ -1,6 +1,6 @@
 #' @title int_dvsr
 #'
-#' @description A simple to use function to find all divisors for an integer number
+#' @description A simple to use function to find all divisors for an integer number.
 #' @param x An integer number
 #' @return A vector containing all the divisors for the input integer
 #' @examples
@@ -15,7 +15,7 @@ tstSeq[x %% tstSeq == 0]
 
 #' @title all_dvsr
 #'
-#' @description A function to find all divisors for any types of number
+#' @description A function to find all divisors for any types of number.
 #' @param x The number of interest
 #' @param i Decimal scaling factor. If the input number is an integer, the starting number will be \code{x*10^i}; if a decimal, the starting number will be \code{x*10^n*10^i} (\code{x*10^(n+i)}), where the auto-determined \code{n} is the decimal amplification factor that transforms the decimal numbers to their corresponding minimum intergers by \code{10*n}. Default is \code{0}.
 #' @return A vector containing all the divisors for the input number

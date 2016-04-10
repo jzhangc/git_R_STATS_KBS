@@ -13,7 +13,7 @@ nat_dvsr(x)
 A vector containing all the divisors for the input integer
 }
 \description{
-A simple to use function to find all divisors for an integer number
+A simple to use function to find all divisors for an integer number.
 }
 \examples{
 \dontrun{
