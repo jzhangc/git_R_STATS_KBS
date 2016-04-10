@@ -22,7 +22,7 @@ frogstats<-function(fileName,Tp="ANOVA"){
   rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
   cNm<-colnames(rawData)
-  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=FALSE) # start the dump.
+  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=FALSE)
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
                function(i)tapply(rawData[[i]],rawData[1],function(x)shapiro.test(x)),
@@ -31,7 +31,6 @@ frogstats<-function(fileName,Tp="ANOVA"){
   print(sapply(cNm[-1], function(x){
     fml<-paste(x,cNm[1],sep="~")
     Mdl<-aov(formula(fml),data = rawData) # fit an analysis of variance model by a call to lm(), applicable for both balanced or unbalanced data set.
-    # below: make sure to chain if else in this way!
     if (Tp=="t-test"){
       if (nlevels(rawData[[1]])==2){
         Control<-subset(rawData[x],rawData[[1]] == levels(rawData[[1]])[1])
@@ -64,7 +63,7 @@ frogstats<-function(fileName,Tp="ANOVA"){
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else {
       "ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE)."
-    } # but the function will still dump the result of the normality test.
+    }
   },  simplify = FALSE)
   )
   sink() # end the dump
