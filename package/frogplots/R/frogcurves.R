@@ -116,12 +116,12 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
-#' @param x_custom_tick_range To initiate setting custom \code{x_upper_limit}, \code{x_lower_limit}, \code{x_major_tick_range}, \code{x_n_minor_ticks}. Default is \code{FALSE}.
+#' @param x_custom_tick_range To initiate setting the custom \code{x_upper_limit}, \code{x_lower_limit}, \code{x_major_tick_range}, \code{x_n_minor_ticks}. Default is \code{FALSE}.
 #' @param x_upper_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom upper limt for x axis. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param x_lower_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom lower limt for x axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param x_major_tick_range Can only be set when \code{x_custom_tick_range = TRUE}. Set custom major tick range for x axis.  Value can be obtained from \code{\link{autorange_curve}}.
 #' @param x_n_minor_ticks Can only be set when \code{x_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_curve}}.
-#' @param y_custom_tick_range To initiate setting custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
+#' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
 #' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_curve}}.

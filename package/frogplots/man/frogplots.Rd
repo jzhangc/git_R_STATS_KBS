@@ -30,7 +30,7 @@ frogplots(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5,
 
 \item{plotHeight}{The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.}
 
-\item{y_custom_tick_range}{To initiate setting custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.}
+\item{y_custom_tick_range}{To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.}
 
 \item{y_lower_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.}
 
