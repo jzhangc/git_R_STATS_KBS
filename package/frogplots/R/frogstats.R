@@ -53,7 +53,7 @@ frogstats<-function(fileName,Tp="ANOVA"){
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else if (Tp =="Dunnett"){
       if (nlevels(rawData[[1]])>2){
-        Eqv<-bartlett.test(formula(fml),data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups are unequal.
+        Eqv<-bartlett.test(formula(fml),data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
         var<-cNm[1]
         arg<-list("Dunnett")
         names(arg)<-var
