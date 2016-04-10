@@ -107,9 +107,9 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
                  if (nlevels(rawData[[1]]) == 2){
                    Control<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
                    Experimental<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
-                   Ttest<-t.test(Control, Experimental, na.rm = TRUE)
+                   Ttest<-t.test(Control, Experimental, var.equal = TRUE, na.rm = TRUE)
                    Ttestp<-Ttest$p.value
-                   Lvl<- data.frame(Condition=unique(rawData[[1]]),pvalue=c(1, Ttestp))
+                   Lvl<- data.frame(Condition=unique(rawData[[1]]), pvalue = c(1, Ttestp))
                    Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x < 0.05, "*", ""))
                    Lvl<-Lvl[,c(1,3)]
                  } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett).")}
