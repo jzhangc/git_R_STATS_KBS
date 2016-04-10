@@ -204,6 +204,8 @@ frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NU
     ylab(yLabel)+
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
           legend.position = "bottom",
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
