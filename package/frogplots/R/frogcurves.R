@@ -53,7 +53,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 
   ## calculate optimal lower/upper limits (x_lw_lmt/x_upr_lmt) and major tick range (x_rd_intvl) for x axis
   # setting the raw x lower/upper limit
-  ifelse(x_DfltZero == FALSE, x_Mn<-with(DfPlt, floor(min(plotMean - plotSEM) / 0.5) * 0.5), x_Mn<-0)
+  ifelse(x_DfltZero == FALSE, x_Mn<-with(DfPlt, floor(min(unique(variable)) / 0.5) * 0.5), x_Mn<-0)
   x_Mx<-with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)
 
   x_Rge<-x_Mx - x_Mn
@@ -75,8 +75,8 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 
   ## calculate optimal lower/upper limits (y_lw_lmt/y_upr_lmt) and major tick range (y_rd_intvl) for y axis
   # setting the raw y lower/upper limit
-  ifelse(y_DfltZero == FALSE, y_Mn<-with(DfPlt, floor(min(plotMean - plotSEM) / 0.5) * 0.5), y_Mn<-0)
-  y_Mx<-ceiling(with(DfPlt, max(plotMean + plotSEM) + 0.02) / 0.5) * 0.5
+  ifelse(y_DfltZero == FALSE, y_Mn<-with(DfPlt, floor(min(plotMean - ifelse(is.na(plotSEM), 0, plotSEM)) / 0.5) * 0.5), y_Mn<-0)
+  y_Mx<-ceiling(with(DfPlt, max(plotMean + ifelse(is.na(plotSEM), 0, plotSEM)) + 0.02) / 0.5) * 0.5
 
   y_Rge<-y_Mx - y_Mn
   y_raw_intvl<-y_Rge / y_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
@@ -210,7 +210,7 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
     y_mj_range<-y_major_tick_range # determined from the optrange_enzyme() function - major_tick_range
     y_n_mnr<-y_n_minor_ticks # chosen from the optrange_enzyme() function - minor_tick_options
   } else {
-    y_axis_Mx<-with(DfPlt,ceiling((max(plotMean + plotSEM) + 0.02) / 0.5) * 0.5) # the default y axis upper limit=max(mean+SEM+label+extra)
+    y_axis_Mx<-with(DfPlt,ceiling((max(plotMean + ifelse(is.na(plotSEM), 0, plotSEM)) + 0.02) / 0.5) * 0.5) # the default y axis upper limit=max(mean+SEM+label+extra)
     y_axis_Mn<-0
     y_mj_range<-0.5 # default
     y_n_mnr<-4 # default
@@ -223,7 +223,8 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
                   environment = loclEnv)+
     geom_line()+
     geom_point()+
-    geom_errorbar(aes(ymin = plotMean - plotSEM, ymax = plotMean + plotSEM), width = 0.2)+
+    geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotSEM), 0, plotSEM),
+                      ymax = plotMean + ifelse(is.na(plotSEM), 0, plotSEM)), width = 0.2)+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
                        labels = minor_tick(seq(x_axis_Mn, x_axis_Mx, by = x_mj_range), x_n_mnr),
