@@ -238,6 +238,8 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
     ylab(yLabel)+
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
