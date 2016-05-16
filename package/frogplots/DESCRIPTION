@@ -1,7 +1,7 @@
 Package: frogplots
 Type: Package
 Title: A package for automated statistical analysis and general plotting.
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: person("Jing", "Zhang", email = "jzhangc@gmail.com", role = c("aut", "cre"))
 Description: The package takes raw data file (.csv) and carries out comprehensive statisical analysis as well as plotting in a fully automated fashion.
 License: GPL-3

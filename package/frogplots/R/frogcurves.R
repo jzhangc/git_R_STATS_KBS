@@ -219,7 +219,7 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
 
 
   loclEnv<-environment()
-  baseplt<-ggplot(data=DfPlt, aes(x = variable, y = plotMean, shape = Condition),
+  baseplt<-ggplot(data=DfPlt, aes(x = variable, y = plotMean, shape = Condition, linetype = Condition),
                   environment = loclEnv)+
     geom_line()+
     geom_point()+
@@ -243,7 +243,8 @@ frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLab
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = 10, hjust = 0.5))+
-    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))
+    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
+    scale_linetype_manual(name=cNm[1],values = c(1:(1 + length(unique(DfPlt$Condition)))))
 
   if (legendTtl == FALSE){
     plt<-baseplt + theme(legend.title = element_blank())
