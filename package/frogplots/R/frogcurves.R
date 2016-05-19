@@ -104,7 +104,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 }
 
 
-#' @title frogplots_curve
+#' @title rbioplot_curve
 #'
 #' @description A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
@@ -131,7 +131,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 #' @import ggplot2
 #' @examples
 #' \dontrun{
-#' frogplots_curve("data6.csv", legendTtl = TRUE,
+#' rbioplot_curve("data6.csv", legendTtl = TRUE,
 #'           y_custom_tick_range = TRUE, y_upper_limit = 45,
 #'           y_major_tick_range = 5,
 #'           y_n_minor_ticks = 4,
@@ -139,7 +139,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 #'           x_major_tick_range = 5)
 #' }
 #' @export
-frogplots_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLabel=NULL, yLabel=NULL,
+rbioplot_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLabel=NULL, yLabel=NULL,
                      legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
                      x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
                      y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){

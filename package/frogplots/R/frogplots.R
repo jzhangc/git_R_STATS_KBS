@@ -17,7 +17,7 @@ revsort<-function(x){
   uLst
 }
 
-#' @title frogplots
+#' @title rbioplot
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
@@ -44,29 +44,29 @@ revsort<-function(x){
 #' @import ggplot2
 #' @examples
 #' \dontrun{
-#' frogplots("data.csv", Tp = "Tukey",
+#' rbioplot("data.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level")
 #'
-#' frogplots("data2.csv", Tp = "t-test", xAngle = -90,
+#' rbioplot("data2.csv", Tp = "t-test", xAngle = -90,
 #' xAlign=0,yLabel="Relative fluorescence level")
 #'
-#' frogplots("data3.csv", Tp = "Tukey",
+#' rbioplot("data3.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level")
 #'
-#' frogplots("data4.csv", Tp = "Dunnett",
+#' rbioplot("data4.csv", Tp = "Dunnett",
 #' yLabel = "Relative fluorescence level")
 #'
-#' frogplots("data5.csv", Tp = "Tukey",
+#' rbioplot("data5.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level", plotWidth = 300)
 #'
-#' frogplots("data8.csv", Tp = "Tukey",
+#' rbioplot("data8.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level",
 #' y_custom_tick_range = TRUE, y_upper_limit = 4,
 #' y_lower_limit = 0, y_major_tick_range = 1,
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-frogplots<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NULL, xLabel = NULL, yLabel = NULL,
+rbioplot<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NULL, xLabel = NULL, yLabel = NULL,
                    legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
                    y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 

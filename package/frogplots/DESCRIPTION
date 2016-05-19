@@ -1,4 +1,4 @@
-Package: frogplots
+Package: RBioplot
 Type: Package
 Title: A package for automated statistical analysis and general plotting.
 Version: 0.2.3

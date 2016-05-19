@@ -4,7 +4,7 @@
 }
 
 
-#' @title frogstats
+#' @title rbiostats
 #'
 #' @description A simple to use function for comprehensive statistical analyses.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
@@ -13,11 +13,11 @@
 #' @importFrom multcomp glht mcp
 #' @examples
 #' \dontrun{
-#' frogstats("data.csv","Tukey")
-#' frogstats("data2.csv","t-test")
+#' rbiostats("data.csv","Tukey")
+#' rbiostats("data2.csv","t-test")
 #' }
 #' @export
-frogstats<-function(fileName,Tp="ANOVA"){
+rbiostats<-function(fileName,Tp="ANOVA"){
   rawData<-read.csv(file=fileName,header=TRUE, na.strings = "NA",stringsAsFactors = FALSE)
   rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
