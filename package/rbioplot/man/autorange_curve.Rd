@@ -8,13 +8,13 @@ autorange_curve(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
   y_nMajorTicks = 10, y_DfltZero = TRUE)
 }
 \arguments{
-\item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{frogplots_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}
+\item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}
 
-\item{x_nMajorTicks}{Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.}
+\item{x_nMajorTicks}{Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.}
 
 \item{x_DfltZero}{When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.}
 
-\item{y_nMajorTicks}{Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.}
+\item{y_nMajorTicks}{Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.}
 
 \item{y_DfltZero}{When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.}
 }

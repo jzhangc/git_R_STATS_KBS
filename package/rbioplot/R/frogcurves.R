@@ -224,7 +224,8 @@ rbioplot_curve<-function(fileName, xAngle = 0, xAlign = 0.5, Title = NULL, xLabe
     geom_line()+
     geom_point()+
     geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotSEM), 0, plotSEM),
-                      ymax = plotMean + ifelse(is.na(plotSEM), 0, plotSEM)), width = 0.2)+
+                      ymax = plotMean + ifelse(is.na(plotSEM), 0, plotSEM)), width = 0.2,
+                  linetype = "solid")+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
                        labels = minor_tick(seq(x_axis_Mn, x_axis_Mx, by = x_mj_range), x_n_mnr),
