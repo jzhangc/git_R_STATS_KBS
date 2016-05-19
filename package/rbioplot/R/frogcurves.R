@@ -1,10 +1,10 @@
 #' @title autorange_curve
 #'
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
-#' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{frogplots_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
-#' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.
+#' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
+#' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
-#' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots_curve}}.
+#' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param y_DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.
