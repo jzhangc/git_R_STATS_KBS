@@ -12,7 +12,7 @@ rbioplot(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NULL,
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
-\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "ANOVA", "Tukey" and "Dunnett". Default is "Tukey".}
+\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".}
 
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 

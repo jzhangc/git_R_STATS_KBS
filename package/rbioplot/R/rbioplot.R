@@ -21,7 +21,7 @@ revsort<-function(x){
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
-#' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "ANOVA", "Tukey" and "Dunnett". Default is "Tukey".
+#' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
