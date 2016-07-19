@@ -112,7 +112,7 @@ rbioplot<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NUL
                    Lvl<- data.frame(Condition=unique(rawData[[1]]), pvalue = c(1, Ttestp))
                    Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x < 0.05, "*", ""))
                    Lvl<-Lvl[,c(1,3)]
-                 } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett).")}
+                 } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).")}
                } else if (Tp == "Tukey"){
                  if (nlevels(rawData[[1]])>2){
                    Sts<-TukeyHSD(Mdl)
