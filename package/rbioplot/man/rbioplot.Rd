@@ -5,10 +5,11 @@
 \title{rbioplot}
 \usage{
 rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
-  xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
-  yLabel = NULL, yTickLblSize = 10, legendTtl = FALSE, plotWidth = 170,
-  plotHeight = 150, y_custom_tick_range = FALSE, y_lower_limit = 0,
-  y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
+  fontType = "sans", xLabel = NULL, xTickLblSize = 10,
+  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, yLabel = NULL,
+  yTickLblSize = 10, yTickItalic = FALSE, legendTtl = FALSE,
+  plotWidth = 170, plotHeight = 150, y_custom_tick_range = FALSE,
+  y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -17,11 +18,15 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
-\item{errorbar}{The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
+\item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
+
+\item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \link{kenstoreylab.com}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
 \item{xTickLblSize}{Font size of x axis ticks. Default is 10.}
+
+\item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
 
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 
@@ -30,6 +35,8 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
 \item{yTickLblSize}{Font size of y axis ticks. Default is 10.}
+
+\item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
 
 \item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.}
 

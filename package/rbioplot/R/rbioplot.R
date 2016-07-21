@@ -23,13 +23,16 @@ revsort<-function(x){
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
-#' @param errorbar The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \link{kenstoreylab.com}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
+#' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
+#' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
@@ -70,9 +73,9 @@ revsort<-function(x){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey",
-                     Title = NULL, errorbar = "SEM",
-                     xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
-                     yLabel = NULL, yTickLblSize = 10,
+                     Title = NULL, errorbar = "SEM", fontType = "sans",
+                     xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                     yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE,
                      plotWidth = 170, plotHeight = 150,
                      y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
@@ -235,12 +238,22 @@ rbioplot <- function(fileName, Tp = "Tukey",
     ylab(yLabel) +
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
-          plot.title = element_text(face = "bold"),
-          axis.title = element_text(face = "bold"),
+          plot.title = element_text(face = "bold", family = fontType),
+          axis.title = element_text(face = "bold", family = fontType),
           legend.position = "bottom",
-          axis.text.x = element_text(size = xTickLblSize, angle = xAngle, hjust = xAlign),
-          axis.text.y = element_text(size = yTickLblSize, hjust = 0.5)) +
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
+          axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
     scale_fill_grey(start = 0, name = cNm[1])
+
+  if (xTickItalic == TRUE){
+    baseplt <- baseplt +
+      theme(axis.text.x = element_text(face = "italic"))
+  }
+
+  if (yTickItalic == TRUE){
+    baseplt <- baseplt +
+      theme(axis.text.y = element_text(face = "italic"))
+  }
 
   if (Tp == "Tukey"){
     pltLbl <- baseplt +
