@@ -22,11 +22,13 @@ revsort<-function(x){
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
-#' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
-#' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param xTickLblSize Font size of x axis ticks. Default is 10.
+#' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
+#' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
@@ -66,8 +68,12 @@ revsort<-function(x){
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NULL, xLabel = NULL, yLabel = NULL,
-                   legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
+rbioplot<-function(fileName, Tp = "Tukey",
+                   Title = NULL,
+                   xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
+                   yLabel = NULL, yTickLblSize = 10,
+                   legendTtl = FALSE,
+                   plotWidth = 170, plotHeight = 150,
                    y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
@@ -207,8 +213,8 @@ rbioplot<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NUL
           plot.title = element_text(face = "bold"),
           axis.title = element_text(face = "bold"),
           legend.position = "bottom",
-          axis.text.x = element_text(size = 10, angle = xAngle, hjust = xAlign),
-          axis.text.y = element_text(size = 10, hjust = 0.5))+
+          axis.text.x = element_text(size = xTickLblSize, angle = xAngle, hjust = xAlign),
+          axis.text.y = element_text(size = yTickLblSize, hjust = 0.5))+
     scale_fill_grey(start = 0, name = cNm[1])
 
   if (Tp == "Tukey"){
@@ -254,7 +260,7 @@ rbioplot<-function(fileName, Tp = "Tukey", xAngle = 0, xAlign = 0.5, Title = NUL
   pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
 
   # export the file and draw a preview
-  ggsave(filename=paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.pdf",sep=""),plot=pltgtb,
-         width = plotWidth, height = plotHeight, units = "mm",dpi=600)
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep=""), plot = pltgtb,
+         width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   grid.draw(pltgtb) # preview
 }
