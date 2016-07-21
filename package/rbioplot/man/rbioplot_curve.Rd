@@ -4,17 +4,20 @@
 \alias{rbioplot_curve}
 \title{rbioplot_curve}
 \usage{
-rbioplot_curve(fileName, Title = NULL, xLabel = NULL, xTickLblSize = 10,
-  xAngle = 0, xAlign = 0.5, yLabel = NULL, yTickLblSize = 10,
-  legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
-  x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit,
-  x_major_tick_range, x_n_minor_ticks = 0, y_custom_tick_range = FALSE,
-  y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
+rbioplot_curve(fileName, Title = NULL, errorbar = "SEM", xLabel = NULL,
+  xTickLblSize = 10, xAngle = 0, xAlign = 0.5, yLabel = NULL,
+  yTickLblSize = 10, legendTtl = FALSE, plotWidth = 170,
+  plotHeight = 150, x_custom_tick_range = FALSE, x_lower_limit = 0,
+  x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
+  y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
+  y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
+
+\item{errorbar}{The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 

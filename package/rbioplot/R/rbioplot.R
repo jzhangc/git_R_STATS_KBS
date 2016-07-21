@@ -23,6 +23,7 @@ revsort<-function(x){
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
+#' @param errorbar The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
@@ -61,7 +62,7 @@ revsort<-function(x){
 #' rbioplot("data5.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level", plotWidth = 300)
 #'
-#' rbioplot("data8.csv", Tp = "Tukey",
+#' rbioplot("data8.csv", Tp = "Tukey", errorbar = "SD"
 #' yLabel = "Relative fluorescence level",
 #' y_custom_tick_range = TRUE, y_upper_limit = 4,
 #' y_lower_limit = 0, y_major_tick_range = 1,
@@ -69,12 +70,12 @@ revsort<-function(x){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey",
-                    Title = NULL,
-                    xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
-                    yLabel = NULL, yTickLblSize = 10,
-                    legendTtl = FALSE,
-                    plotWidth = 170, plotHeight = 150,
-                    y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+                     Title = NULL, errorbar = "SEM",
+                     xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
+                     yLabel = NULL, yTickLblSize = 10,
+                     legendTtl = FALSE,
+                     plotWidth = 170, plotHeight = 150,
+                     y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
   rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
@@ -89,19 +90,32 @@ rbioplot <- function(fileName, Tp = "Tukey",
                                function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
                         Condition = factor(rownames(Mean), levels = c(rownames(Mean))))
 
-  SEM <- sapply(colnames(rawData)[-1],
-                function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-  SEM <- data.frame(SEM)
-  SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
-  SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                              function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                       Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
-  colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
-                                                        function(x)paste(x, "SEM", sep=""))
+  if (errorbar == "SEM"){
 
-  SD <- sapply
+    SEM <- sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+    SEM <- data.frame(SEM)
+    SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
+    SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
+                                function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                         Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
+    colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
+                                                          function(x)paste(x, "SEM", sep=""))
 
+  } else if (errorbar == "SD"){
+    SD <- sapply(colnames(rawData)[-1],
+                 function(i) tapply(rawData[[i]], rawData[1],
+                                    function(j)sd(j, na.rm = TRUE)))
+    SD <- data.frame(SD)
+    SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
+    SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
+                               function(i)sapply(SD[[i]], function(j)j/Mean[[i]][1])),
+                        Condition = factor(rownames(SD), levels = c(rownames(SD))))
+    colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
+                                                        function(x)paste(x, "SD", sep=""))
+
+  } else {stop("Please specify the error bar type, SEM or SD")}
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
   cNm <- colnames(rawData)
@@ -160,19 +174,28 @@ rbioplot <- function(fileName, Tp = "Tukey",
   MeanNrmMLT <- melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
   MeanNrmMLT$id <- rownames(MeanNrmMLT)
 
-  SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
-  SEMNrmMLT$id <- rownames(SEMNrmMLT)
-
   cTtMLT <- melt(cTt,id.vars = colnames(cTt)[1])
   cTtMLT$id <- rownames(cTtMLT)
   cTtMLT[1] <- as.factor(cTtMLT[[1]])
 
   colnames(MeanNrmMLT)[3] <- "NrmMean"
-  colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "NrmSEM")
   colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
 
-  DfPlt <- merge(MeanNrmMLT, SEMNrmMLT, by = c("id", "Condition"), sort = FALSE)
-  DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
+  if (errorbar == "SEM"){
+    SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
+    SEMNrmMLT$id <- rownames(SEMNrmMLT)
+    colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "NrmErr")
+
+    DfPlt <- merge(MeanNrmMLT, SEMNrmMLT, by = c("id", "Condition"), sort = FALSE)
+    DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
+  } else if (errorbar == "SD"){
+    SDNrmMLT <- melt(SDNrm,id.vars = colnames(SDNrm)[length(colnames(SDNrm))])
+    SDNrmMLT$id <- rownames(SDNrmMLT)
+    colnames(SDNrmMLT)[2:3] <- c("variableSD", "NrmErr")
+
+    DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
+    DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
+  } else {stop("Please specify the error bar type, SEM or SD")}
 
   # dump all data into a file
   write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.csv",sep= ""),
@@ -191,7 +214,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
     major_tick_range <- y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
     n_minor_ticks <- y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
   } else {
-    y_axis_Mx <- with(DfPlt, ceiling((max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5)
+    y_axis_Mx <- with(DfPlt, ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
     y_axis_Mn <- 0
     major_tick_range <- 0.5 # default
     n_minor_ticks <- 4 # default
@@ -201,7 +224,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
   baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
                   environment = loclEnv) +
     geom_bar(position = "dodge", stat = "identity", color = "black") +
-    geom_errorbar(aes(ymin = NrmMean - NrmSEM,ymax = NrmMean + NrmSEM),width=0.2,
+    geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr),width=0.2,
                   position = position_dodge(0.9))+
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
@@ -221,11 +244,11 @@ rbioplot <- function(fileName, Tp = "Tukey",
 
   if (Tp == "Tukey"){
     pltLbl <- baseplt +
-      geom_text(aes(y = NrmMean + NrmSEM + 0.07,label = Lbl), position = position_dodge(width = 0.9),
+      geom_text(aes(y = NrmMean + NrmErr + 0.07,label = Lbl), position = position_dodge(width = 0.9),
                 color = "black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean+SEM.
   } else {
     pltLbl <- baseplt +
-      geom_text(aes(y = NrmMean + NrmSEM + 0.06,label = Lbl), position = position_dodge(width = 0.9),
+      geom_text(aes(y = NrmMean + NrmErr + 0.06,label = Lbl), position = position_dodge(width = 0.9),
                 size = 6, color = "black") # font size 6 and 0.06 unit higher is good for asterisks.
   }
 

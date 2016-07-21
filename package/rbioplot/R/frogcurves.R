@@ -2,6 +2,7 @@
 #'
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
+#' @param errorbar The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
 #' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
@@ -10,58 +11,81 @@
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.
 #' @examples
 #' \dontrun{
-#' enzyme_curve("data6.csv", x_nMajorTicks = 6, x_DfltZero = FALSE,
+#' enzyme_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FALSE,
 #' y_nMajorTicks = 8, y_DfltZero = TRUE)
 #' }
 #' @export
-autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
+autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_DfltZero = TRUE,
                       y_nMajorTicks = 10, y_DfltZero = TRUE){
 
   ## load file
-  rawData<-read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]], levels = c(unique(rawData[[1]])))
+  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]] <- factor(rawData[[1]], levels = c(unique(rawData[[1]])))
 
   ## calculate mean and SEM
-  Mean<-sapply(colnames(rawData)[-1],
-                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm=TRUE))
-  Mean<-data.frame(Mean)
-  Mean$Condition<-factor(rownames(Mean), levels = c(rownames(Mean)))
+  Mean <- sapply(colnames(rawData)[-1],
+                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
+  Mean <- data.frame(Mean)
+  Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
 
 
-  SEM<-sapply(colnames(rawData)[-1],
-                function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
-  SEM<-data.frame(SEM)
-  SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
+
+  if (errorbar == "SEM"){
+
+    SEM <- sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+    SEM <- data.frame(SEM)
+    SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
+
+  } else if (errorbar == "SD"){
+    SD <- sapply(colnames(rawData)[-1],
+                 function(i) tapply(rawData[[i]], rawData[1],
+                                    function(j)sd(j, na.rm = TRUE)))
+    SD <- data.frame(SD)
+    SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
+
+  } else {stop("Please specify the error bar type, SEM or SD")}
+
 
   ## generate the master dataframe
-  MeanMLT<-melt(Mean,id.vars = colnames(Mean)[length(colnames(Mean))])
-  MeanMLT$id<-rownames(MeanMLT)
+  MeanMLT <- melt(Mean,id.vars = colnames(Mean)[length(colnames(Mean))])
+  MeanMLT$id <- rownames(MeanMLT)
+  colnames(MeanMLT)[3] <- "plotMean"
 
-  SEMMLT<-melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
-  SEMMLT$id<-rownames(SEMMLT)
+  if (errorbar == "SEM"){
+    SEMMLT<-melt(SEM, id.vars = colnames(SEM)[length(colnames(SEM))])
+    SEMMLT$id<-rownames(SEMMLT)
+    colnames(SEMMLT)[2:3]<-c("variableSEM","plotErr")
 
-  colnames(MeanMLT)[3]<- "plotMean"
-  colnames(SEMMLT)[2:3]<-c("variableSEM","plotSEM")
+    DfPlt<-merge(MeanMLT,SEMMLT,by = c("id","Condition"),sort=FALSE)
 
+    DfPlt$variable<-as.character(DfPlt$variable)
+    DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
+    DfPlt$variable<-as.numeric(DfPlt$variable)
+  } else if (errorbar == "SD"){
+    SDMLT<-melt(SD, id.vars = colnames(SD)[length(colnames(SD))])
+    SDMLT$id<-rownames(SDMLT)
+    colnames(SDMLT)[2:3]<-c("variableSD","plotErr")
 
-  DfPlt<-merge(MeanMLT,SEMMLT,by = c("id","Condition"),sort=FALSE)
+    DfPlt<-merge(MeanMLT,SDMLT,by = c("id","Condition"),sort=FALSE)
 
-  DfPlt$variable<-as.character(DfPlt$variable)
-  DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
-  DfPlt$variable<-as.numeric(DfPlt$variable)
+    DfPlt$variable<-as.character(DfPlt$variable)
+    DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
+    DfPlt$variable<-as.numeric(DfPlt$variable)
+  } else {stop("Please specify the error bar type, SEM or SD")}
 
   ## calculate optimal lower/upper limits (x_lw_lmt/x_upr_lmt) and major tick range (x_rd_intvl) for x axis
   # setting the raw x lower/upper limit
-  ifelse(x_DfltZero == FALSE, x_Mn<-with(DfPlt, floor(min(unique(variable)) / 0.5) * 0.5), x_Mn<-0)
+  ifelse(x_DfltZero == FALSE, x_Mn <- with(DfPlt, floor(min(unique(variable)) / 0.5) * 0.5), x_Mn <- 0)
   x_Mx<-with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)
 
-  x_Rge<-x_Mx - x_Mn
-  x_raw_intvl<-x_Rge / x_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
-  x_Aa<-10^ceiling(log10(x_raw_intvl))
-  x_rd_intvl<-ceiling((x_raw_intvl / x_Aa) / 0.05) * 0.05 * x_Aa
-  x_lw_lmt<-x_rd_intvl * floor(x_Mn / x_rd_intvl)
-  x_upr_lmt<-x_rd_intvl * ceiling(x_Mx / x_rd_intvl)
+  x_Rge <- x_Mx - x_Mn
+  x_raw_intvl <- x_Rge / x_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
+  x_Aa <- 10^ceiling(log10(x_raw_intvl))
+  x_rd_intvl <- ceiling((x_raw_intvl / x_Aa) / 0.05) * 0.05 * x_Aa
+  x_lw_lmt <- x_rd_intvl * floor(x_Mn / x_rd_intvl)
+  x_upr_lmt <- x_rd_intvl * ceiling(x_Mx / x_rd_intvl)
 
   ## calculate minor tick options for x axis
   # set 4 as the minor tick range cutoff: it always makes sure to give at least 4 minor ticks.
@@ -75,15 +99,15 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 
   ## calculate optimal lower/upper limits (y_lw_lmt/y_upr_lmt) and major tick range (y_rd_intvl) for y axis
   # setting the raw y lower/upper limit
-  ifelse(y_DfltZero == FALSE, y_Mn<-with(DfPlt, floor(min(plotMean - ifelse(is.na(plotSEM), 0, plotSEM)) / 0.5) * 0.5), y_Mn<-0)
-  y_Mx<-ceiling(with(DfPlt, max(plotMean + ifelse(is.na(plotSEM), 0, plotSEM)) + 0.02) / 0.5) * 0.5
+  ifelse(y_DfltZero == FALSE, y_Mn <- with(DfPlt, floor(min(plotMean - ifelse(is.na(plotErr), 0, plotErr)) / 0.5) * 0.5), y_Mn<-0)
+  y_Mx <- ceiling(with(DfPlt, max(plotMean + ifelse(is.na(plotErr), 0, plotErr)) + 0.02) / 0.5) * 0.5
 
-  y_Rge<-y_Mx - y_Mn
-  y_raw_intvl<-y_Rge / y_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
-  y_Aa<-10^ceiling(log10(y_raw_intvl))
-  y_rd_intvl<-ceiling((y_raw_intvl / y_Aa) / 0.05) * 0.05 * y_Aa
-  y_lw_lmt<-y_rd_intvl * floor(y_Mn / y_rd_intvl)
-  y_upr_lmt<-y_rd_intvl * ceiling(y_Mx / y_rd_intvl)
+  y_Rge <- y_Mx - y_Mn
+  y_raw_intvl <- y_Rge / y_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
+  y_Aa <- 10^ceiling(log10(y_raw_intvl))
+  y_rd_intvl <- ceiling((y_raw_intvl / y_Aa) / 0.05) * 0.05 * y_Aa
+  y_lw_lmt <- y_rd_intvl * floor(y_Mn / y_rd_intvl)
+  y_upr_lmt <- y_rd_intvl * ceiling(y_Mx / y_rd_intvl)
 
   ## calculate minor tick options for y axis
   # set 4 as the minor tick range cutoff: it always makes sure to give at least 4 minor ticks.
@@ -109,6 +133,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 #' @description A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
+#' @param errorbar The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
@@ -141,7 +166,7 @@ autorange_curve<-function(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
 #'           x_major_tick_range = 5)
 #' }
 #' @export
-rbioplot_curve<-function(fileName, Title = NULL,
+rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM",
                          xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
                          yLabel = NULL, yTickLblSize = 10,
                          legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
@@ -159,29 +184,57 @@ rbioplot_curve<-function(fileName, Title = NULL,
   Mean<-data.frame(Mean)
   Mean$Condition<-factor(rownames(Mean),levels=c(rownames(Mean)))
 
-  SEM<-sapply(colnames(rawData)[-1],
-              function(i) tapply(rawData[[i]], rawData[1],
-                                 function(j)sd(j,na.rm=TRUE)/sqrt(length(!is.na(j)))))
-  SEM<-data.frame(SEM)
-  SEM$Condition<-factor(rownames(SEM),levels=c(rownames(SEM)))
-  colnames(SEM)[-length(colnames(SEM))]<-sapply(colnames(rawData)[-1],
-                                                function(x)paste(x,"SEM",sep=""))
+  if (errorbar == "SEM"){
+
+    SEM <- sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+    SEM <- data.frame(SEM)
+    SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
+    colnames(SEM)[-length(colnames(SEM))] <- sapply(colnames(rawData)[-1],
+                                                          function(x)paste(x, "SEM", sep=""))
+
+  } else if (errorbar == "SD"){
+    SD <- sapply(colnames(rawData)[-1],
+                 function(i) tapply(rawData[[i]], rawData[1],
+                                    function(j)sd(j, na.rm = TRUE)))
+    SD <- data.frame(SD)
+    SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
+    colnames(SD)[-length(colnames(SD))] <- sapply(colnames(rawData)[-1],
+                                                        function(x)paste(x, "SD", sep=""))
+
+  } else {stop("Please specify the error bar type, SEM or SD")}
+
 
   ## generate the master dataframe for plotting
   MeanMLT<-melt(Mean, id.vars = colnames(Mean)[length(colnames(Mean))])
   MeanMLT$id<-rownames(MeanMLT)
-
-  SEMMLT<-melt(SEM, id.vars = colnames(SEM)[length(colnames(SEM))])
-  SEMMLT$id<-rownames(SEMMLT)
-
   colnames(MeanMLT)[3]<- "plotMean"
-  colnames(SEMMLT)[2:3]<-c("variableSEM","plotSEM")
 
-  DfPlt<-merge(MeanMLT,SEMMLT,by = c("id","Condition"),sort=FALSE)
+  if (errorbar == "SEM"){
+    SEMMLT<-melt(SEM, id.vars = colnames(SEM)[length(colnames(SEM))])
+    SEMMLT$id<-rownames(SEMMLT)
+    colnames(SEMMLT)[2:3]<-c("variableSEM","plotErr")
 
-  DfPlt$variable<-as.character(DfPlt$variable)
-  DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
-  DfPlt$variable<-as.numeric(DfPlt$variable)
+    DfPlt<-merge(MeanMLT,SEMMLT,by = c("id","Condition"),sort=FALSE)
+
+    DfPlt$variable<-as.character(DfPlt$variable)
+    DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
+    DfPlt$variable<-as.numeric(DfPlt$variable)
+  } else if (errorbar == "SD"){
+    SDMLT<-melt(SD, id.vars = colnames(SD)[length(colnames(SD))])
+    SDMLT$id<-rownames(SDMLT)
+    colnames(SDMLT)[2:3]<-c("variableSD","plotErr")
+
+    DfPlt<-merge(MeanMLT,SDMLT,by = c("id","Condition"),sort=FALSE)
+
+    DfPlt$variable<-as.character(DfPlt$variable)
+    DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
+    DfPlt$variable<-as.numeric(DfPlt$variable)
+  } else {stop("Please specify the error bar type, SEM or SD")}
+
+
+
 
   # dump all data into a file
   write.csv(DfPlt,file = paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.csv",sep = ""),
@@ -196,39 +249,37 @@ rbioplot_curve<-function(fileName, Title = NULL,
 
   # x axis
   if (x_custom_tick_range == TRUE){ # custome x range and tick settings
-    x_axis_Mx<-x_upper_limit
-    x_axis_Mn<-x_lower_limit
-    x_mj_range<-x_major_tick_range # determined from the optrange_enzyme() function - major_tick_range
-    x_n_mnr<-x_n_minor_ticks # chosen from the optrange_enzyme() function - minor_tick_options
+    x_axis_Mx <- x_upper_limit
+    x_axis_Mn <- x_lower_limit
+    x_mj_range <- x_major_tick_range # determined from the optrange_enzyme() function - major_tick_range
+    x_n_mnr <- x_n_minor_ticks # chosen from the optrange_enzyme() function - minor_tick_options
   } else {
-    x_axis_Mx<-with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)# the default x axis upper limit=max(mean+extra)
-    x_axis_Mn<-0
-    x_mj_range<-0.5 # default
-    x_n_mnr<-0 # default
+    x_axis_Mx <- with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)# the default x axis upper limit=max(mean+extra)
+    x_axis_Mn <- 0
+    x_mj_range <- 0.5 # default
+    x_n_mnr <- 0 # default
   }
 
   # y axis
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
-    y_axis_Mx<-y_upper_limit
-    y_axis_Mn<-y_lower_limit
-    y_mj_range<-y_major_tick_range # determined from the optrange_enzyme() function - major_tick_range
-    y_n_mnr<-y_n_minor_ticks # chosen from the optrange_enzyme() function - minor_tick_options
+    y_axis_Mx <- y_upper_limit
+    y_axis_Mn <- y_lower_limit
+    y_mj_range <- y_major_tick_range # determined from the optrange_enzyme() function - major_tick_range
+    y_n_mnr <- y_n_minor_ticks # chosen from the optrange_enzyme() function - minor_tick_options
   } else {
-    y_axis_Mx<-with(DfPlt,ceiling((max(plotMean + ifelse(is.na(plotSEM), 0, plotSEM)) + 0.02) / 0.5) * 0.5) # the default y axis upper limit=max(mean+SEM+label+extra)
-    y_axis_Mn<-0
-    y_mj_range<-0.5 # default
-    y_n_mnr<-4 # default
+    y_axis_Mx <- with(DfPlt,ceiling((max(plotMean + ifelse(is.na(plotErr), 0, plotErr)) + 0.02) / 0.5) * 0.5) # the default y axis upper limit = max(mean + SEM + label + extra)
+    y_axis_Mn <- 0
+    y_mj_range <- 0.5 # default
+    y_n_mnr <- 4 # default
   }
-
-
 
   loclEnv<-environment()
   baseplt<-ggplot(data=DfPlt, aes(x = variable, y = plotMean, shape = Condition, linetype = Condition),
                   environment = loclEnv)+
     geom_line()+
     geom_point()+
-    geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotSEM), 0, plotSEM),
-                      ymax = plotMean + ifelse(is.na(plotSEM), 0, plotSEM)), width = 0.2,
+    geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotErr), 0, plotErr),
+                      ymax = plotMean + ifelse(is.na(plotErr), 0, plotErr)), width = 0.2,
                   linetype = "solid")+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
@@ -248,8 +299,8 @@ rbioplot_curve<-function(fileName, Title = NULL,
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = xTickLblSize, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = yTickLblSize, hjust = 0.5))+
-    scale_shape_manual(name=cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
-    scale_linetype_manual(name=cNm[1],values = c(1:(1 + length(unique(DfPlt$Condition)))))
+    scale_shape_manual(name = cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
+    scale_linetype_manual(name = cNm[1],values = c(1:(1 + length(unique(DfPlt$Condition)))))
 
   if (legendTtl == FALSE){
     plt<-baseplt + theme(legend.title = element_blank())

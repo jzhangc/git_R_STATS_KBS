@@ -4,11 +4,13 @@
 \alias{autorange_curve}
 \title{autorange_curve}
 \usage{
-autorange_curve(fileName, x_nMajorTicks = 5, x_DfltZero = TRUE,
-  y_nMajorTicks = 10, y_DfltZero = TRUE)
+autorange_curve(fileName, errorbar = "SEM", x_nMajorTicks = 5,
+  x_DfltZero = TRUE, y_nMajorTicks = 10, y_DfltZero = TRUE)
 }
 \arguments{
 \item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}
+
+\item{errorbar}{The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
 \item{x_nMajorTicks}{Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.}
 
@@ -26,7 +28,7 @@ A function to get custom lower/upper limit, major tick range, as well as minor t
 }
 \examples{
 \dontrun{
-enzyme_curve("data6.csv", x_nMajorTicks = 6, x_DfltZero = FALSE,
+enzyme_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FALSE,
 y_nMajorTicks = 8, y_DfltZero = TRUE)
 }
 }
