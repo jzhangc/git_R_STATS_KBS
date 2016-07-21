@@ -48,16 +48,18 @@ all_dvsr<-function(x, i = 0){
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{frogplots}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
+#' @param errorbar The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param nMajorTicks Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots}}.
 #' @param DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options}.
 #' @examples
 #' \dontrun{
-#' autorange_bar_y("data.csv",Nrm = T, nMajorTicks = 8, DfltZero=FALSE)
+#' autorange_bar_y("data.csv", Nrm = T, errorbar = "SEM", nMajorTicks = 8, DfltZero=FALSE)
 #' }
 #' @export
-autorange_bar_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE){
+autorange_bar_y<-function(fileName, Nrm = TRUE,
+                          errorbar = "SEM", nMajorTicks = 5, DfltZero = TRUE){
 
   ## load file
   rawData<-read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
@@ -73,28 +75,48 @@ autorange_bar_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE
                                function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
                         Condition = factor(rownames(Mean),levels = c(rownames(Mean))))
 
-    SEM<-sapply(colnames(rawData)[-1],
-                function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-    SEM<-data.frame(SEM)
-    SEM$Condition<-factor(rownames(SEM), levels = c(rownames(SEM)))
-    SEMNrm<-data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                              function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                       Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
-    colnames(SEMNrm)[-length(colnames(SEMNrm))]<-sapply(colnames(rawData)[-1],
-                                                        function(x)paste(x, "SEM", sep = ""))
+    if (errorbar == "SEM"){
+      SEM<-sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+      SEM<-data.frame(SEM)
+      SEM$Condition<-factor(rownames(SEM), levels = c(rownames(SEM)))
+      SEMNrm<-data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
+                                function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                         Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
+      colnames(SEMNrm)[-length(colnames(SEMNrm))]<-sapply(colnames(rawData)[-1],
+                                                          function(x)paste(x, "SEM", sep = ""))
+    } else if (errorbar == "SD") {
+      SD <- sapply(colnames(rawData)[-1],
+                   function(i) tapply(rawData[[i]], rawData[1],
+                                      function(j)sd(j, na.rm = TRUE)))
+      SD <- data.frame(SD)
+      SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
+      SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
+                                 function(i)sapply(SD[[i]], function(j)j/Mean[[i]][1])),
+                          Condition = factor(rownames(SD), levels = c(rownames(SD))))
+      colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
+                                                          function(x)paste(x, "SD", sep=""))
+
+    } else {stop("Please properly specify the error bar type, SEM or SD")}
+
 
     ## generate the master dataframe
     MeanNrmMLT<-melt(MeanNrm, id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
     MeanNrmMLT$id<-rownames(MeanNrmMLT)
-
-    SEMNrmMLT<-melt(SEMNrm, id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
-    SEMNrmMLT$id<-rownames(SEMNrmMLT)
-
     colnames(MeanNrmMLT)[3]<- "plotMean"
-    colnames(SEMNrmMLT)[2:3]<-c("variableSEM", "plotSEM")
 
-    DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
+    if (errorbar == "SEM"){
+      SEMNrmMLT<-melt(SEMNrm, id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
+      SEMNrmMLT$id<-rownames(SEMNrmMLT)
+      colnames(SEMNrmMLT)[2:3]<-c("variableSEM", "plotErr")
+      DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
+    } else if (errorbar == "SD"){
+      SDNrmMLT<-melt(SDNrm, id.vars = colnames(SDNrm)[length(colnames(SDNrm))])
+      SDNrmMLT$id<-rownames(SDNrmMLT)
+      colnames(SDNrmMLT)[2:3]<-c("variableSD", "plotErr")
+      DfPlt<-merge(MeanNrmMLT,SDNrmMLT,by = c("id","Condition"),sort=FALSE)
+    } else {stop("Please properly specify the error bar type, SEM or SD")}
   }
 
   if (Nrm == FALSE) {
@@ -104,30 +126,43 @@ autorange_bar_y<-function(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE
     Mean<-data.frame(Mean)
     Mean$Condition<-factor(rownames(Mean), levels = c(rownames(Mean)))
 
+    if (errorbar == "SEM"){
+      SEM<-sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
+      SEM<-data.frame(SEM)
+      SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
+    } else if (errorbar == "SD"){
+      SD<-sapply(colnames(rawData)[-1],
+                  function(i) tapply(rawData[[i]], rawData[1],
+                                     function(j)sd(j,na.rm = TRUE)))
+      SD<-data.frame(SD)
+      SD$Condition<-factor(rownames(SD),levels = c(rownames(SD)))
+    } else {stop("Please properly specify the error bar type, SEM or SD")}
 
-    SEM<-sapply(colnames(rawData)[-1],
-                function(i) tapply(rawData[[i]], rawData[1],
-                                   function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
-    SEM<-data.frame(SEM)
-    SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
 
     ## generate the master dataframe
     MeanMLT<-melt(Mean,id.vars = colnames(Mean)[length(colnames(Mean))])
     MeanMLT$id<-rownames(MeanMLT)
-
-    SEMMLT<-melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
-    SEMMLT$id<-rownames(SEMMLT)
-
     colnames(MeanMLT)[3]<- "plotMean"
-    colnames(SEMMLT)[2:3]<-c("variableSEM","plotSEM")
 
-    DfPlt<-merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
+    if (errorbar == "SEM"){
+      SEMMLT<-melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
+      SEMMLT$id<-rownames(SEMMLT)
+      colnames(SEMMLT)[2:3]<-c("variableSEM","plotErr")
+      DfPlt<-merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
+    } else if (errorbar == "SD"){
+      SDMLT<-melt(SD,id.vars = colnames(SD)[length(colnames(SD))])
+      SDMLT$id<-rownames(SDMLT)
+      colnames(SDMLT)[2:3]<-c("variableSD","plotErr")
+      DfPlt<-merge(MeanMLT,SDMLT,by = c("id", "Condition"), sort = FALSE)
+    } else {stop("Please properly specify the error bar type, SEM or SD")}
   }
 
   ## calculate optimal lower/upper limits (lw_lmt/upr_lmt) and major tick range (rd_intvl)
   # setting the raw y lower/upper limit
-  ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMean- plotSEM) / 0.5) * 0.5), Mn<-0)
-  Mx<-with(DfPlt, ceiling((max(plotMean + plotSEM) + 0.09) / 0.5) * 0.5)
+  ifelse(DfltZero == FALSE, Mn<-with(DfPlt, floor(min(plotMean - plotErr) / 0.5) * 0.5), Mn<-0)
+  Mx<-with(DfPlt, ceiling((max(plotMean + plotErr) + 0.09) / 0.5) * 0.5)
 
   Rge<-Mx - Mn
   raw_intvl<-Rge / nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)

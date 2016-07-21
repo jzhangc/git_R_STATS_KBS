@@ -115,7 +115,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
     colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
                                                         function(x)paste(x, "SD", sep=""))
 
-  } else {stop("Please specify the error bar type, SEM or SD")}
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
   cNm <- colnames(rawData)
@@ -195,7 +195,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
 
     DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
     DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
-  } else {stop("Please specify the error bar type, SEM or SD")}
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
   write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.csv",sep= ""),

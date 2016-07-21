@@ -4,12 +4,15 @@
 \alias{autorange_bar_y}
 \title{autorange_bar_y}
 \usage{
-autorange_bar_y(fileName, Nrm = TRUE, nMajorTicks = 5, DfltZero = TRUE)
+autorange_bar_y(fileName, Nrm = TRUE, errorbar = "SEM", nMajorTicks = 5,
+  DfltZero = TRUE)
 }
 \arguments{
 \item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{frogplots}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
 \item{Nrm}{When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.}
+
+\item{errorbar}{The type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
 \item{nMajorTicks}{Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots}}.}
 
@@ -23,7 +26,7 @@ A function to get custom lower/upper limit, major tick range, as well as minor t
 }
 \examples{
 \dontrun{
-autorange_bar_y("data.csv",Nrm = T, nMajorTicks = 8, DfltZero=FALSE)
+autorange_bar_y("data.csv", Nrm = T, errorbar = "SEM", nMajorTicks = 8, DfltZero=FALSE)
 }
 }
 

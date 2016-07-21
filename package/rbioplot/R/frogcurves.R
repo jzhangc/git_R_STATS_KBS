@@ -45,7 +45,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
     SD <- data.frame(SD)
     SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
 
-  } else {stop("Please specify the error bar type, SEM or SD")}
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
 
   ## generate the master dataframe
@@ -73,7 +73,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
     DfPlt$variable<-as.character(DfPlt$variable)
     DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
     DfPlt$variable<-as.numeric(DfPlt$variable)
-  } else {stop("Please specify the error bar type, SEM or SD")}
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   ## calculate optimal lower/upper limits (x_lw_lmt/x_upr_lmt) and major tick range (x_rd_intvl) for x axis
   # setting the raw x lower/upper limit
@@ -203,7 +203,7 @@ rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM",
     colnames(SD)[-length(colnames(SD))] <- sapply(colnames(rawData)[-1],
                                                         function(x)paste(x, "SD", sep=""))
 
-  } else {stop("Please specify the error bar type, SEM or SD")}
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
 
   ## generate the master dataframe for plotting
@@ -231,10 +231,7 @@ rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM",
     DfPlt$variable<-as.character(DfPlt$variable)
     DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
     DfPlt$variable<-as.numeric(DfPlt$variable)
-  } else {stop("Please specify the error bar type, SEM or SD")}
-
-
-
+  } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
   write.csv(DfPlt,file = paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.csv",sep = ""),
