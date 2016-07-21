@@ -68,113 +68,115 @@ revsort<-function(x){
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot<-function(fileName, Tp = "Tukey",
-                   Title = NULL,
-                   xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
-                   yLabel = NULL, yTickLblSize = 10,
-                   legendTtl = FALSE,
-                   plotWidth = 170, plotHeight = 150,
-                   y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+rbioplot <- function(fileName, Tp = "Tukey",
+                    Title = NULL,
+                    xLabel = NULL, xTickLblSize = 10, xAngle = 0, xAlign = 0.5,
+                    yLabel = NULL, yTickLblSize = 10,
+                    legendTtl = FALSE,
+                    plotWidth = 170, plotHeight = 150,
+                    y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
-  rawData<-read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
-  rawData[[1]]<-factor(rawData[[1]],levels = c(unique(rawData[[1]])))
+  rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
 
   ## normalize everything to control as 1
-  Mean<-sapply(colnames(rawData)[-1],
-               function(i) tapply(rawData[[i]], rawData[1], mean, na.rm=TRUE))
-  Mean<-data.frame(Mean)
-  Mean$Condition<-factor(rownames(Mean), levels = c(rownames(Mean)))
-  MeanNrm<-data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                             function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
-                      Condition = factor(rownames(Mean), levels=c(rownames(Mean))))
+  Mean <- sapply(colnames(rawData)[-1],
+                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
+  Mean <- data.frame(Mean)
+  Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
+  MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
+                               function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
+                        Condition = factor(rownames(Mean), levels = c(rownames(Mean))))
 
-  SEM<-sapply(colnames(rawData)[-1],
-              function(i) tapply(rawData[[i]], rawData[1],
-                                 function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-  SEM<-data.frame(SEM)
-  SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
-  SEMNrm<-data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                            function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                     Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
-  colnames(SEMNrm)[-length(colnames(SEMNrm))]<-sapply(colnames(rawData)[-1],
-                                                      function(x)paste(x, "SEM", sep=""))
+  SEM <- sapply(colnames(rawData)[-1],
+                function(i) tapply(rawData[[i]], rawData[1],
+                                   function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+  SEM <- data.frame(SEM)
+  SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
+  SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
+                              function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                       Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
+  colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
+                                                        function(x)paste(x, "SEM", sep=""))
+
+  SD <- sapply
 
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
-  cNm<-colnames(rawData)
+  cNm <- colnames(rawData)
 
-  Tt<-sapply(colnames(rawData)[-1],
-             function(i) {
-               fml<-paste(i,cNm[1], sep = "~")
-               Mdl<-aov(formula(fml), data = rawData)
+  Tt <- sapply(colnames(rawData)[-1],
+               function(i) {
+                 fml<-paste(i,cNm[1], sep = "~")
+                 Mdl<-aov(formula(fml), data = rawData)
 
-               if (Tp == "t-test"){
+                 if (Tp == "t-test"){
                  if (nlevels(rawData[[1]]) == 2){
-                   Control<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
-                   Experimental<-subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
-                   Ttest<-t.test(Control, Experimental, var.equal = TRUE, na.rm = TRUE)
-                   Ttestp<-Ttest$p.value
-                   Lvl<- data.frame(Condition=unique(rawData[[1]]), pvalue = c(1, Ttestp))
-                   Lvl$Lbl<-sapply(Lvl$pvalue,function(x)ifelse(x < 0.05, "*", ""))
-                   Lvl<-Lvl[,c(1,3)]
+                   Control <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
+                   Experimental <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
+                   Ttest <- t.test(Control, Experimental, var.equal = TRUE, na.rm = TRUE)
+                   Ttestp <- Ttest$p.value
+                   Lvl <- data.frame(Condition = unique(rawData[[1]]), pvalue = c(1, Ttestp))
+                   Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
+                   Lvl <- Lvl[,c(1,3)]
                  } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).")}
                } else if (Tp == "Tukey"){
-                 if (nlevels(rawData[[1]])>2){
-                   Sts<-TukeyHSD(Mdl)
-                   Tkp<-Sts[[1]][,4]
-                   names(Tkp)<-sapply(names(Tkp),function(j)revsort(j))
-                   Tkp<-multcompLetters(Tkp)["Letters"]
-                   Lbl<-names(Tkp[["Letters"]])
-                   Lvl<-data.frame(Lbl, Tkp[["Letters"]],
-                                   stringsAsFactors = FALSE)
+                 if (nlevels(rawData[[1]]) > 2){
+                   Sts <- TukeyHSD(Mdl)
+                   Tkp <- Sts[[1]][,4]
+                   names(Tkp) <- sapply(names(Tkp), function(j)revsort(j))
+                   Tkp <- multcompLetters(Tkp)["Letters"]
+                   Lbl <- names(Tkp[["Letters"]])
+                   Lvl <- data.frame(Lbl, Tkp[["Letters"]],
+                                     stringsAsFactors = FALSE)
                  } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
                } else if (Tp == "Dunnett"){
-                 if (nlevels(rawData[[1]])>2){
+                 if (nlevels(rawData[[1]]) > 2){
                    var <- cNm[1]
-                   arg<- list("Dunnett")
-                   names(arg)<-var
-                   mcp<- do.call(mcp, arg)
-                   Sts<-summary(glht(Mdl, linfct = mcp))
-                   Dnt<-Sts$test$pvalues
-                   names(Dnt)<-names(Sts$test$coefficients)
-                   Lvl<- data.frame(Condition = unique(rawData[[1]]),pvalue = c(1,Dnt))
-                   Lvl$Lbl<-sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
-                   Lvl<-Lvl[,c(1,3)]
+                   arg <- list("Dunnett")
+                   names(arg) <- var
+                   mcp <- do.call(mcp, arg)
+                   Sts <- summary(glht(Mdl, linfct = mcp))
+                   Dnt <- Sts$test$pvalues
+                   names(Dnt) <- names(Sts$test$coefficients)
+                   Lvl <- data.frame(Condition = unique(rawData[[1]]),pvalue = c(1,Dnt))
+                   Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
+                   Lvl <- Lvl[, c(1, 3)]
                  } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
                } else {
                  stop("ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE).")
                }
-               colnames(Lvl)<-c(colnames(rawData)[1],i)
+               colnames(Lvl) <- c(colnames(rawData)[1], i)
                Lvl
              },simplify = FALSE)
   cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
                                      by = colnames(rawData)[1],sort = FALSE),
                 Tt, accumulate = FALSE)
-  colnames(cTt)[-1]<-sapply(colnames(rawData)[-1],
-                            function(x)paste(x,"Lbl",sep=""))
+  colnames(cTt)[-1] <- sapply(colnames(rawData)[-1],
+                              function(x)paste(x, "Lbl", sep=""))
 
   ## generate the master dataframe for plotting
-  MeanNrmMLT<-melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
-  MeanNrmMLT$id<-rownames(MeanNrmMLT)
+  MeanNrmMLT <- melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
+  MeanNrmMLT$id <- rownames(MeanNrmMLT)
 
-  SEMNrmMLT<-melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
-  SEMNrmMLT$id<-rownames(SEMNrmMLT)
+  SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
+  SEMNrmMLT$id <- rownames(SEMNrmMLT)
 
-  cTtMLT<-melt(cTt,id.vars = colnames(cTt)[1])
-  cTtMLT$id<-rownames(cTtMLT)
-  cTtMLT[1]<-as.factor(cTtMLT[[1]])
+  cTtMLT <- melt(cTt,id.vars = colnames(cTt)[1])
+  cTtMLT$id <- rownames(cTtMLT)
+  cTtMLT[1] <- as.factor(cTtMLT[[1]])
 
-  colnames(MeanNrmMLT)[3]<- "NrmMean"
-  colnames(SEMNrmMLT)[2:3]<-c("variableSEM","NrmSEM")
-  colnames(cTtMLT)[1:3]<-c(colnames(MeanNrmMLT)[1],"variableLbl","Lbl")
+  colnames(MeanNrmMLT)[3] <- "NrmMean"
+  colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "NrmSEM")
+  colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
 
-  DfPlt<-merge(MeanNrmMLT, SEMNrmMLT, by = c("id","Condition"), sort=FALSE)
-  DfPlt<-merge(DfPlt, cTtMLT, by = c("id","Condition"), sort=FALSE)
+  DfPlt <- merge(MeanNrmMLT, SEMNrmMLT, by = c("id", "Condition"), sort = FALSE)
+  DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
 
   # dump all data into a file
-  write.csv(DfPlt,file = paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.csv",sep=""),
-            quote = FALSE,na = "NA",row.names = FALSE)
+  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.csv",sep= ""),
+            quote = FALSE, na = "NA", row.names = FALSE)
 
   ## plotting
   # a function to add minor ticks
@@ -184,47 +186,47 @@ rbioplot<-function(fileName, Tp = "Tukey",
   }
 
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
-    y_axis_Mx<-y_upper_limit
-    y_axis_Mn<-y_lower_limit
-    major_tick_range<-y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
-    n_minor_ticks<-y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
+    y_axis_Mx <- y_upper_limit
+    y_axis_Mn <- y_lower_limit
+    major_tick_range <- y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
+    n_minor_ticks <- y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
   } else {
-    y_axis_Mx<-with(DfPlt, ceiling((max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5)
-    y_axis_Mn<-0
-    major_tick_range<-0.5 # default
-    n_minor_ticks<-4 # default
+    y_axis_Mx <- with(DfPlt, ceiling((max(NrmMean + NrmSEM) + 0.09) / 0.5) * 0.5)
+    y_axis_Mn <- 0
+    major_tick_range <- 0.5 # default
+    n_minor_ticks <- 4 # default
   }
 
-  loclEnv<-environment()
-  baseplt<-ggplot(data=DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
+  loclEnv <- environment()
+  baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
                   environment = loclEnv) +
-    geom_bar(position="dodge",stat="identity",color="black")+
+    geom_bar(position = "dodge", stat = "identity", color = "black") +
     geom_errorbar(aes(ymin = NrmMean - NrmSEM,ymax = NrmMean + NrmSEM),width=0.2,
                   position = position_dodge(0.9))+
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
                        labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = major_tick_range), n_minor_ticks),
                        limits = c(y_axis_Mn,y_axis_Mx))+
-    ggtitle(Title)+
-    xlab(xLabel)+
-    ylab(yLabel)+
+    ggtitle(Title) +
+    xlab(xLabel) +
+    ylab(yLabel) +
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
           plot.title = element_text(face = "bold"),
           axis.title = element_text(face = "bold"),
           legend.position = "bottom",
           axis.text.x = element_text(size = xTickLblSize, angle = xAngle, hjust = xAlign),
-          axis.text.y = element_text(size = yTickLblSize, hjust = 0.5))+
+          axis.text.y = element_text(size = yTickLblSize, hjust = 0.5)) +
     scale_fill_grey(start = 0, name = cNm[1])
 
   if (Tp == "Tukey"){
-    pltLbl<-baseplt+
+    pltLbl <- baseplt +
       geom_text(aes(y = NrmMean + NrmSEM + 0.07,label = Lbl), position = position_dodge(width = 0.9),
-                color="black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean+SEM.
+                color = "black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean+SEM.
   } else {
-    pltLbl<-baseplt+
+    pltLbl <- baseplt +
       geom_text(aes(y = NrmMean + NrmSEM + 0.06,label = Lbl), position = position_dodge(width = 0.9),
-                size=6, color="black") # font size 6 and 0.06 unit higher is good for asterisks.
+                size = 6, color = "black") # font size 6 and 0.06 unit higher is good for asterisks.
   }
 
   if (legendTtl == FALSE){
@@ -235,8 +237,8 @@ rbioplot<-function(fileName, Tp = "Tukey",
 
   if (nlevels(DfPlt$variable) == 1){
     plt<-pltLbl +
-      theme(axis.text.x = element_blank())+
-      coord_equal(ratio = 0.5)+
+      theme(axis.text.x = element_blank()) +
+      coord_equal(ratio = 0.5) +
       scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
   } else {
     plt<-pltLbl
