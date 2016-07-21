@@ -1,5 +1,5 @@
 # git_R_STATS_KBS
-RBioplot (former: frogplots) package for Storey lab to replace Sigmaplot
+RBioplot (former: frogplots) package for fully automated statistical analysis and data visualization.
 
 It is awesome.
 
