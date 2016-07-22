@@ -38,7 +38,7 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
 
-\item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.}
+\item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw data file will display as the legend title. Default is \code{FALSE}.}
 
 \item{plotWidth}{The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.}
 

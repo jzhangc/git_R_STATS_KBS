@@ -143,7 +143,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
-#' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
+#' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw data file will display as the legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param x_custom_tick_range To initiate setting the custom \code{x_upper_limit}, \code{x_lower_limit}, \code{x_major_tick_range}, \code{x_n_minor_ticks}. Default is \code{FALSE}.

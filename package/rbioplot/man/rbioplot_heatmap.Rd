@@ -5,8 +5,8 @@
 \title{rbioplot_heatmap}
 \usage{
 rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
-  fontType = "sans", tileLow = "white", tileHigh = "steelblue",
-  tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "black",
+  fontType = "sans", tileLow = "skyblue", tileHigh = "midnightblue",
+  tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
   xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
   xAlign = 0.5, yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
   legendTtl = FALSE, plotWidth = 170, plotHeight = 150)
@@ -20,11 +20,15 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
 
 \item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.}
 
+\item{tileLow}{Set the colour for the lower limit of the heatmap. Default is \code{skyblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.}
+
+\item{tileHigh}{Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.}
+
 \item{tileLbl}{Enable or disable significant notation on the tiles. Default is \code{TRUE}.}
 
 \item{tileLblSize}{Set the font size of the tile label. Default is \code{10}.}
 
-\item{tileTxtColour}{Set the colour of the on tile label. Default is \code{"black"}.}
+\item{tileTxtColour}{Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
@@ -42,7 +46,7 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
 
-\item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.}
+\item{legendTtl}{Hide/Display legend title. Default is \code{FALSE}.}
 
 \item{plotWidth}{The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.}
 

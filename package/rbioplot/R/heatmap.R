@@ -5,9 +5,11 @@
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.
+#' @param tileLow Set the colour for the lower limit of the heatmap. Default is \code{skyblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
+#' @param tileHigh Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
 #' @param tileLbl Enable or disable significant notation on the tiles. Default is \code{TRUE}.
 #' @param tileLblSize Set the font size of the tile label. Default is \code{10}.
-#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"black"}.
+#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
@@ -16,7 +18,7 @@
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
-#' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw date file will display as the legend title. Default is \code{FALSE}.
+#' @param legendTtl Hide/Display legend title. Default is \code{FALSE}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
@@ -57,7 +59,7 @@
 #' @export
 rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
                      Title = NULL,  fontType = "sans",
-                     tileLow = "white", tileHigh = "steelblue", tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "black",
+                     tileLow = "skyblue", tileHigh = "midnightblue", tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE,
@@ -172,7 +174,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
 
   if (tileLbl == TRUE){
     baseplt <- baseplt +
-      geom_text(aes(x = Condition, y = variable,label = Lbl), size = tileLblSize, color = tileTxtColour)
+      geom_text(aes(x = Condition, y = variable,label = Lbl), size = tileLblSize, color = tileTxtColour, family = fontType)
   }
 
   if (xTickItalic == TRUE){
