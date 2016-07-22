@@ -32,7 +32,7 @@
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
-#' @importFrom gtable gtable_add_cols gtable_add_grob
+#' @importFrom gtable gtable_add_cols gtable_add_grob gtable_add_rows
 #' @import ggplot2
 #' @examples
 #' \dontrun{
