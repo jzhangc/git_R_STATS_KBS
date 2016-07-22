@@ -2,11 +2,12 @@
 #'
 #' @description A function for plotting simple heatmap basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
-#' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
+#' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.
 #' @param tileLbl Enable or disable significant notation on the tiles. Default is \code{TRUE}.
-#' @param tileLblSize Set the font size of the tile lable. Default is \code{10}.
+#' @param tileLblSize Set the font size of the tile label. Default is \code{10}.
+#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"black"}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
@@ -54,9 +55,9 @@
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot_heatmap <- function(fileName, Tp = "Tukey",
+rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
                      Title = NULL,  fontType = "sans",
-                     tileLow = "white", tileHigh = "steelblue", tileLbl = TRUE, tileLblSize = 10,
+                     tileLow = "white", tileHigh = "steelblue", tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "black",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE,
@@ -147,26 +148,31 @@ rbioplot_heatmap <- function(fileName, Tp = "Tukey",
 
   ## plotting
   loclEnv <- environment()
+
   baseplt <- ggplot(data = DfPlt, aes(x = Condition, y = variable),
                     environment = loclEnv) +
     geom_tile(aes(fill = NrmMean), colour = "white") +
-    scale_fill_gradient(low = tileLow, high = tileHigh) +
+    scale_fill_gradient(low = tileLow, high = tileHigh,
+                        breaks = c(ceiling(with(DfPlt, min(NrmMean) / 0.05)) * 0.05, floor(with(DfPlt, max(NrmMean)) / 0.05) * 0.05),
+                        guide = guide_colorbar(ticks = FALSE)) +
     scale_y_discrete(expand = c(0, 0)) +
     scale_x_discrete(expand = c(0, 0)) +
     ggtitle(Title) +
     xlab(xLabel) +
     ylab(yLabel) +
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
-          panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+          panel.border = element_blank(),
+          axis.ticks = element_line(colour = "white"),
           plot.title = element_text(face = "bold", family = fontType),
           axis.title = element_text(face = "bold", family = fontType),
           legend.position = "bottom",
-          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign,
+                                     margin = margin(t = 5, r = 5, b = 3, l = 5, unit = "pt")),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
 
   if (tileLbl == TRUE){
     baseplt <- baseplt +
-      geom_text(aes(x = Condition, y = variable,label = Lbl), color = "black", size = tileLblSize)
+      geom_text(aes(x = Condition, y = variable,label = Lbl), size = tileLblSize, color = tileTxtColour)
   }
 
   if (xTickItalic == TRUE){
@@ -194,25 +200,26 @@ rbioplot_heatmap <- function(fileName, Tp = "Tukey",
     plt<-pltLbl
   }
 
-  ## add the right-side y axis
+  ## switch x axis to top
   grid.newpage()
 
   # extract gtable
   pltgtb <- ggplot_gtable(ggplot_build(plt))
 
-  # add the right side y axis
-  Aa <- which(pltgtb$layout$name == "axis-l")
+  # switch x axis to top
+  Ap <- c(subset(pltgtb$layout, name == "panel", se = t:r))
+  Aa <- which(pltgtb$layout$name == "axis-b")
   pltgtb_a <- pltgtb$grobs[[Aa]]
   axs <- pltgtb_a$children[[2]]
-  axs$widths <- rev(axs$widths)
+  axs$heights <- rev(axs$heights)
   axs$grobs <- rev(axs$grobs)
-  axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-  Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-  pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-  pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+  axs$grobs[[2]]$y <- axs$grobs[[2]]$y - unit(1, "npc") + unit(0.15, "cm")
+  pltgtb <- gtable_add_rows(pltgtb, pltgtb$heights[pltgtb$layout[Aa, ]$l], Ap$t - 1)
+  pltgtb <- gtable_add_grob(pltgtb, axs, l = Ap$l, t = Ap$t, r = Ap$r)
+  pltgtb <- pltgtb[-(Ap$b + 2), ]
 
   # export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep=""), plot = pltgtb,
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.heatmap.pdf", sep=""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
-  grid.draw(pltgtb) # preview
+  grid.draw(pltgtb)
 }

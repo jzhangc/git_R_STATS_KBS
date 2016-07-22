@@ -4,17 +4,17 @@
 \alias{rbioplot_heatmap}
 \title{rbioplot_heatmap}
 \usage{
-rbioplot_heatmap(fileName, Tp = "Tukey", Title = NULL, fontType = "sans",
-  tileLow = "white", tileHigh = "steelblue", tileLbl = TRUE,
-  tileLblSize = 10, xLabel = NULL, xTickLblSize = 10,
-  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, yLabel = NULL,
-  yTickLblSize = 10, yTickItalic = FALSE, legendTtl = FALSE,
-  plotWidth = 170, plotHeight = 150)
+rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
+  fontType = "sans", tileLow = "white", tileHigh = "steelblue",
+  tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "black",
+  xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
+  xAlign = 0.5, yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+  legendTtl = FALSE, plotWidth = 170, plotHeight = 150)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
-\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".}
+\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".}
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
@@ -22,7 +22,9 @@ rbioplot_heatmap(fileName, Tp = "Tukey", Title = NULL, fontType = "sans",
 
 \item{tileLbl}{Enable or disable significant notation on the tiles. Default is \code{TRUE}.}
 
-\item{tileLblSize}{Set the font size of the tile lable. Default is \code{10}.}
+\item{tileLblSize}{Set the font size of the tile label. Default is \code{10}.}
+
+\item{tileTxtColour}{Set the colour of the on tile label. Default is \code{"black"}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
