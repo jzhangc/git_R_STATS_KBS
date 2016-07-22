@@ -29,7 +29,7 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
 
 \item{tileLblSize}{Set the font size of the tile label. Default is \code{10}.}
 
-\item{tileTxtColour}{Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.}
+\item{tileTxtColour}{Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 

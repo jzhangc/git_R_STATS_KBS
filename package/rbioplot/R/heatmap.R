@@ -9,7 +9,7 @@
 #' @param tileHigh Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param tileLbl Enable or disable significant notation on the tiles. Default is \code{TRUE}.
 #' @param tileLblSize Set the font size of the tile label. Default is \code{10}.
-#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
+#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
