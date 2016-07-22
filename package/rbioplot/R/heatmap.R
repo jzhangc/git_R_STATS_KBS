@@ -26,7 +26,7 @@
 #' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.
-#' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
+#' @return Outputs a \code{.csv} file with detailed metrics for the plot, including normalized mean and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp

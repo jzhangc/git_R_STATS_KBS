@@ -63,7 +63,7 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
 \item{y_n_minor_ticks}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.}
 }
 \value{
-Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
+Outputs a \code{.csv} file with detailed metrics for the plot, including normalized mean and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 }
 \description{
 A function for plotting simple heatmap basing on the statistical analysis of choice.
