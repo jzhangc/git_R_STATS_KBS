@@ -20,7 +20,7 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
-\item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.}
+\item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 

@@ -134,7 +134,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
-#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.
+#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.

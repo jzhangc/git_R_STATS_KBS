@@ -24,7 +24,7 @@ revsort<-function(x){
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
-#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.
+#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.

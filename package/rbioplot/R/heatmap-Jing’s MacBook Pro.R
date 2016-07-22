@@ -4,9 +4,9 @@
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
-#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
-#' @param tileLow Set the colour for the lower limit of the heatmap. Default is \code{skyblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
-#' @param tileHigh Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
+#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=69}.
+#' @param tileLow Set the colour for the lower limit of the heatmap. Default is \code{skyblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
+#' @param tileHigh Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
 #' @param tileLbl Enable or disable significant notation on the tiles. Default is \code{TRUE}.
 #' @param tileLblSize Set the font size of the tile label. Default is \code{10}.
 #' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
@@ -19,7 +19,6 @@
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
 #' @param legendTtl Hide/Display legend title. Default is \code{FALSE}.
-#' @param legendPos Set the legend position. Options are \code{"top"}, \code{"bottom"}, \code{"left"} and \code{"right"}. Default is \code{"bottom"}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
@@ -32,30 +31,13 @@
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
-#' @importFrom gtable gtable_add_cols gtable_add_grob
+#' @importFrom gtable gtable_add_cols gtable_add_grob gtable_add_rows
 #' @import ggplot2
 #' @examples
 #' \dontrun{
-#' rbioplot("data.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level")
+#' rbioplot_heatmap("data.csv", Tp = "Tukey", tileLow = "white", tileHigh = "blue")
 #'
-#' rbioplot("data2.csv", Tp = "t-test", xAngle = -90,
-#' xAlign=0,yLabel="Relative fluorescence level")
-#'
-#' rbioplot("data3.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level")
-#'
-#' rbioplot("data4.csv", Tp = "Dunnett",
-#' yLabel = "Relative fluorescence level")
-#'
-#' rbioplot("data5.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level", plotWidth = 300)
-#'
-#' rbioplot("data8.csv", Tp = "Tukey", errorbar = "SD"
-#' yLabel = "Relative fluorescence level",
-#' y_custom_tick_range = TRUE, y_upper_limit = 4,
-#' y_lower_limit = 0, y_major_tick_range = 1,
-#' y_n_minor_ticks = 4)
+#' rbioplot_heatmap("data2.csv", Tp = "t-test", xAngle = -90, tileLbl = FALSE)
 #' }
 #' @export
 rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
@@ -63,7 +45,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
                      tileLow = "skyblue", tileHigh = "midnightblue", tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                     legendTtl = FALSE, legendPos = "bottom",
+                     legendTtl = FALSE,
                      plotWidth = 170, plotHeight = 150){
 
   ## load file
@@ -140,7 +122,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
   cTtMLT$id <- rownames(cTtMLT)
   cTtMLT[1] <- as.factor(cTtMLT[[1]])
 
-  colnames(MeanNrmMLT)[3] <- "Fold.Change"
+  colnames(MeanNrmMLT)[3] <- "Fold_Change"
   colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
 
   DfPlt <- merge(MeanNrmMLT, cTtMLT, by = c("id", "Condition"), sort = FALSE)
@@ -154,9 +136,9 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
 
   baseplt <- ggplot(data = DfPlt, aes(x = Condition, y = variable),
                     environment = loclEnv) +
-    geom_tile(aes(fill = Fold.Change), colour = "white") +
+    geom_tile(aes(fill = Fold_Change), colour = "white") +
     scale_fill_gradient(low = tileLow, high = tileHigh,
-                        breaks = c(ceiling(with(DfPlt, min(Fold.Change) / 0.05)) * 0.05, floor(with(DfPlt, max(Fold.Change)) / 0.05) * 0.05),
+                        breaks = c(ceiling(with(DfPlt, min(Fold_Change) / 0.05)) * 0.05, floor(with(DfPlt, max(Fold_Change)) / 0.05) * 0.05),
                         guide = guide_colorbar(ticks = FALSE)) +
     scale_y_discrete(expand = c(0, 0)) +
     scale_x_discrete(expand = c(0, 0)) +
@@ -168,7 +150,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
           axis.ticks = element_line(colour = "white"),
           plot.title = element_text(face = "bold", family = fontType),
           axis.title = element_text(face = "bold", family = fontType),
-          legend.position = legendPos,
+          legend.position = "bottom",
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign,
                                      margin = margin(t = 5, r = 5, b = 3, l = 5, unit = "pt")),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
