@@ -6,6 +6,12 @@ It is awesome.
 Change Log
 
 
+0.2.5
+
+
+- RBioplot now supports heatmap with the new function rbioplot_heatmap()
+
+
 
 0.2.4
 
