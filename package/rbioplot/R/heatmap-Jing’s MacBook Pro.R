@@ -9,8 +9,7 @@
 #' @param tileHigh Set the colour for the upper limit of the heatmap. Default is \code{midnightblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param tileLbl Enable or disable significant notation on the tiles. Default is \code{TRUE}.
 #' @param tileLblSize Set the font size of the tile label. Default is \code{10}.
-#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
-#' @param tileLblPos Set the position of the tile lables. Options are \code{0}, \code{0.5} and \code{1}. Default is \code{0.5}.
+#' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=69}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
@@ -33,7 +32,7 @@
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
-#' @importFrom gtable gtable_add_cols gtable_add_grob gtable_add_rows
+#' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @import ggplot2
 #' @examples
 #' \dontrun{
@@ -61,8 +60,7 @@
 #' @export
 rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
                      Title = NULL,  fontType = "sans",
-                     tileLow = "skyblue", tileHigh = "midnightblue",
-                     tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
+                     tileLow = "skyblue", tileHigh = "midnightblue", tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE, legendPos = "bottom",
@@ -177,8 +175,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
 
   if (tileLbl == TRUE){
     baseplt <- baseplt +
-      geom_text(aes(x = Condition, y = variable,label = Lbl), size = tileLblSize, vjust = tileLblPos,
-                color = tileTxtColour, family = fontType)
+      geom_text(aes(x = Condition, y = variable,label = Lbl), size = tileLblSize, color = tileTxtColour, family = fontType)
   }
 
   if (xTickItalic == TRUE){
