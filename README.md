@@ -17,14 +17,14 @@ Change Log
 
 - It is now possible to use standard deviation (SD) as error bar via the new argument:	errorbar
 
-	errorbar: Set the type of errorbar. Options are standard error of mean ("SEM"), or standard deviation ("SD"). Default is "SEM".
+		errorbar: Set the type of errorbar. Options are standard error of mean ("SEM"), or standard deviation ("SD"). Default is "SEM".
 
 	Functions with errorbar argument are: rbioplot(), rbioplot_curve(), autorange_bar_y(), autorange_curve()
 
 
 - It is now possible to change the font type for the graphs via the new argument: fontType
 
-	fontType: The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: http://kenstoreylab.com/?page_id=69
+		fontType: The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: http://kenstoreylab.com/?page_id=69
 
 	Functions with fontType argument are: rbioplot(), rbioplot_curve()
 
@@ -32,16 +32,16 @@ Change Log
 
 - It is now possible to change the font size for ticks via the new arguments: xTickLblSize, yTickLblSize
 
-	xTickLblSize: Font size of x axis ticks. Default is 10.
-	yTickLblSize: Font size of x axis ticks. Default is 10.
+		xTickLblSize: Font size of x axis ticks. Default is 10.
+		yTickLblSize: Font size of x axis ticks. Default is 10.
 
 	Functions with fontType argument are: rbioplot(), rbioplot_curve()
 
 
 - It is now possible to set tick font to italic via the new arguments: xTickItalic, yTickItalic
 
-	xTickItalic: Set x axis tick font to italic. Default is FALSE.
-	yTickItalic: Set y axis tick font to italic. Default is FALSE.
+		xTickItalic: Set x axis tick font to italic. Default is FALSE.
+		yTickItalic: Set y axis tick font to italic. Default is FALSE.
 
 	Functions with fontType argument are: rbioplot(), rbioplot_curve()
 
@@ -56,22 +56,22 @@ Along with the necessary name change for some functions, I have also added some 
 
 - Function name change (old -> new)	*Note that the usage of those functions are unchanged*
 
-	frogstats -> rbiostats
-	frogplots -> rbioplot
-	frogplots_curve -> rbioplot_cruve
+		frogstats -> rbiostats
+		frogplots -> rbioplot
+		frogplots_curve -> rbioplot_cruve
 	
 - New features and changes
 	
-	rbioplot_curve: 
-		- the function now detects the number of end numbers (i.e., if the data has replicates or not) and determines if error bar is needed for plotting.
-		- the function now automatically assigns different line patterns for each experimental group. 
+		rbioplot_curve(): 
+			- the function now detects the number of end numbers (i.e., if the data has replicates or not) and determines if error bar is needed for plotting.
+			- the function now automatically assigns different line patterns for each experimental group. 
 
-	autorange_curve:
-		-consistent with the changes to rbioplot_curve, necessary adjustments have been made to make sure proper space management of the graph
+		autorange_curve():
+			-consistent with the changes to rbioplot_curve, necessary adjustments have been made to make sure proper space management of the graph
 
 - Other
 	
-	The contact email address specific to the program is changed to jzhangcad@gmail.com. (Please note that this will not affect my current Gmail address, i.e., I am NOT switching my main email address to this)
+		The contact email address specific to the program is changed to jzhangcad@gmail.com. (Please note that this will not affect my current Gmail address, i.e., I am NOT switching my main email address to this)
 
 
 
@@ -92,15 +92,15 @@ Bug fixes
 
 - New functions:
  
-	frogplots_curve(): A simple to use function for plotting joining-point curves with continuous x and y axises values.
+		frogplots_curve(): A simple to use function for plotting joining-point curves with continuous x and y axises values.
  
-	autorange_bar_y(): A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
+		autorange_bar_y(): A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
 
-	autorange_curve(): A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
+		autorange_curve(): A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
  
-	nat_dvsr(): A simple to use function to find all divisors for an integer number.
+		nat_dvsr(): A simple to use function to find all divisors for an integer number.
  
-	all_dvsr(): A function to find all divisors for any types of number.
+		all_dvsr(): A function to find all divisors for any types of number.
  
  
 - Changes to existing functions:
