@@ -150,4 +150,5 @@ Along with the necessary name change for some functions, some minor new features
 
 
 0.1.0
-	Initial release
+
+- Initial release
