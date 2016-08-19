@@ -6,6 +6,7 @@ It is awesome.
 Change Log
 
 0.3.0 (beta - more things to be added)
+
 - It is now possible to change the width of the errorbar with the argument errorbarWidth. Applicable functions: rbioplot(), rbioplot_curve().
 
 		errorbarWidth: Set the width for errorbar. Defualt is 0.2.
@@ -18,7 +19,9 @@ Change Log
 0.2.5
 
 
-- RBioplot now supports heatmap with the new function rbioplot_heatmap()
+- RBioplot now supports heatmap with the new function rbioplot_heatmap().
+
+- Bug fixes.
 
 
 
@@ -54,7 +57,7 @@ Change Log
 
 	Functions with fontType argument are: rbioplot(), rbioplot_curve()
 
-
+- Bug fixes.
 
 
 0.2.3
@@ -78,6 +81,8 @@ Along with the necessary name change for some functions, some minor new features
 		autorange_curve():
 			-consistent with the changes to rbioplot_curve, necessary adjustments have been made to make sure proper space management of the graph
 
+- Bug fixes.
+
 - Other
 	
 		The contact email address specific to the program is changed to jzhangcad@gmail.com. (Please note that this will not affect my current Gmail address, i.e., I am NOT switching my main email address to this)
@@ -87,13 +92,13 @@ Along with the necessary name change for some functions, some minor new features
 
 0.2.2
 
-Bug fixes
+- Bug fixes.
 
 
 
 0.2.1
 
-Bug fixes
+- Bug fixes.
 
 
 
@@ -141,7 +146,7 @@ Bug fixes
  
 		4. Small fixes, etc. 
 
-
+- Bug fixes.
 
 
 0.1.0
