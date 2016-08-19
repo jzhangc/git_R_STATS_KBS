@@ -19,7 +19,7 @@ Change Log
 
 		rmCntl Remove the first column (i.e., control). Default is FALSE.
 
-- Buf fixes.
+- Bug fixes.
 
 
 0.2.5
