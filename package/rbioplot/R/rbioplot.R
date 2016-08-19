@@ -259,7 +259,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
   if (Tp == "Tukey"){
     pltLbl <- baseplt +
       geom_text(aes(y = NrmMean + NrmErr + 0.07,label = Lbl), position = position_dodge(width = 0.9),
-                color = "black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean+SEM.
+                color = "black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean + SEM.
   } else {
     pltLbl <- baseplt +
       geom_text(aes(y = NrmMean + NrmErr + 0.06,label = Lbl), position = position_dodge(width = 0.9),
@@ -299,7 +299,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
   pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
 
   # export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep=""), plot = pltgtb,
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   grid.draw(pltgtb) # preview
 }
