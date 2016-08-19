@@ -3,7 +3,6 @@
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
-#' @param errorbarwidth Set the width for errorbar. Defualt is \code{0.2}.
 #' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
 #' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
@@ -135,6 +134,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbarwidth Set the width for errorbar. Defualt is \code{0.2}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
