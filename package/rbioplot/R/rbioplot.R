@@ -74,7 +74,7 @@ revsort<-function(x){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey",
-                     Title = NULL, errorbar = "SEM", errorbarwidth = 0.2, fontType = "sans",
+                     Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE,
