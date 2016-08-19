@@ -5,6 +5,11 @@ It is awesome.
 
 Change Log
 
+0.2.6 (beta - more things to be added)
+- It is now possible to change the width of the errorbar with the argument errorbarwidth.
+
+		errorbarwidth: Set the width for errorbar. Defualt is 0.2.
+
 
 0.2.5
 
