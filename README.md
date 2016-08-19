@@ -57,7 +57,7 @@ Change Log
 
 The program has a new name: RBioplot.
 
-Along with the necessary name change for some functions, I have also added some minor new features to the existing functions. Please see the following:
+Along with the necessary name change for some functions, some minor new features have also been added to the existing functions. 
 
 - Function name change (old -> new)	*Note that the usage of those functions are unchanged*
 
