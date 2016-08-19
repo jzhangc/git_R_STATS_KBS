@@ -3,6 +3,7 @@
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbarwidth Set the width for errorbar. Defualt is \code{0.2}.
 #' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
 #' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
@@ -169,7 +170,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #'           x_major_tick_range = 5)
 #' }
 #' @export
-rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", fontType = "sans",
+rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", errorbarwidth = 0.2, fontType = "sans",
                          xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                          yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                          legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
@@ -279,7 +280,7 @@ rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", fontType = "s
     geom_line()+
     geom_point()+
     geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotErr), 0, plotErr),
-                      ymax = plotMean + ifelse(is.na(plotErr), 0, plotErr)), width = 0.2,
+                      ymax = plotMean + ifelse(is.na(plotErr), 0, plotErr)), width = errorbarwidth,
                   linetype = "solid")+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),

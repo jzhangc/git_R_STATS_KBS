@@ -5,11 +5,12 @@
 \title{rbioplot}
 \usage{
 rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
-  fontType = "sans", xLabel = NULL, xTickLblSize = 10,
-  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, yLabel = NULL,
-  yTickLblSize = 10, yTickItalic = FALSE, legendTtl = FALSE,
-  plotWidth = 170, plotHeight = 150, y_custom_tick_range = FALSE,
-  y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
+  errorbarwidth = 0.2, fontType = "sans", xLabel = NULL,
+  xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+  yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+  legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
+  y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
+  y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -19,6 +20,8 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
+
+\item{errorbarwidth}{Set the width for errorbar. Default is \code{0.2}.}
 
 \item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.}
 

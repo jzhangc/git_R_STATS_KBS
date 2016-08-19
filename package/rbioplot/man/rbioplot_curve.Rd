@@ -5,13 +5,13 @@
 \title{rbioplot_curve}
 \usage{
 rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
-  fontType = "sans", xLabel = NULL, xTickLblSize = 10,
-  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, yLabel = NULL,
-  yTickLblSize = 10, yTickItalic = FALSE, legendTtl = FALSE,
-  plotWidth = 170, plotHeight = 150, x_custom_tick_range = FALSE,
-  x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
-  y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
-  y_major_tick_range, y_n_minor_ticks = 4)
+  errorbarwidth = 0.2, fontType = "sans", xLabel = NULL,
+  xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+  yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+  legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
+  x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit,
+  x_major_tick_range, x_n_minor_ticks = 0, y_custom_tick_range = FALSE,
+  y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}

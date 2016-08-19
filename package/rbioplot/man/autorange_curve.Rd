@@ -19,6 +19,8 @@ autorange_curve(fileName, errorbar = "SEM", x_nMajorTicks = 5,
 \item{y_nMajorTicks}{Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.}
 
 \item{y_DfltZero}{When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.}
+
+\item{errorbarwidth}{Set the width for errorbar. Defualt is \code{0.2}.}
 }
 \value{
 A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.

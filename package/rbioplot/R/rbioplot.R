@@ -24,6 +24,7 @@ revsort<-function(x){
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbarwidth Set the width for errorbar. Default is \code{0.2}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
@@ -73,7 +74,7 @@ revsort<-function(x){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey",
-                     Title = NULL, errorbar = "SEM", fontType = "sans",
+                     Title = NULL, errorbar = "SEM", errorbarwidth = 0.2, fontType = "sans",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                      legendTtl = FALSE,
@@ -227,7 +228,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
   baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
                   environment = loclEnv) +
     geom_bar(position = "dodge", stat = "identity", color = "black") +
-    geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr),width=0.2,
+    geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = errorbarwidth,
                   position = position_dodge(0.9))+
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
