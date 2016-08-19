@@ -4,7 +4,7 @@
 \alias{rbioplot_heatmap}
 \title{rbioplot_heatmap}
 \usage{
-rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
+rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
   fontType = "sans", tileLow = "skyblue", tileHigh = "midnightblue",
   tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
   tileLblPos = 0.5, xLabel = NULL, xTickLblSize = 10,
@@ -16,6 +16,8 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", Title = NULL,
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
 \item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".}
+
+\item{rmCntl}{Remove the first column (i.e., control). Default is \code{FALSE}.}
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 

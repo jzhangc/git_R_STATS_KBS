@@ -3,6 +3,7 @@
 #' @description A function for plotting simple heatmap basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".
+#' @param rmCntl Remove the first column (i.e., control). Default is \code{FALSE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param tileLow Set the colour for the lower limit of the heatmap. Default is \code{skyblue}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
@@ -59,7 +60,7 @@
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
+rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                      Title = NULL,  fontType = "sans",
                      tileLow = "skyblue", tileHigh = "midnightblue",
                      tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
@@ -146,6 +147,11 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett",
   colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
 
   DfPlt <- merge(MeanNrmMLT, cTtMLT, by = c("id", "Condition"), sort = FALSE)
+
+  if (rmCntl == TRUE){
+    DfPlt <- DfPlt[DfPlt$Condition %in% levels(DfPlt$Condition)[-1], ]
+    DfPlt$Condition <- factor(DfPlt$Condition, levels = unique(DfPlt$Condition))
+  }
 
   # dump all data into a file
   write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.heatmap.csv",sep= ""),
