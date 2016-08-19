@@ -5,7 +5,7 @@ It is awesome.
 
 Change Log
 
-0.2.6 (beta - more things to be added)
+0.3.0 (beta - more things to be added)
 - It is now possible to change the width of the errorbar with the argument errorbarWidth. Applicable functions: rbioplot(), rbioplot_curve().
 
 		errorbarWidth: Set the width for errorbar. Defualt is 0.2.
