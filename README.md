@@ -6,9 +6,13 @@ It is awesome.
 Change Log
 
 0.2.6 (beta - more things to be added)
-- It is now possible to change the width of the errorbar with the argument errorbarwidth. Applicable functions: rbioplot(), rbioplot_curve().
+- It is now possible to change the width of the errorbar with the argument errorbarWidth. Applicable functions: rbioplot(), rbioplot_curve().
 
-		errorbarwidth: Set the width for errorbar. Defualt is 0.2.
+		errorbarWidth: Set the width for errorbar. Defualt is 0.2.
+
+- it is now possible to change the size of the symbols for curve plots with the argument symbolSize. Application function: rbioplot_curve().
+
+		symbolSize: Set the size of symbols. Default is 2.
 
 
 0.2.5
