@@ -15,6 +15,12 @@ Change Log
 
 		symbolSize: Set the size of symbols. Default is 2.
 
+- It is now possible to remove the first column of the heatmap with the argument rmCntl. Applicable function: rbioplot_heatmap().
+
+		rmCntl Remove the first column (i.e., control). Default is FALSE.
+
+- Buf fixes.
+
 
 0.2.5
 
