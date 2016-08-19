@@ -5,7 +5,7 @@ It is awesome.
 
 Change Log
 
-0.3.0 (beta - more things to be added)
+0.3.0
 
 - It is now possible to change the width of the errorbar with the argument errorbarWidth. Applicable functions: rbioplot(), rbioplot_curve().
 
@@ -14,6 +14,12 @@ Change Log
 - it is now possible to change the size of the symbols for curve plots with the argument symbolSize. Application function: rbioplot_curve().
 
 		symbolSize: Set the size of symbols. Default is 2.
+
+- It is now possible to remove the first column of the heatmap with the argument rmCntl. Applicable function: rbioplot_heatmap().
+
+		rmCntl Remove the first column (i.e., control). Default is FALSE.
+
+- Buf fixes.
 
 
 0.2.5
@@ -150,4 +156,5 @@ Along with the necessary name change for some functions, some minor new features
 
 
 0.1.0
-	Initial release
+
+- Initial release.
