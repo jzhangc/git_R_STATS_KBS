@@ -5,7 +5,7 @@
 \title{rbioplot_curve}
 \usage{
 rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
-  errorbarwidth = 0.2, fontType = "sans", xLabel = NULL,
+  errorbarWidth = 0.2, fontType = "sans", symbolSize = 2, xLabel = NULL,
   xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
   yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
   legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
@@ -20,9 +20,11 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
-\item{errorbarwidth}{Set the width for errorbar. Defualt is \code{0.2}.}
+\item{errorbarWidth}{Set the width for errorbar. Default is \code{0.2}.}
 
 \item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.}
+
+\item{symbolSize}{Set the size of symbols. Default is \code{2}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 

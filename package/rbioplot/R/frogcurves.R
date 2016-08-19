@@ -134,7 +134,8 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
-#' @param errorbarwidth Set the width for errorbar. Defualt is \code{0.2}.
+#' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
+#' @param symbolSize Set the size of symbols. Default is \code{2}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
@@ -170,7 +171,8 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 #'           x_major_tick_range = 5)
 #' }
 #' @export
-rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", errorbarwidth = 0.2, fontType = "sans",
+rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
+                         symbolSize = 2,
                          xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                          yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                          legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
@@ -278,9 +280,9 @@ rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", errorbarwidth
   baseplt<-ggplot(data=DfPlt, aes(x = variable, y = plotMean, shape = Condition, linetype = Condition),
                   environment = loclEnv)+
     geom_line()+
-    geom_point()+
+    geom_point(size = symbolSize)+
     geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotErr), 0, plotErr),
-                      ymax = plotMean + ifelse(is.na(plotErr), 0, plotErr)), width = errorbarwidth,
+                      ymax = plotMean + ifelse(is.na(plotErr), 0, plotErr)), width = errorbarWidth,
                   linetype = "solid")+
     scale_x_continuous(expand = c(0,0),
                        breaks = seq(x_axis_Mn, x_axis_Mx, by = x_mj_range / (x_n_mnr + 1)),
@@ -300,7 +302,7 @@ rbioplot_curve<-function(fileName, Title = NULL, errorbar = "SEM", errorbarwidth
           legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))+
-    scale_shape_manual(name = cNm[1],values = c(5:(5 + length(unique(DfPlt$Condition)))))+
+    scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(DfPlt$Condition)))))+
     scale_linetype_manual(name = cNm[1],values = c(1:(1 + length(unique(DfPlt$Condition)))))
 
   if (xTickItalic == TRUE){

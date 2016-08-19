@@ -21,8 +21,6 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
-\item{errorbarwidth}{Set the width for errorbar. Default is \code{0.2}.}
-
 \item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.}
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
@@ -56,6 +54,8 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 \item{y_major_tick_range}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_bar_y}}.}
 
 \item{y_n_minor_ticks}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.}
+
+\item{errorbarWidth}{Set the width for errorbar. Default is \code{0.2}.}
 }
 \value{
 Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
