@@ -11,7 +11,7 @@ Change Log
 
 		errorbarWidth: Set the width for errorbar. Defualt is 0.2.
 
-- it is now possible to change the size of the symbols for curve plots with the argument symbolSize. Application function: rbioplot_curve().
+- it is now possible to change the size of the symbols for curve plots with the argument symbolSize. Applicable function: rbioplot_curve().
 
 		symbolSize: Set the size of symbols. Default is 2.
 
