@@ -8,13 +8,13 @@ autorange_bar_y(fileName, Nrm = TRUE, errorbar = "SEM", nMajorTicks = 5,
   DfltZero = TRUE)
 }
 \arguments{
-\item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{frogplots}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
+\item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
 \item{Nrm}{When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.}
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
-\item{nMajorTicks}{Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{frogplots}}.}
+\item{nMajorTicks}{Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot}}.}
 
 \item{DfltZero}{When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.}
 }
