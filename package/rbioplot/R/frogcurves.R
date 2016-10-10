@@ -78,7 +78,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
   ## calculate optimal lower/upper limits (x_lw_lmt/x_upr_lmt) and major tick range (x_rd_intvl) for x axis
   # setting the raw x lower/upper limit
   ifelse(x_DfltZero == FALSE, x_Mn <- with(DfPlt, floor(min(unique(variable)) / 0.5) * 0.5), x_Mn <- 0)
-  x_Mx<-with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)
+  x_Mx <- with(DfPlt, ceiling((max(unique(variable)) + 0.02) / 0.5) * 0.5)
 
   x_Rge <- x_Mx - x_Mn
   x_raw_intvl <- x_Rge / x_nMajorTicks # nMjoarTicks: excluding 0 (or the ymin)
