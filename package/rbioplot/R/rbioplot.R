@@ -82,7 +82,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
                      y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
-  rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
 
   ## normalize everything to control as 1

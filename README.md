@@ -4,6 +4,10 @@ RBioplot (former: frogplots) package for fully automated statistical analysis an
 It is awesome.
 
 Change Log
+0.3.1 - 0.3.2
+
+- Bug fixes
+
 
 0.3.0
 
