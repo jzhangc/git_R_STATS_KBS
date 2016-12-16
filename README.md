@@ -3,6 +3,12 @@ RBioplot (former: frogplots) package for fully automated statistical analysis an
 
 It is awesome.
 
+To install:
+    
+    devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot")   
+
+
+
 Change Log
 0.3.1 - 0.3.2
 
