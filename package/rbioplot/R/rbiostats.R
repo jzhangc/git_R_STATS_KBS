@@ -24,7 +24,7 @@ rbiostats<-function(fileName,Tp="ANOVA"){
   rawData[[1]]<-factor(rawData[[1]],levels=c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
   cNm<-colnames(rawData)
-  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""),append=FALSE)
+  sink(file=paste(substr(noquote(fileName),1,nchar(fileName)-4),".stats.txt",sep=""), append=FALSE)
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
                function(i)tapply(rawData[[i]],rawData[1],function(x)shapiro.test(x)),
