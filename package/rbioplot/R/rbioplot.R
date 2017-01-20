@@ -10,10 +10,10 @@
 #' ab
 #' }
 #' @export
-revsort<-function(x){
-  uLst<-unlist(strsplit(x, "-"))
-  uLst<-uLst[c(2,1)]
-  uLst<-paste(uLst,collapse = "-")
+revsort <- function(x){
+  uLst <- unlist(strsplit(x, "-"))
+  uLst <- uLst[c(2,1)]
+  uLst <- paste(uLst,collapse = "-")
   uLst
 }
 
@@ -83,7 +83,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
 
   ## load file
   rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE)
-  rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
+  rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
 
   ## normalize everything to control as 1
   Mean <- sapply(colnames(rawData)[-1],
@@ -92,7 +92,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
   Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
   MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
                                function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
-                        Condition = factor(rownames(Mean), levels = c(rownames(Mean))))
+                        Condition = factor(rownames(Mean), levels = c(rownames(Mean)))) # keep the correct factor level order with levels=c().
 
   if (errorbar == "SEM"){
 
@@ -103,7 +103,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
     SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
     SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
                                 function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                         Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
+                         Condition = factor(rownames(SEM), levels = c(rownames(SEM)))) # keep the correct factor level order with levels=c().
     colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
                                                           function(x)paste(x, "SEM", sep=""))
 
@@ -143,8 +143,8 @@ rbioplot <- function(fileName, Tp = "Tukey",
                  if (nlevels(rawData[[1]]) > 2){
                    Sts <- TukeyHSD(Mdl)
                    Tkp <- Sts[[1]][,4]
-                   names(Tkp) <- sapply(names(Tkp), function(j)revsort(j))
-                   Tkp <- multcompLetters(Tkp)["Letters"]
+                   names(Tkp) <- sapply(names(Tkp), function(j)revsort(j)) # change orders (from b-a to a-b)
+                   Tkp <- multcompLetters(Tkp)["Letters"] # from the multcompView package.
                    Lbl <- names(Tkp[["Letters"]])
                    Lvl <- data.frame(Lbl, Tkp[["Letters"]],
                                      stringsAsFactors = FALSE)
@@ -170,20 +170,20 @@ rbioplot <- function(fileName, Tp = "Tukey",
              },simplify = FALSE)
   cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
                                      by = colnames(rawData)[1],sort = FALSE),
-                Tt, accumulate = FALSE)
+                Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
   colnames(cTt)[-1] <- sapply(colnames(rawData)[-1],
                               function(x)paste(x, "Lbl", sep=""))
 
   ## generate the master dataframe for plotting
-  MeanNrmMLT <- melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
+  MeanNrmMLT <- melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))]) # melt mean
   MeanNrmMLT$id <- rownames(MeanNrmMLT)
 
-  cTtMLT <- melt(cTt,id.vars = colnames(cTt)[1])
+  cTtMLT <- melt(cTt,id.vars = colnames(cTt)[1]) # melt labels
   cTtMLT$id <- rownames(cTtMLT)
   cTtMLT[1] <- as.factor(cTtMLT[[1]])
 
-  colnames(MeanNrmMLT)[3] <- "NrmMean"
-  colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
+  colnames(MeanNrmMLT)[3] <- "NrmMean" # give unique variable names
+  colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl") # same as above and make sure to have the same "Condition" variable name for merging
 
   if (errorbar == "SEM"){
     SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
@@ -244,7 +244,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
           legend.position = "bottom",
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
-    scale_fill_grey(start = 0, name = cNm[1])
+    scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
 
   if (xTickItalic == TRUE){
     baseplt <- baseplt +
