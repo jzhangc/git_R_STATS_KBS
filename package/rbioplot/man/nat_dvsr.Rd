@@ -2,7 +2,7 @@
 % Please edit documentation in R/axisrange.R
 \name{nat_dvsr}
 \alias{nat_dvsr}
-\title{int_dvsr}
+\title{nat_dvsr}
 \usage{
 nat_dvsr(x)
 }
@@ -17,7 +17,7 @@ A simple to use function to find all divisors for an integer number.
 }
 \examples{
 \dontrun{
-int_dvsr(10)
+nat_dvsr(10)
 }
 }
 

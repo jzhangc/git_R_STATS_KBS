@@ -19,6 +19,7 @@ Change Log
       - The hyphen issue resolved.
       - Users now can choose to hide the righ hand y-axis
       - Users now can choose to avoid setting control to 1 for rbioplot() function
+      - Bug fixes
     
     0.3.3
       - Backend updates for next feature update.
