@@ -17,7 +17,7 @@ Change Log
 
     0.3.4
       - Characters considered as special operators now can be included in the target names for the stats, histogram and heatmap modules, and will be displayed properly in the figures.
-      - Users now can choose to avoid setting control to 1 for rbioplot() function, by argument “Nrm = FALSE”.
+      - Users now can choose to avoid setting control to 1 for rbioplot() function, by setting  "Nrm = FALSE”.
       - Bug fixes
     
     0.3.3
