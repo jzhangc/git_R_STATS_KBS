@@ -16,7 +16,7 @@ It is awesome.
 Change Log
 
     0.3.4
-      - Character considered as special operators now can be included in the target names for the histogram and heatmap moduels, and will be displayed properly in the figures.
+      - Characters considered as special operators now can be included in the target names for the histogram and heatmap modules, and will be displayed properly in the figures.
       - Users now can choose to avoid setting control to 1 for rbioplot() function
       - Bug fixes
     
