@@ -20,7 +20,7 @@
 #' }
 #' @export
 rbiostats <- function(fileName, Tp = "ANOVA"){
-  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE)
+  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]], levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "type-in" order
 
   cNm <- colnames(rawData)
@@ -28,14 +28,15 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
   # below: nchar() counts the number of the characters: note the diference between length(),
   # which counts "how many" the *whole* character strings.
   # ALSO, to use substr(), the object has to have "no quote" - use the function noquote() to achieve.
-  sink(file = paste(substr(noquote(fileName),1,nchar(fileName)-4), ".stats.txt", sep = ""), append = FALSE)
+  sink(file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".stats.txt", sep = ""), append = FALSE)
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
-               function(i)tapply(rawData[[i]],rawData[1],function(x)shapiro.test(x)),
+               function(i)tapply(rawData[[i]], rawData[1], function(x)shapiro.test(x)),
                simplify = FALSE))
   # below: stats
   print(sapply(cNm[-1], function(x){
-    fml <- paste(x,cNm[1],sep="~")
+    quoteName <- paste0("`", x, "`", sep = "")
+    fml <- paste(quoteName, cNm[1], sep = "~")
     Mdl <- aov(formula(fml), data = rawData) # fit an analysis of variance model by a call to lm(), applicable for both balanced or unbalanced data set.
     # below: make sure to chain if else in this way!
     if (Tp == "t-test"){

@@ -62,42 +62,42 @@ all_dvsr <- function(x, i = 0){
 #' }
 #' @export
 autorange_bar_y <- function(fileName, Nrm = TRUE,
-                          errorbar = "SEM", nMajorTicks = 5, DfltZero = TRUE){
+                            errorbar = "SEM", nMajorTicks = 5, DfltZero = TRUE){ # autorange_bar_y in the package
 
   ## load file
-  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]]<-factor(rawData[[1]], levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
 
-  if (Nrm == TRUE){
+  if (Nrm){
     ## normalize everything to control as 1
     Mean <- sapply(colnames(rawData)[-1],
-                 function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
-    Mean <- data.frame(Mean)
+                   function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
+    Mean <- data.frame(Mean, check.names = FALSE)
     Mean$Condition <- factor(rownames(Mean),levels = c(rownames(Mean)))
     MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                               function(i)sapply(Mean[[i]], function(j)j / Mean[[i]][1])),
-                        Condition = factor(rownames(Mean), levels = c(rownames(Mean)))) # keep the correct factor level order with levels = c(). same below
+                                 function(i)sapply(Mean[[i]], function(j)j / Mean[[i]][1])),
+                          Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels = c(). same below
 
     if (errorbar == "SEM"){
       SEM <- sapply(colnames(rawData)[-1],
-                  function(i) tapply(rawData[[i]], rawData[1],
-                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-      SEM <- data.frame(SEM)
+                    function(i) tapply(rawData[[i]], rawData[1],
+                                       function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+      SEM <- data.frame(SEM, check.names = FALSE)
       SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
       SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                                function(i)sapply(SEM[[i]], function(j)j / Mean[[i]][1])),
-                         Condition = factor(rownames(SEM), levels = c(rownames(SEM))))
+                                  function(i)sapply(SEM[[i]], function(j)j / Mean[[i]][1])),
+                           Condition = factor(rownames(SEM), levels = c(rownames(SEM))), check.names = FALSE)
       colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
-                                                          function(x)paste(x, "SEM", sep = ""))
+                                                            function(x)paste(x, "SEM", sep = ""))
     } else if (errorbar == "SD") {
       SD <- sapply(colnames(rawData)[-1],
                    function(i) tapply(rawData[[i]], rawData[1],
                                       function(j)sd(j, na.rm = TRUE)))
-      SD <- data.frame(SD)
+      SD <- data.frame(SD, check.names = FALSE)
       SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
       SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
                                  function(i)sapply(SD[[i]], function(j)j / Mean[[i]][1])),
-                          Condition = factor(rownames(SD), levels = c(rownames(SD))))
+                          Condition = factor(rownames(SD), levels = c(rownames(SD))), check.names = FALSE)
       colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
                                                           function(x)paste(x, "SD", sep = ""))
 
@@ -121,25 +121,25 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
       DfPlt <- merge(MeanNrmMLT,SDNrmMLT,by = c("id","Condition"),sort=FALSE)
     } else {stop("Please properly specify the error bar type, SEM or SD")}
   }
-
-  if (Nrm == FALSE) {
+  else
+  {
     ## calculate mean and SEM
     Mean <- sapply(colnames(rawData)[-1],
-                 function(i)tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
-    Mean <- data.frame(Mean)
+                   function(i)tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
+    Mean <- data.frame(Mean, check.names = FALSE)
     Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
 
     if (errorbar == "SEM"){
       SEM <- sapply(colnames(rawData)[-1],
-                  function(i)tapply(rawData[[i]], rawData[1],
-                                     function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
-      SEM <- data.frame(SEM)
+                    function(i)tapply(rawData[[i]], rawData[1],
+                                      function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
+      SEM <- data.frame(SEM, check.names = FALSE)
       SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
     } else if (errorbar == "SD"){
       SD <- sapply(colnames(rawData)[-1],
-                  function(i) tapply(rawData[[i]], rawData[1],
-                                     function(j)sd(j,na.rm = TRUE)))
-      SD <- data.frame(SD)
+                   function(i) tapply(rawData[[i]], rawData[1],
+                                      function(j)sd(j,na.rm = TRUE)))
+      SD <- data.frame(SD, check.names = FALSE)
       SD$Condition <- factor(rownames(SD),levels = c(rownames(SD)))
     } else {stop("Please properly specify the error bar type, SEM or SD")}
 

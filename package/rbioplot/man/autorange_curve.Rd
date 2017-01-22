@@ -28,7 +28,7 @@ A function to get custom lower/upper limit, major tick range, as well as minor t
 }
 \examples{
 \dontrun{
-enzyme_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FALSE,
+autorange_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FALSE,
 y_nMajorTicks = 8, y_DfltZero = TRUE)
 }
 }

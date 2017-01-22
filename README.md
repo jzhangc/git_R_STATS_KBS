@@ -3,7 +3,7 @@ RBioplot (former: frogplots) package for fully automated statistical analysis an
 
 It is awesome.
 
-  - Install devtools
+  - Install devtools (if not already done)
   
         install.package("devtools")
     
@@ -16,8 +16,7 @@ It is awesome.
 Change Log
 
     0.3.4
-      - The hyphen issue resolved.
-      - Users now can choose to hide the righ hand y-axis
+      - Character considered as special operators now can be included in the target names for the histogram and heatmap moduels, and will be displayed properly in the figures.
       - Users now can choose to avoid setting control to 1 for rbioplot() function
       - Bug fixes
     

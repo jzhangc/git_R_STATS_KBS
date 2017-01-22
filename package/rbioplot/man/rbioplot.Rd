@@ -4,10 +4,10 @@
 \alias{rbioplot}
 \title{rbioplot}
 \usage{
-rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
-  errorbarWidth = 0.2, fontType = "sans", xLabel = NULL,
-  xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
-  yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
+  errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
+  xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
+  xAlign = 0.5, yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
   legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
   y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
   y_major_tick_range, y_n_minor_ticks = 4)
@@ -16,6 +16,8 @@ rbioplot(fileName, Tp = "Tukey", Title = NULL, errorbar = "SEM",
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
 \item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".}
+
+\item{Nrm}{When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.}
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 

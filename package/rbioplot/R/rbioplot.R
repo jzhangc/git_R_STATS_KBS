@@ -22,6 +22,7 @@ revsort <- function(x){
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
+#' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
@@ -73,7 +74,7 @@ revsort <- function(x){
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot <- function(fileName, Tp = "Tukey",
+rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
@@ -82,92 +83,113 @@ rbioplot <- function(fileName, Tp = "Tukey",
                      y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
 
   ## load file
-  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE)
+  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
 
-  ## normalize everything to control as 1
+  ## calculations for the metrics
   Mean <- sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
-  Mean <- data.frame(Mean)
+  Mean <- data.frame(Mean, check.names = FALSE) # add the check.name argument to preserve the name of the variables. same as all the following data.frame() usage
   Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
-  MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                               function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
-                        Condition = factor(rownames(Mean), levels = c(rownames(Mean)))) # keep the correct factor level order with levels=c().
+  if (Nrm){ # normalize to control as 1
+    MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
+                                 function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
+                          Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels=c().
+
+  } else {
+    MeanNrm <- Mean
+  }
+
+
 
   if (errorbar == "SEM"){
 
     SEM <- sapply(colnames(rawData)[-1],
                   function(i) tapply(rawData[[i]], rawData[1],
                                      function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-    SEM <- data.frame(SEM)
+    SEM <- data.frame(SEM, check.names = FALSE)
     SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
-    SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                                function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                         Condition = factor(rownames(SEM), levels = c(rownames(SEM)))) # keep the correct factor level order with levels=c().
+
+    if (Nrm){
+      SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
+                                  function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
+                           Condition = factor(rownames(SEM), levels = c(rownames(SEM))), check.names = FALSE) # keep the correct factor level order with levels=c().
+    } else {
+      SEMNrm <- SEM
+    }
+
     colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
-                                                          function(x)paste(x, "SEM", sep=""))
+                                                          function(x)paste(x, "SEM", sep = ""))
 
   } else if (errorbar == "SD"){
     SD <- sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1],
                                     function(j)sd(j, na.rm = TRUE)))
-    SD <- data.frame(SD)
+    SD <- data.frame(SD, check.names = FALSE)
     SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
-    SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
-                               function(i)sapply(SD[[i]], function(j)j/Mean[[i]][1])),
-                        Condition = factor(rownames(SD), levels = c(rownames(SD))))
+
+    if (Nrm){
+      SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
+                                 function(i)sapply(SD[[i]], function(j)j/Mean[[i]][1])),
+                          Condition = factor(rownames(SD), levels = c(rownames(SD))), check.names = FALSE)
+    } else {
+      SDNrm <- SD
+    }
+
     colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
-                                                        function(x)paste(x, "SD", sep=""))
+                                                        function(x)paste(x, "SD", sep = ""))
 
   } else {stop("Please properly specify the error bar type, SEM or SD")}
+
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
   cNm <- colnames(rawData)
 
   Tt <- sapply(colnames(rawData)[-1],
                function(i) {
-                 fml<-paste(i,cNm[1], sep = "~")
+                 quoteName <- paste0("`", i, "`", sep = "") # add the single quote to the variable names, to ensure the preservation of the names
+                 fml<-paste(quoteName, cNm[1], sep = "~")
                  Mdl<-aov(formula(fml), data = rawData)
 
                  if (Tp == "t-test"){
-                 if (nlevels(rawData[[1]]) == 2){
-                   Control <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
-                   Experimental <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
-                   Ttest <- t.test(Control, Experimental, var.equal = TRUE, na.rm = TRUE)
-                   Ttestp <- Ttest$p.value
-                   Lvl <- data.frame(Condition = unique(rawData[[1]]), pvalue = c(1, Ttestp))
-                   Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
-                   Lvl <- Lvl[,c(1,3)]
-                 } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).")}
-               } else if (Tp == "Tukey"){
-                 if (nlevels(rawData[[1]]) > 2){
-                   Sts <- TukeyHSD(Mdl)
-                   Tkp <- Sts[[1]][,4]
-                   names(Tkp) <- sapply(names(Tkp), function(j)revsort(j)) # change orders (from b-a to a-b)
-                   Tkp <- multcompLetters(Tkp)["Letters"] # from the multcompView package.
-                   Lbl <- names(Tkp[["Letters"]])
-                   Lvl <- data.frame(Lbl, Tkp[["Letters"]],
-                                     stringsAsFactors = FALSE)
-                 } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
-               } else if (Tp == "Dunnett"){
-                 if (nlevels(rawData[[1]]) > 2){
-                   var <- cNm[1]
-                   arg <- list("Dunnett")
-                   names(arg) <- var
-                   mcp <- do.call(mcp, arg)
-                   Sts <- summary(glht(Mdl, linfct = mcp))
-                   Dnt <- Sts$test$pvalues
-                   names(Dnt) <- names(Sts$test$coefficients)
-                   Lvl <- data.frame(Condition = unique(rawData[[1]]),pvalue = c(1,Dnt))
-                   Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
-                   Lvl <- Lvl[, c(1, 3)]
-                 } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
-               } else {
-                 stop("ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE).")
-               }
-               colnames(Lvl) <- c(colnames(rawData)[1], i)
-               Lvl
-             },simplify = FALSE)
+                   if (nlevels(rawData[[1]]) == 2){
+                     Control <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
+                     Experimental <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
+                     Ttest <- t.test(Control, Experimental, var.equal = TRUE, na.rm = TRUE)
+                     Ttestp <- Ttest$p.value
+                     Lvl <- data.frame(Condition = unique(rawData[[1]]), pvalue = c(1, Ttestp))
+                     Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
+                     Lvl <- Lvl[,c(1,3)]
+                   } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).")}
+                 } else if (Tp == "Tukey"){
+                   if (nlevels(rawData[[1]]) > 2){
+                     Sts <- TukeyHSD(Mdl)
+                     Tkp <- Sts[[1]][,4]
+                     names(Tkp) <- sapply(names(Tkp), function(j)revsort(j)) # change orders (from b-a to a-b)
+                     Tkp <- multcompLetters(Tkp)["Letters"] # from the multcompView package.
+                     Lbl <- names(Tkp[["Letters"]])
+                     Lvl <- data.frame(Lbl, Tkp[["Letters"]],
+                                       stringsAsFactors = FALSE)
+                   } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
+                 } else if (Tp == "Dunnett"){
+                   if (nlevels(rawData[[1]]) > 2){
+                     var <- cNm[1]
+                     arg <- list("Dunnett")
+                     names(arg) <- var
+                     mcp <- do.call(mcp, arg)
+                     Sts <- summary(glht(Mdl, linfct = mcp))
+                     Dnt <- Sts$test$pvalues
+                     names(Dnt) <- names(Sts$test$coefficients)
+                     Lvl <- data.frame(Condition = unique(rawData[[1]]),pvalue = c(1,Dnt))
+                     Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
+                     Lvl <- Lvl[, c(1, 3)]
+                   } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
+                 } else {
+                   stop("ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE).")
+                 }
+                 colnames(Lvl) <- c(colnames(rawData)[1], i)
+                 Lvl
+               },simplify = FALSE)
   cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
                                      by = colnames(rawData)[1],sort = FALSE),
                 Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
@@ -226,7 +248,7 @@ rbioplot <- function(fileName, Tp = "Tukey",
 
   loclEnv <- environment()
   baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
-                  environment = loclEnv) +
+                    environment = loclEnv) +
     geom_bar(position = "dodge", stat = "identity", color = "black") +
     geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = errorbarWidth,
                   position = position_dodge(0.9))+

@@ -61,34 +61,35 @@
 #' }
 #' @export
 rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
-                     Title = NULL,  fontType = "sans",
-                     tileLow = "skyblue", tileHigh = "midnightblue",
-                     tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
-                     xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
-                     yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                     legendTtl = FALSE, legendPos = "bottom",
-                     plotWidth = 170, plotHeight = 150){
+                             Title = NULL,  fontType = "sans",
+                             tileLow = "skyblue", tileHigh = "midnightblue",
+                             tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
+                             xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                             yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+                             legendTtl = FALSE, legendPos = "bottom",
+                             plotWidth = 170, plotHeight = 150){
 
   ## load file
-  rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
 
   ## normalize everything to control as 1
   Mean <- sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
-  Mean <- data.frame(Mean)
+  Mean <- data.frame(Mean, check.names = FALSE)
   Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
   MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
                                function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
-                        Condition = factor(rownames(Mean), levels = c(rownames(Mean))))
+                        Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE)
 
   ## for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
   cNm <- colnames(rawData)
 
   Tt <- sapply(colnames(rawData)[-1],
                function(i) {
-                 fml<-paste(i,cNm[1], sep = "~")
-                 Mdl<-aov(formula(fml), data = rawData)
+                 quoteName <- paste0("`", i, "`", sep = "")
+                 fml <- paste(quoteName, cNm[1], sep = "~")
+                 Mdl <- aov(formula(fml), data = rawData)
 
                  if (Tp == "t-test"){
                    if (nlevels(rawData[[1]]) == 2){
