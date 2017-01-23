@@ -15,11 +15,12 @@ It is awesome.
 
 Change Log
 
-    0.3.4
+    0.3.4 (Jan. 23. 2017)
       - Characters considered as special operators now can be included in the target names for the stats, histogram and heatmap modules, and will be displayed properly in the figures.
       - Users now can choose to avoid setting control to 1 for rbioplot() function, by setting  "Nrm = FALSE”.
       - Users now can choose to display or hide the right side y-axis for histogram and curve modules by setting "rightsideY = TRUE" or "rightsideY = FALSE", respectively.
       - Bug fixes
+      
     
     0.3.3
       - Backend updates for next feature update.
