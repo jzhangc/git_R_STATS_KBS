@@ -12,6 +12,7 @@
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param rightsideY If to display the right side y-axis. Default is \code{TRUE}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
@@ -42,12 +43,13 @@
 #' }
 #' @export
 rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
-                         symbolSize = 2,
-                         xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
-                         yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                         legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
-                         x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
-                         y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+                           symbolSize = 2,
+                           xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                           rightsideY = TRUE,
+                           yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+                           legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
+                           x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
+                           y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
   ## load file
   rawData <- read.csv(file=fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
@@ -56,7 +58,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 
   ## calculate mean and SEM
   Mean <- sapply(colnames(rawData)[-1],
-               function(i)tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
+                 function(i)tapply(rawData[[i]], rawData[1], mean, na.rm = TRUE))
   Mean <- data.frame(Mean)
   Mean$Condition <- factor(rownames(Mean),levels = c(rownames(Mean)))
 
@@ -64,7 +66,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 
     SEM <- sapply(colnames(rawData)[-1],
                   function(i)tapply(rawData[[i]], rawData[1],
-                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
+                                    function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
     SEM <- data.frame(SEM)
     SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
     colnames(SEM)[-length(colnames(SEM))] <- sapply(colnames(rawData)[-1],
@@ -73,7 +75,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   } else if (errorbar == "SD"){
     SD <- sapply(colnames(rawData)[-1],
                  function(i)tapply(rawData[[i]], rawData[1],
-                                    function(j)sd(j, na.rm = TRUE)))
+                                   function(j)sd(j, na.rm = TRUE)))
     SD <- data.frame(SD)
     SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
     colnames(SD)[-length(colnames(SD))] <- sapply(colnames(rawData)[-1],
@@ -186,32 +188,41 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   }
 
   if (legendTtl == FALSE){
-    plt<-baseplt + theme(legend.title = element_blank())
+    plt <- baseplt + theme(legend.title = element_blank())
 
   } else {
-    plt<-baseplt + theme(legend.title = element_text(size=9))
+    plt <- baseplt + theme(legend.title = element_text(size=9))
   }
 
-  ## add the right-side y axis
+  ## finalize the plot
   grid.newpage()
 
-  # extract gtable
-  pltgtb <- ggplot_gtable(ggplot_build(plt))
+  if (rightsideY){ # add the right-side y axis
 
-  # add the right side y axis
-  Aa <- which(pltgtb$layout$name == "axis-l")
-  pltgtb_a <- pltgtb$grobs[[Aa]]
-  axs <- pltgtb_a$children[[2]]
-  axs$widths <- rev(axs$widths)
-  axs$grobs <- rev(axs$grobs)
-  axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-  Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-  pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-  pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+    # extract gtable
+    pltgtb <- ggplot_gtable(ggplot_build(plt))
 
-  # export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.pdf", sep = ""), plot = pltgtb,
-         width = plotWidth, height = plotHeight, units = "mm",dpi=600)
+    # add the right side y axis
+    Aa <- which(pltgtb$layout$name == "axis-l")
+    pltgtb_a <- pltgtb$grobs[[Aa]]
+    axs <- pltgtb_a$children[[2]]
+    axs$widths <- rev(axs$widths)
+    axs$grobs <- rev(axs$grobs)
+    axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
+    Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
+    pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
+    pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+
+
+  } else { # no right side y-axis
+
+    pltgtb <- plt
+
+  }
+
+  ## export the file and draw a preview
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
+         width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   grid.draw(pltgtb) # preview
 }
 

@@ -7,10 +7,10 @@
 rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
   errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
   xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
-  xAlign = 0.5, yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-  legendTtl = FALSE, plotWidth = 170, plotHeight = 150,
-  y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
-  y_major_tick_range, y_n_minor_ticks = 4)
+  xAlign = 0.5, rightsideY = TRUE, yLabel = NULL, yTickLblSize = 10,
+  yTickItalic = FALSE, legendTtl = FALSE, plotWidth = 170,
+  plotHeight = 150, y_custom_tick_range = FALSE, y_lower_limit = 0,
+  y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -36,6 +36,8 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 
 \item{xAlign}{The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
+
+\item{rightsideY}{If to display the right side y-axis. Default is \code{TRUE}.}
 
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
