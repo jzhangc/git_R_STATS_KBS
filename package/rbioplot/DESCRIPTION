@@ -1,7 +1,7 @@
 Package: RBioplot
 Type: Package
 Title: A package for automated statistical analysis and data visualization in molecular biology and biochemistry
-Version: 0.3.4
+Version: 0.3.5
 Authors@R: c(person("Jing", "Zhang", email = "jzhangcad@gmail.com", role = c("aut", "cre")), person("Kenneth B.", "Storey", email = "KenStorey@cunet.carleton.ca", role = c("aut")))
 Description: The package takes raw data file (.csv) and carries out comprehensive statisical analysis as well as plotting in a fully automated fashion.
 Date: 2016-09-28
@@ -11,5 +11,5 @@ Imports:
     multcomp (>= 1.4-4),multcompView (>= 0.1-7),
     ggplot2 (>= 2.1.0),
     reshape2 (>= 1.4.1),
-    gtable (>= 0.2.0),grid (>= 3.2.4)
+    gtable (>= 0.2.0), grid (>= 3.2.4), scales (>= 0.4.1)
 RoxygenNote: 5.0.1

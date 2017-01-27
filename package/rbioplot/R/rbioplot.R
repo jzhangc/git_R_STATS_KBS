@@ -26,6 +26,7 @@ revsort <- function(x){
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
+#' @param errorbarLblSpace Set the distance between the errorbar label and errorbar. Defaults is \code{0.07} when \code{Tp = "Tukey"}, \code{0.06} for everything else.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
@@ -50,6 +51,7 @@ revsort <- function(x){
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
 #' @importFrom gtable gtable_add_cols gtable_add_grob
+#' @importFrom scales rescale_none
 #' @import ggplot2
 #' @examples
 #' \dontrun{
@@ -76,7 +78,8 @@ revsort <- function(x){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
-                     Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
+                     Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSpace = ifelse(Tp == "Tukey", 0.07, 0.06),
+                     fontType = "sans",
                      xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      rightsideY = TRUE,
                      yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
@@ -257,7 +260,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
                        labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = major_tick_range), n_minor_ticks),
-                       limits = c(y_axis_Mn,y_axis_Mx))+
+                       limits = c(y_axis_Mn,y_axis_Mx), oob = rescale_none)+
     ggtitle(Title) +
     xlab(xLabel) +
     ylab(yLabel) +
@@ -282,11 +285,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
   if (Tp == "Tukey"){
     pltLbl <- baseplt +
-      geom_text(aes(y = NrmMean + NrmErr + 0.07,label = Lbl), position = position_dodge(width = 0.9),
+      geom_text(aes(y = NrmMean + NrmErr + errorbarLblSpace, label = Lbl), position = position_dodge(width = 0.9),
                 color = "black") # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean + SEM.
   } else {
     pltLbl <- baseplt +
-      geom_text(aes(y = NrmMean + NrmErr + 0.06,label = Lbl), position = position_dodge(width = 0.9),
+      geom_text(aes(y = NrmMean + NrmErr + errorbarLblSpace, label = Lbl), position = position_dodge(width = 0.9),
                 size = 6, color = "black") # font size 6 and 0.06 unit higher is good for asterisks.
   }
 

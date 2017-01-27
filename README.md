@@ -15,7 +15,11 @@ It is awesome.
 
 Change Log
 
-    0.3.4 (Jan. 23. 2017)
+    0.3.5 (Jan. 27. 2017)
+      - Bars now won't disappear for rbioplot() when the y-axis lower limit is set to a value other than zero.
+      - The distance between the errorbar label and errorbar now can be adjusted for rbioplot() through argument "errorbarLblSpace".
+
+    0.3.4
       - Characters considered as special operators now can be included in the target names for the stats, histogram and heatmap modules, and will be displayed properly in the figures.
       - Users now can choose to avoid setting control to 1 for rbioplot() function, by setting  "Nrm = FALSE”.
       - Users now can choose to display or hide the right side y-axis for histogram and curve modules by setting "rightsideY = TRUE" or "rightsideY = FALSE", respectively.

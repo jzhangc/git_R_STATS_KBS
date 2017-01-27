@@ -5,9 +5,10 @@
 \title{rbioplot}
 \usage{
 rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
-  errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
-  xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
-  xAlign = 0.5, rightsideY = TRUE, yLabel = NULL, yTickLblSize = 10,
+  errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSpace = ifelse(Tp ==
+  "Tukey", 0.07, 0.06), fontType = "sans", xLabel = NULL,
+  xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+  rightsideY = TRUE, yLabel = NULL, yTickLblSize = 10,
   yTickItalic = FALSE, legendTtl = FALSE, plotWidth = 170,
   plotHeight = 150, y_custom_tick_range = FALSE, y_lower_limit = 0,
   y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
@@ -24,6 +25,8 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 \item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
 
 \item{errorbarWidth}{Set the width for errorbar. Default is \code{0.2}.}
+
+\item{errorbarLblSpace}{Set the distance between the errorbar label and errorbar. Defaults is \code{0.07} when \code{Tp = "Tukey"}, \code{0.06} for everything else.}
 
 \item{fontType}{The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.}
 
