@@ -3,6 +3,14 @@ RBioplot (former: frogplots) package for fully automated statistical analysis an
 
 It is awesome.
 
+To cite in publication
+  
+  Zhang J, Storey KB. (2016) RBioplot: an easy-to-use R pipeline for automated statistical analysis and 
+  data visualization in molecular biology and biochemistry. PeerJ 4:e2436.
+
+
+Installation
+
   - Install devtools (if not already done)
   
         install.package("devtools")
@@ -15,11 +23,19 @@ It is awesome.
 
 Change Log
 
-    0.3.5 (Jan. 27. 2017)
+    0.3.6 (Feb. 1. 2017)
+    
+      - Citation info added
+    
+
+    0.3.5
+    
       - Bars now won't disappear for rbioplot() when the y-axis lower limit is set to a value other than zero.
       - The distance between the errorbar label and errorbar now can be adjusted for rbioplot() through argument "errorbarLblSpace".
+      
 
     0.3.4
+    
       - Characters considered as special operators now can be included in the target names for the stats, histogram and heatmap modules, and will be displayed properly in the figures.
       - Users now can choose to avoid setting control to 1 for rbioplot() function, by setting  "Nrm = FALSE”.
       - Users now can choose to display or hide the right side y-axis for histogram and curve modules by setting "rightsideY = TRUE" or "rightsideY = FALSE", respectively.
@@ -27,14 +43,17 @@ Change Log
       
     
     0.3.3
+    
       - Backend updates for next feature update.
 
 
     0.3.1 - 0.3.2
+    
       - Bug fixes
 
 
     0.3.0
+    
       - It is now possible to change the width of the errorbar with the argument errorbarWidth. Applicable functions: rbioplot(), rbioplot_curve().
 		        errorbarWidth: Set the width for errorbar. Defualt is 0.2.
 
@@ -48,12 +67,14 @@ Change Log
 
 
     0.2.5
+    
       - RBioplot now supports heatmap with the new function rbioplot_heatmap().
 
       - Bug fixes.
 
 
     0.2.4
+    
       - It is now possible to use standard deviation (SD) as error bar via the new argument: errorbar. Functions with errorbar argument are: rbioplot(), rbioplot_curve(), autorange_bar_y(), autorange_curve()
 		      errorbar: Set the type of errorbar. Options are standard error of mean ("SEM"), or standard deviation ("SD"). Default is "SEM".
 
@@ -72,6 +93,7 @@ Change Log
 
 
     0.2.3
+    
     - The program has a new name: RBioplot. Along with the necessary name change for some functions, some minor new features have also been added to the existing functions. 
 
     - Function name change (old -> new)	*Note that the usage of those functions are unchanged*
@@ -94,14 +116,17 @@ Change Log
 
 
     0.2.2
+    
     - Bug fixes.
     
 
     0.2.1
+    
     - Bug fixes.
     
 
     0.2.0
+    
     - New functions:
 		    frogplots_curve(): A simple to use function for plotting joining-point curves with continuous x and y axises values.
  
@@ -146,4 +171,5 @@ Change Log
 
 
     0.1.0
+    
     - Initial release.

@@ -25,4 +25,3 @@ all_dvsr(2)
 all_dvsr(2,1) # with decimal scaling factor set at 1, meaning the divisor will be based on 20.
 }
 }
-

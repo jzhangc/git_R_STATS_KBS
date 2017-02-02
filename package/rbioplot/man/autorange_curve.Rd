@@ -32,4 +32,3 @@ autorange_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FA
 y_nMajorTicks = 8, y_DfltZero = TRUE)
 }
 }
-

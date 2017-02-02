@@ -29,4 +29,3 @@ A function to get custom lower/upper limit, major tick range, as well as minor t
 autorange_bar_y("data.csv", Nrm = T, errorbar = "SEM", nMajorTicks = 8, DfltZero=FALSE)
 }
 }
-

@@ -87,4 +87,3 @@ rbioplot_curve("data6.csv", legendTtl = TRUE,
           x_major_tick_range = 5)
 }
 }
-

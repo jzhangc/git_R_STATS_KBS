@@ -23,4 +23,3 @@ rbiostats("data.csv","Tukey")
 rbiostats("data2.csv","t-test")
 }
 }
-

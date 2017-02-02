@@ -20,4 +20,3 @@ A simple to use function to find all divisors for an integer number.
 nat_dvsr(10)
 }
 }
-
