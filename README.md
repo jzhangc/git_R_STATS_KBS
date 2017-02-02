@@ -5,8 +5,7 @@ It is awesome.
 
 To cite in publication
   
-  Zhang J, Storey KB. (2016) RBioplot: an easy-to-use R pipeline for automated statistical analysis and 
-  data visualization in molecular biology and biochemistry. PeerJ 4:e2436.
+    Zhang J, Storey KB. (2016) RBioplot: an easy-to-use R pipeline for automated statistical              analysis and data visualization in molecular biology and biochemistry. PeerJ 4:e2436.
 
 
 Installation
