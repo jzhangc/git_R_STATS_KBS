@@ -12,7 +12,7 @@ Installation
 
   - Install devtools (if not already done)
   
-        install.package("devtools")
+        install.packages("devtools")
     
   - Install the package
   
