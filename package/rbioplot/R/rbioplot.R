@@ -90,6 +90,12 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   ## load file
   rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
+  c <- length(unique(rawData[[1]])) # store the number of conditons
+
+  ## check if the data only has one condition
+  if (c < 2){
+    stop("rbioplot() requires more than one group (e.g. experimental condition). Function aborted.")
+  }
 
   ## calculations for the metrics
   Mean <- sapply(colnames(rawData)[-1],
