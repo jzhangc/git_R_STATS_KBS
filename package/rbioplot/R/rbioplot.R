@@ -21,7 +21,7 @@ revsort <- function(x){
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
-#' @param Tp Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".
+#' @param Tp Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
@@ -162,7 +162,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                  fml<-paste(quoteName, cNm[1], sep = "~")
                  Mdl<-aov(formula(fml), data = rawData)
 
-                 if (Tp == "t-test"){
+                 if (tolower(Tp) %in% c("t-test", "t test", "ttest", "t")){
                    if (nlevels(rawData[[1]]) == 2){
                      Control <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[1])
                      Experimental <- subset(rawData[i], rawData[[1]] == levels(rawData[[1]])[2])
@@ -172,7 +172,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Lvl$Lbl <- sapply(Lvl$pvalue, function(x)ifelse(x < 0.05, "*", ""))
                      Lvl <- Lvl[,c(1,3)]
                    } else {stop("T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).")}
-                 } else if (Tp == "Tukey"){
+                 } else if (tolower(Tp) %in% c("tukey")){
                    if (nlevels(rawData[[1]]) > 2){
                      Sts <- TukeyHSD(Mdl)
                      Tkp <- Sts[[1]][,4]
@@ -182,7 +182,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Lvl <- data.frame(Lbl, Tkp[["Letters"]],
                                        stringsAsFactors = FALSE)
                    } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
-                 } else if (Tp == "Dunnett"){
+                 } else if (tolower(Tp) %in% c("dunnett", "dunnett\'s", "dunnetts")){
                    if (nlevels(rawData[[1]]) > 2){
                      var <- cNm[1]
                      arg <- list("Dunnett")
@@ -346,3 +346,4 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   grid.draw(pltgtb) # preview
 
 }
+

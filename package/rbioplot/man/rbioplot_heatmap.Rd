@@ -15,7 +15,7 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
-\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Dunnett".}
+\item{Tp}{Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Dunnett".}
 
 \item{rmCntl}{Remove the first column (i.e., control). Default is \code{FALSE}.}
 

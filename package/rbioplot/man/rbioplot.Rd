@@ -16,7 +16,7 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
-\item{Tp}{Type of the intended statistical test. Case sensitive and be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett". Default is "Tukey".}
+\item{Tp}{Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".}
 
 \item{Nrm}{When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.}
 

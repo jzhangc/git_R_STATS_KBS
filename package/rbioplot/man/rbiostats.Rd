@@ -9,7 +9,7 @@ rbiostats(fileName, Tp = "ANOVA")
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
 
-\item{Tp}{Type of the intended statistical test. Case sensitive and type with quotation marks. Options are: "t-test", "ANOVA", "Tukey" and "Dunnett". Default is "ANOVA".}
+\item{Tp}{Type of the intended statistical test. e sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "ANOVA".}
 }
 \value{
 Outputs a \code{.txt} file with Shapiro-Wilk normality test results and the results of the statistical analysis of interest.

@@ -10,7 +10,7 @@
 #'
 #' @description A simple to use function for comprehensive statistical analyses.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
-#' @param Tp Type of the intended statistical test. Case sensitive and type with quotation marks. Options are: "t-test", "ANOVA", "Tukey" and "Dunnett". Default is "ANOVA".
+#' @param Tp Type of the intended statistical test. e sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "ANOVA".
 #' @return Outputs a \code{.txt} file with Shapiro-Wilk normality test results and the results of the statistical analysis of interest.
 #' @importFrom multcomp glht mcp
 #' @examples
@@ -39,7 +39,7 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
     fml <- paste(quoteName, cNm[1], sep = "~")
     Mdl <- aov(formula(fml), data = rawData) # fit an analysis of variance model by a call to lm(), applicable for both balanced or unbalanced data set.
     # below: make sure to chain if else in this way!
-    if (Tp == "t-test"){
+    if (tolower(Tp) %in% c("t-test", "t test", "ttest", "t")){
       if (nlevels(rawData[[1]]) == 2){
         Control <- subset(rawData[x], rawData[[1]] == levels(rawData[[1]])[1])
         Experimental <- subset(rawData[x], rawData[[1]] == levels(rawData[[1]])[2])
@@ -47,19 +47,19 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
         tTest <- t.test(Control, Experimental, var.equal = TRUE ,na.rm = TRUE)
         statsLst <- list(EqualVariance = Eqv, ttest = tTest)
       } else {"T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try ANOVA/Tukey/Dunnett)."}
-    } else if (Tp == "ANOVA"){
+    } else if (tolower(Tp) %in% c("anova")){
       if (nlevels(rawData[[1]]) > 2){
         Eqv <- bartlett.test(formula(fml), data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
         statsLst <- list(EqualVariance = Eqv, ANOVA = anova(Mdl))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
-    } else if (Tp =="Tukey"){
+    } else if (tolower(Tp) %in% c("tukey")){
       if (nlevels(rawData[[1]]) > 2){
         Eqv <- bartlett.test(formula(fml), data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
         statsLst <- list(EqualVariance = Eqv, ANOVA = anova(Mdl), Tukey = TukeyHSD(Mdl))
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
-    } else if (Tp == "Dunnett"){
+    } else if (tolower(Tp) %in% c("dunnett", "dunnett\'s", "dunnetts")){
       if (nlevels(rawData[[1]]) > 2){
         Eqv <- bartlett.test(formula(fml), data = rawData)  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
         var <- cNm[1]
@@ -75,4 +75,6 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
   },  simplify = FALSE)
   )
   sink() # end the dump
+
+  print(paste(tolower(Tp), " test results written to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".stats.txt", sep = ""))
 }
