@@ -24,7 +24,7 @@ revsort <- function(x){
 #' @param Tp Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
-#' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
 #' @param errorbarLblSpace Set the distance between the errorbar label and errorbar. Defaults is \code{0.07} when \code{Tp = "Tukey"}, \code{0.06} for everything else.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
@@ -113,7 +113,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
 
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
 
     SEM <- sapply(colnames(rawData)[-1],
                   function(i) tapply(rawData[[i]], rawData[1],
@@ -132,7 +132,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
     colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
                                                           function(x)paste(x, "SEM", sep = ""))
 
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SD <- sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1],
                                     function(j)sd(j, na.rm = TRUE)))

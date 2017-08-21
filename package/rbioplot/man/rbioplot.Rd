@@ -22,7 +22,7 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
-\item{errorbar}{Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.}
+\item{errorbar}{Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.}
 
 \item{errorbarWidth}{Set the width for errorbar. Default is \code{0.2}.}
 

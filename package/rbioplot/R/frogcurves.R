@@ -3,7 +3,7 @@
 #' @description A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
-#' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
 #' @param symbolSize Set the size of symbols. Default is \code{2}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
@@ -62,7 +62,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   Mean <- data.frame(Mean)
   Mean$Condition <- factor(rownames(Mean),levels = c(rownames(Mean)))
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
 
     SEM <- sapply(colnames(rawData)[-1],
                   function(i)tapply(rawData[[i]], rawData[1],
@@ -72,7 +72,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
     colnames(SEM)[-length(colnames(SEM))] <- sapply(colnames(rawData)[-1],
                                                     function(x)paste(x, "SEM", sep = ""))
 
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SD <- sapply(colnames(rawData)[-1],
                  function(i)tapply(rawData[[i]], rawData[1],
                                    function(j)sd(j, na.rm = TRUE)))
@@ -89,7 +89,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   MeanMLT$id <- rownames(MeanMLT)
   colnames(MeanMLT)[3] <- "plotMean"
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
     SEMMLT <- melt(SEM, id.vars = colnames(SEM)[length(colnames(SEM))])
     SEMMLT$id <- rownames(SEMMLT)
     colnames(SEMMLT)[2:3] <- c("variableSEM", "plotErr")
@@ -99,7 +99,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
     DfPlt$variable <- as.character(DfPlt$variable)
     DfPlt$variable <- sapply(DfPlt$variable, function(x)substr(x, 2, nchar(x)))
     DfPlt$variable <- as.numeric(DfPlt$variable)
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SDMLT <- melt(SD, id.vars = colnames(SD)[length(colnames(SD))])
     SDMLT$id <- rownames(SDMLT)
     colnames(SDMLT)[2:3] <- c("variableSD", "plotErr")
@@ -232,7 +232,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 #'
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
-#' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
 #' @param y_nMajorTicks Number of major ticks intended to use for the y axis. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{10}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
@@ -260,7 +260,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
 
 
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
 
     SEM <- sapply(colnames(rawData)[-1],
                   function(i) tapply(rawData[[i]], rawData[1],
@@ -268,7 +268,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
     SEM <- data.frame(SEM)
     SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
 
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SD <- sapply(colnames(rawData)[-1],
                  function(i) tapply(rawData[[i]], rawData[1],
                                     function(j)sd(j, na.rm = TRUE)))
@@ -283,7 +283,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
   MeanMLT$id <- rownames(MeanMLT)
   colnames(MeanMLT)[3] <- "plotMean"
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
     SEMMLT<-melt(SEM, id.vars = colnames(SEM)[length(colnames(SEM))])
     SEMMLT$id<-rownames(SEMMLT)
     colnames(SEMMLT)[2:3]<-c("variableSEM","plotErr")
@@ -293,7 +293,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
     DfPlt$variable<-as.character(DfPlt$variable)
     DfPlt$variable<-sapply(DfPlt$variable,function(x)substr(x,2,nchar(x)))
     DfPlt$variable<-as.numeric(DfPlt$variable)
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SDMLT<-melt(SD, id.vars = colnames(SD)[length(colnames(SD))])
     SDMLT$id<-rownames(SDMLT)
     colnames(SDMLT)[2:3]<-c("variableSD","plotErr")

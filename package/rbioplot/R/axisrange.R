@@ -51,7 +51,7 @@ all_dvsr <- function(x, i = 0){
 #' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for y axis, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
-#' @param errorbar Set the type of errorbar. Options are standard error of mean (\code{"SEM"}), or standard deviation (\code{"SD"}). Default is \code{"SEM"}.
+#' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param nMajorTicks Number of major ticks intended to use for the plot. Note that the input number should be major tick number EXCLUDING 0 (or y axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot}}.
 #' @param DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
@@ -78,7 +78,7 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
                                  function(i)sapply(Mean[[i]], function(j)j / Mean[[i]][1])),
                           Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels = c(). same below
 
-    if (errorbar == "SEM"){
+    if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
       SEM <- sapply(colnames(rawData)[-1],
                     function(i) tapply(rawData[[i]], rawData[1],
                                        function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
@@ -89,7 +89,7 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
                            Condition = factor(rownames(SEM), levels = c(rownames(SEM))), check.names = FALSE)
       colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(rawData)[-1],
                                                             function(x)paste(x, "SEM", sep = ""))
-    } else if (errorbar == "SD") {
+    } else if (tolower(errorbar) %in% c("sd", "standard deviation")) {
       SD <- sapply(colnames(rawData)[-1],
                    function(i) tapply(rawData[[i]], rawData[1],
                                       function(j)sd(j, na.rm = TRUE)))
@@ -109,12 +109,12 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
     MeanNrmMLT$id <- rownames(MeanNrmMLT)
     colnames(MeanNrmMLT)[3] <- "plotMean"
 
-    if (errorbar == "SEM"){
+    if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
       SEMNrmMLT <- melt(SEMNrm, id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
       SEMNrmMLT$id <- rownames(SEMNrmMLT)
       colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "plotErr") # give unique variable names. same below
       DfPlt<-merge(MeanNrmMLT,SEMNrmMLT,by = c("id","Condition"),sort=FALSE)
-    } else if (errorbar == "SD"){
+    } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
       SDNrmMLT <- melt(SDNrm, id.vars = colnames(SDNrm)[length(colnames(SDNrm))])
       SDNrmMLT$id <- rownames(SDNrmMLT)
       colnames(SDNrmMLT)[2:3] <- c("variableSD", "plotErr")
@@ -129,13 +129,13 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
     Mean <- data.frame(Mean, check.names = FALSE)
     Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
 
-    if (errorbar == "SEM"){
+    if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
       SEM <- sapply(colnames(rawData)[-1],
                     function(i)tapply(rawData[[i]], rawData[1],
                                       function(j)sd(j,na.rm = TRUE) / sqrt(length(!is.na(j)))))
       SEM <- data.frame(SEM, check.names = FALSE)
       SEM$Condition<-factor(rownames(SEM),levels = c(rownames(SEM)))
-    } else if (errorbar == "SD"){
+    } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
       SD <- sapply(colnames(rawData)[-1],
                    function(i) tapply(rawData[[i]], rawData[1],
                                       function(j)sd(j,na.rm = TRUE)))
@@ -149,12 +149,12 @@ autorange_bar_y <- function(fileName, Nrm = TRUE,
     MeanMLT$id <- rownames(MeanMLT)
     colnames(MeanMLT)[3] <- "plotMean"
 
-    if (errorbar == "SEM"){
+    if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
       SEMMLT <- melt(SEM,id.vars = colnames(SEM)[length(colnames(SEM))])
       SEMMLT$id <- rownames(SEMMLT)
       colnames(SEMMLT)[2:3] <- c("variableSEM","plotErr")
       DfPlt <- merge(MeanMLT,SEMMLT,by = c("id", "Condition"), sort = FALSE)
-    } else if (errorbar == "SD"){
+    } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
       SDMLT <- melt(SD,id.vars = colnames(SD)[length(colnames(SD))])
       SDMLT$id <- rownames(SDMLT)
       colnames(SDMLT)[2:3] <- c("variableSD","plotErr")
