@@ -218,14 +218,14 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   colnames(MeanNrmMLT)[3] <- "NrmMean" # give unique variable names
   colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl") # same as above and make sure to have the same "Condition" variable name for merging
 
-  if (errorbar == "SEM"){
+  if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
     SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
     SEMNrmMLT$id <- rownames(SEMNrmMLT)
     colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "NrmErr")
 
     DfPlt <- merge(MeanNrmMLT, SEMNrmMLT, by = c("id", "Condition"), sort = FALSE)
     DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
-  } else if (errorbar == "SD"){
+  } else if (tolower(errorbar) %in% c("sd", "standard deviation")){
     SDNrmMLT <- melt(SDNrm,id.vars = colnames(SDNrm)[length(colnames(SDNrm))])
     SDNrmMLT$id <- rownames(SDNrmMLT)
     colnames(SDNrmMLT)[2:3] <- c("variableSD", "NrmErr")
@@ -343,6 +343,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   ## export the file and draw a preview
   ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
+  print(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = "")) # message
   grid.draw(pltgtb) # preview
 
 }

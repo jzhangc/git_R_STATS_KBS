@@ -223,10 +223,9 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   ## export the file and draw a preview
   ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
+  print(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = "")) # message
   grid.draw(pltgtb) # preview
 }
-
-
 
 #' @title autorange_curve
 #'
