@@ -125,7 +125,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                      Lvl <- Lvl[, c(1, 3)]
                    } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
                  } else {
-                   stop("ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE).")
+                   stop("ERROR: CHECK YOUR STATS TEST (Hint: ANOVA test is not supported for plotting).")
                  }
                  colnames(Lvl) <- c(colnames(rawData)[1], i)
                  Lvl
@@ -155,8 +155,12 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
   }
 
   # dump all data into a file
-  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.heatmap.csv",sep= ""),
+  cat(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".heatmap.csv ...", sep = "")) # initail message
+  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".heatmap.csv", sep = ""),
             quote = FALSE, na = "NA", row.names = FALSE)
+  cat("Done!\n") # final message
+
+
 
   ## plotting
   loclEnv <- environment()
@@ -232,8 +236,10 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
   pltgtb <- pltgtb[-(Ap$b + 2), ]
 
   # export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.heatmap.pdf", sep=""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".heatmap.pdf ...", sep = "")) # initial message
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".heatmap.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
-  print(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = "")) # message
+  cat("Done!\n") # final message
+
   grid.draw(pltgtb)
 }

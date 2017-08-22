@@ -196,7 +196,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Lvl <- Lvl[, c(1, 3)]
                    } else {stop("USE T-TEST FOR A TWO-GROUP COMPARISON")}
                  } else {
-                   stop("ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE).")
+                   stop("ERROR: CHECK YOUR STATS TEST (Hint: ANOVA test is not supported for plotting).")
                  }
                  colnames(Lvl) <- c(colnames(rawData)[1], i)
                  Lvl
@@ -235,8 +235,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
-  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".plot.csv",sep= ""),
+  cat(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.csv ...", sep = "")) # initail message
+  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.csv", sep = ""),
             quote = FALSE, na = "NA", row.names = FALSE)
+  cat("Done!\n") # final message
+
 
   ## plotting
   # a function to add minor ticks
@@ -341,9 +344,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   }
 
   ## export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.pdf ...", sep = "")) # initial message
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".histogram.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
-  print(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = "")) # message
+  cat("Done!\n") # final message
+
   grid.draw(pltgtb) # preview
 
 }

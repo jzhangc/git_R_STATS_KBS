@@ -1,11 +1,3 @@
-.onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Written by Jing Zhang, Ph.D. Please direct questions to jzhangcad@gmail.com.
-  To cite in publication: Zhang J, Storey KB. (2016) RBioplot: an easy-to-use R pipeline for automated statistical analysis and data visualization in molecular biology and biochemistry. PeerJ 4:e2436.
-  For more details, please visit: http://kenstoreylab.com/?page_id=2448")
-  return(TRUE)
-}
-
-
 #' @title rbiostats
 #'
 #' @description A simple to use function for comprehensive statistical analyses.
@@ -28,6 +20,8 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
   # below: nchar() counts the number of the characters: note the diference between length(),
   # which counts "how many" the *whole* character strings.
   # ALSO, to use substr(), the object has to have "no quote" - use the function noquote() to achieve.
+  cat(paste(tolower(Tp), " test results written to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".stats.txt ...", sep = "")) # initial message
+
   sink(file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".stats.txt", sep = ""), append = FALSE)
   # below: Shapiro-Wilk normality test. p>0.5 means the data is normal.
   print(sapply(cNm[-1],
@@ -70,11 +64,11 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
         statsLst
       } else {"USE T-TEST FOR A TWO-GROUP COMPARISON"}
     } else {
-      "ERROR: CHECK YOUR SPELLING (Hint: EveRyThinG iS cASe-sEnSiTiVE)."
+      "ERROR: CHECK YOUR STATS TEST."
     }
   },  simplify = FALSE)
   )
   sink() # end the dump
 
-  print(paste(tolower(Tp), " test results written to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".stats.txt", sep = ""))
+  cat("Done!\n") # final message
 }

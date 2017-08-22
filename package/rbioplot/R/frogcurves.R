@@ -112,8 +112,10 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
-  write.csv(DfPlt,file = paste(substr(noquote(fileName),1,nchar(fileName) - 4),".plot.csv",sep = ""),
-            quote = FALSE,na = "NA",row.names = FALSE)
+  cat(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.csv ...", sep = "")) # initail message
+  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.csv", sep = ""),
+            quote = FALSE, na = "NA", row.names = FALSE)
+  cat("Done!\n") # final message
 
   ## plotting
   # a function to add minor ticks
@@ -221,9 +223,11 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   }
 
   ## export the file and draw a preview
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = ""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.pdf ...", sep = "")) # initial message
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".curve.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
-  print(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4),".plot.pdf", sep = "")) # message
+  cat("Done!\n") # final message
+
   grid.draw(pltgtb) # preview
 }
 
