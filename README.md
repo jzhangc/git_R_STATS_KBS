@@ -22,8 +22,8 @@ Installation
 Change Log
 
     0.3.8 (Aug. 21. 2017)
-      - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now reomoved.
-      - the case sensitive requirement for the “Tp" argument of rbiostats(), rbioplot() and rbioplot_heatmap() are now reomoved.
+      - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now removed.
+      - the case sensitive requirement for the “Tp" argument of rbiostats(), rbioplot() and rbioplot_heatmap() are now removed.
       - display messages are added to rbiostats(), rbioplot(), rbioplot_curve() and rbioplot_heatmap().
       - the suffix of the output file names has been changed:
           - rbioplot(): .histogram.csv, .histogram.pdf
