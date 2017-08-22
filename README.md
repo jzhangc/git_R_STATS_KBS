@@ -22,10 +22,10 @@ Installation
 Change Log
 
     0.3.8 (Aug. 21. 2017)
-      - the case sensitive requirement for the errorbar argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now reomoved.
-      - the case sensitive requirement for the Tp argument of rbiostats(), rbioplot() and rbioplot_heatmap() are now reomoved.
-      - display message added for rbiostats(), rbioplot() and rbioplot_heatmap().
-      - the suffix of the output file names changed for the functions:
+      - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now reomoved.
+      - the case sensitive requirement for the “Tp" argument of rbiostats(), rbioplot() and rbioplot_heatmap() are now reomoved.
+      - display messages are added to rbiostats(), rbioplot(), rbioplot_curve() and rbioplot_heatmap().
+      - the suffix of the output file names has been changed:
           - rbioplot(): .histogram.csv, .histogram.pdf
           - rbioplot_curve(): .curve.csv, .curve.pdf
           - rbioplot_heatmap(): .heatmap.csv, .heatmap.pdf
@@ -33,7 +33,7 @@ Change Log
       - zzz.R file added.
 
     0.3.7
-      - rbioplot() now checks if the data has more than one group, e.g. experimental condition.
+      - rbioplot() now gives a proper error message if only one group (e.g. experimental condition) is present.
       - editorial changes in documentation.
 
     0.3.6
