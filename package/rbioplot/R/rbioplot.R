@@ -17,6 +17,23 @@ revsort <- function(x){
   uLst
 }
 
+#' @title minor_tick
+#'
+#' @description A function to calculate space for minor ticks
+#' @param major A vector of major ticks
+#' @param n_minor Number of minor ticks
+#' @return A vector containing the spaces for minor ticks
+#' @examples
+#' \dontrun{
+#' minor_tick(seq(1, 10, by = 2), 4)
+#' }
+#' @export
+minor_tick <- function(major, n_minor){
+  labs <- c(sapply(major, function(x) c(x, rep("", n_minor))))
+  labs[1:(length(labs) - n_minor)]
+}
+
+
 #' @title rbioplot
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
@@ -242,12 +259,6 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
 
   ## plotting
-  # a function to add minor ticks
-  minor_tick <- function(major, n_minor){
-    labs <- c(sapply(major, function(x) c(x, rep("", n_minor))))
-    labs[1:(length(labs) - n_minor)]
-  }
-
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
     y_axis_Mx <- y_upper_limit
     y_axis_Mn <- y_lower_limit

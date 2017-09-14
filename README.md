@@ -21,7 +21,10 @@ Installation
 
 Change Log
 
-    0.3.8 (Aug. 21. 2017)
+    0.3.9 (Sep. 14. 2017)
+      - minor_tick() separeted from the rbioplot function
+      
+    0.3.8
       - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now removed.
       - the case sensitive requirement for the “Tp" argument of rbiostats(), rbioplot() and rbioplot_heatmap() are now removed.
       - display messages are added to rbiostats(), rbioplot(), rbioplot_curve() and rbioplot_heatmap().

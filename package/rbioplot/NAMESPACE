@@ -3,6 +3,7 @@
 export(all_dvsr)
 export(autorange_bar_y)
 export(autorange_curve)
+export(minor_tick)
 export(nat_dvsr)
 export(rbioplot)
 export(rbioplot_curve)
