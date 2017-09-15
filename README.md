@@ -21,7 +21,8 @@ Installation
 
 Change Log
 
-    0.3.9 (Sep. 14. 2017)
+    0.4.0 (Sep. 14. 2017)
+      - rbioplot_app() added
       - minor_tick() separeted from rbioplot()
       - errorbarLblSize added for rbioplot()
       
