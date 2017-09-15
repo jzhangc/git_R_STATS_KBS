@@ -22,7 +22,8 @@ Installation
 Change Log
 
     0.3.9 (Sep. 14. 2017)
-      - minor_tick() separeted from the rbioplot function
+      - minor_tick() separeted from rbioplot()
+      - errorbarLblSize added for rbioplot()
       
     0.3.8
       - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now removed.
