@@ -9,3 +9,8 @@ rbioplot_app()
 \description{
 The web app version of \code{\link{rbioplot}}.
 }
+\examples{
+\dontrun{
+rbioplot_app() # launch the app version by running the function
+}
+}

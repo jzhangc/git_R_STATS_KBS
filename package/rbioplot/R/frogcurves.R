@@ -118,12 +118,6 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   cat("Done!\n") # final message
 
   ## plotting
-  # a function to add minor ticks
-  minor_tick <- function(major, n_minor) {
-    labs <- c(sapply(major, function(x) c(x, rep("", n_minor))))
-    labs[1:(length(labs) - n_minor)]
-  }
-
   # x axis
   if (x_custom_tick_range == TRUE){ # custome x range and tick settings
     x_axis_Mx <- x_upper_limit

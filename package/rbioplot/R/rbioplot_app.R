@@ -11,9 +11,8 @@
 #' @import shiny
 #' @examples
 #' \dontrun{
-#'
 #' rbioplot_app() # launch the app version by running the function
-#'
+#' }
 #' @export
 rbioplot_app <- function(){
   shinyApp(
@@ -78,7 +77,7 @@ rbioplot_app <- function(){
           # Horizontal line ----
           tags$hr(),
 
-          ## Quick plot
+          ## Plot settings
           h2("Detailed plot settings"),
 
           # Plot: title

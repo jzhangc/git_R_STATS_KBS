@@ -23,7 +23,8 @@ Change Log
 
     0.4.0 (Sep. 14. 2017)
       - rbioplot_app() added
-      - minor_tick() separeted from rbioplot()
+      - rbioplot_curve_app() added
+      - minor_tick() separeted from the main functions
       - errorbarLblSize added for rbioplot()
       
     0.3.8
