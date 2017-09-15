@@ -11,8 +11,8 @@
 #' @import shiny
 #' @examples
 #' \dontrun{
-#' rbioplot("data.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level")
+#'
+#' rbioplot_app() # launch the app version by running the function
 #'
 #' @export
 rbioplot_app <- function(){
