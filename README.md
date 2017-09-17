@@ -24,7 +24,7 @@ Change Log
     0.4.0 (Sep. 17. 2017)
       - rbioplot_app() added
       - rbioplot_curve_app() added
-      - rbioplot_heat_app() added
+      - rbioplot_heatmap_app() added
       - minor_tick() separeted from the main functions
       - errorbarLblSize added for rbioplot()
       
