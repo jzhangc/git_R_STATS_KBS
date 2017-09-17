@@ -15,6 +15,7 @@
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
+#' @param xSpace Set the space between the plot and the x-axis tick marks. Default is \code{5}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
@@ -64,7 +65,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                              Title = NULL,  fontType = "sans",
                              tileLow = "skyblue", tileHigh = "midnightblue",
                              tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
-                             xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                             xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
                              yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
                              legendTtl = FALSE, legendPos = "bottom",
                              plotWidth = 170, plotHeight = 150){
@@ -183,7 +184,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
           axis.title = element_text(face = "bold", family = fontType),
           legend.position = legendPos,
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign,
-                                     margin = margin(t = 5, r = 5, b = 3, l = 5, unit = "pt")),
+                                     margin = margin(t = 5, r = 5, b = xSpace, l = 5, unit = "pt")),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
 
   if (tileLbl == TRUE){

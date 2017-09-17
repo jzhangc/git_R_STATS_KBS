@@ -8,9 +8,10 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
   fontType = "sans", tileLow = "skyblue", tileHigh = "midnightblue",
   tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
   tileLblPos = 0.5, xLabel = NULL, xTickLblSize = 10,
-  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, yLabel = NULL,
-  yTickLblSize = 10, yTickItalic = FALSE, legendTtl = FALSE,
-  legendPos = "bottom", plotWidth = 170, plotHeight = 150)
+  xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
+  yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
+  legendTtl = FALSE, legendPos = "bottom", plotWidth = 170,
+  plotHeight = 150)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -40,6 +41,8 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 \item{xTickLblSize}{Font size of x axis ticks. Default is 10.}
 
 \item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
+
+\item{xSpace}{Set the space between the plot and the x-axis tick marks. Default is \code{5}.}
 
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 

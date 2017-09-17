@@ -130,6 +130,8 @@ rbioplot_heatmap_app <- function(){
                        value = 10),
           numericInput(inputId = "xAngle", label = "Tick label angle",
                        value = 0, step = 15),
+          numericInput(inputId = "xSpace", label = "Tick label space",
+                       value = 5, step = 1),
           radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                        selected = 0.5),
 
@@ -296,7 +298,7 @@ rbioplot_heatmap_app <- function(){
                 axis.title = element_text(face = "bold", family = input$fontType),
                 legend.position = input$legendPos,
                 axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign,
-                                           margin = margin(t = 5, r = 5, b = 3, l = 5, unit = "pt")),
+                                           margin = margin(t = 5, r = 5, b = input$xSpace, l = 5, unit = "pt")),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
 
         if (input$tileLbl){

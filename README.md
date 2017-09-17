@@ -26,7 +26,8 @@ Change Log
       - rbioplot_curve_app() added
       - rbioplot_heatmap_app() added
       - minor_tick() separeted from the main functions
-      - errorbarLblSize added for rbioplot()
+      - rbioplot(): errorbar label size now can be set via argument errorbarLblSize
+      - rbioplot_heatmap(): space between x-axis tick marks and the plot now can be set via arugment xSpace
       
     0.3.8
       - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now removed.
