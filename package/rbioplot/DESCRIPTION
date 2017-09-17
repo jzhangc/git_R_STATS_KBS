@@ -11,5 +11,5 @@ Imports:
     multcomp (>= 1.4-4),multcompView (>= 0.1-7),
     ggplot2 (>= 2.1.0),
     reshape2 (>= 1.4.1),
-    gtable (>= 0.2.0), grid (>= 3.2.4), scales (>= 0.4.1), shiny (>= 1.0.5)
+    gtable (>= 0.2.0), grid (>= 3.2.4), scales (>= 0.4.1), shiny (>= 1.0.5), colourpicker (>= 0.3)
 RoxygenNote: 6.0.1

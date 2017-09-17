@@ -76,6 +76,7 @@ rbioplot_curve_app <- function(){
 
           # Plot: font
           textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
+          actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
 
           # Plot: symbol size
           numericInput(inputId = "symbolSize", label = "Symbol size",
@@ -87,11 +88,8 @@ rbioplot_curve_app <- function(){
           numericInput(inputId = "plotHeight", label = "Plot height",
                        value = 600, step = 10),
 
-          # Plot: if to normalized to 1
-          checkboxInput("Nrm", "Normalize to control as 1", TRUE),
-
           # Plot: legend title
-          checkboxInput("legendTtl", "Display legend title", FALSE),
+          checkboxInput("legendTtl", "Display legend title", TRUE),
 
           # Plot: right side y
           checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
@@ -316,9 +314,9 @@ rbioplot_curve_app <- function(){
         }
 
         if (input$legendTtl){
-          plt <- baseplt + theme(legend.title = element_blank())
-        } else {
           plt <- baseplt + theme(legend.title = element_text(size = 9))
+        } else {
+          plt <- baseplt + theme(legend.title = element_blank())
         }
 
         ## finalize the plot

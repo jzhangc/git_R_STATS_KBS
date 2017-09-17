@@ -1,12 +1,13 @@
-#' @title rbioplot_app
+#' @title rbioplot_heatmap_app
 #'
-#' @description The web app version of \code{\link{rbioplot}}.
+#' @description The web app version of \code{\link{rbioplot_heatmap}}.
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
 #' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @importFrom scales rescale_none
+#' @importFrom colourpicker colourInput
 #' @import ggplot2
 #' @import shiny
 #' @examples
@@ -14,11 +15,11 @@
 #' rbioplot_app() # launch the app version by running the function
 #' }
 #' @export
-rbioplot_app <- function(){
+rbioplot_heatmap_app <- function(){
   shinyApp(
     ui = fluidPage(
       ## App title ----
-      titlePanel(h1("Function: rbioplot()")),
+      titlePanel(h1("Function: rbioplot_heatmap()")),
 
       ## Sidebar layout with input and output definitions ----
       sidebarLayout(
@@ -87,34 +88,36 @@ rbioplot_app <- function(){
           textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
           actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
 
+          ## Plot settings
+          h2("Detailed plot settings"),
+
           # Plot: size
           numericInput(inputId = "plotWidth", label = "Plot width",
                        value = 800, step = 10),
           numericInput(inputId = "plotHeight", label = "Plot height",
                        value = 600, step = 10),
 
-          # Plot: if to normalized to 1
-          checkboxInput("Nrm", "Normalize to control as 1", TRUE),
+          # Plot: if to remove control
+          checkboxInput("rmCntl", "Remove control", FALSE),
 
           # Plot: legend title
           checkboxInput("legendTtl", "Display legend title", FALSE),
-
-          # Plot: right side y
-          checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
+          radioButtons("legendPos", "Legend position", choices = c(none = "none", left = "left", right = "right", bottom = "bottom", top = "top"),
+                       selected = "bottom"),
 
           # Space ----
           tags$br(),
 
-          # error bar
-          h4("Error bar"),
-          radioButtons("errorbar", "Type", choices = c(SEM = "sem", SD = "sd"),
-                       selected = "sem"),
-          numericInput(inputId = "errorbarWidth", label = "Width",
-                       value = 0.1, step = 0.01),
-          numericInput(inputId = "errorbarLblSize", label = "Label size",
-                       value = 6, step = 1),
-          numericInput(inputId = "errorbarLblSpace", label = "Space below label",
-                       value = 0.07, step = 0.01),
+          # Plot: tiles
+          h2("Tile settings"),
+          # tile colour code
+          colourInput("tileLow", "Lower end colour", value = "skyblue", returnName = TRUE, palette = "square"),
+          colourInput("tileHigh", "Higher end colour", value = "midnightblue", returnName = TRUE, palette = "square"),
+          checkboxInput("tileLbl", "Display tile label", TRUE),
+          numericInput(inputId = "tileLblSize", label = "Label size", value = 10, step = 1),
+          colourInput("tileTxtColour", "Label colour", value = "white", returnName = TRUE, palette = "limited"),
+          radioButtons("tileLblPos", "Label position", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                       selected = 0.5),
 
           # Space ----
           tags$br(),
@@ -138,15 +141,7 @@ rbioplot_app <- function(){
           checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
           textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
           numericInput(inputId = "yTickLblSize", label = "Tick label size",
-                       value = 10),
-          numericInput(inputId = "y_lower_limit", label = "Axis lower limit",
-                       value = 0, step = 0.25),
-          numericInput(inputId = "y_upper_limit", label = "Axis upper limit",
-                       value = NULL, step = 0.25),
-          numericInput(inputId = "y_major_tick_range", label = "Major tick range",
-                       value = 0.5, step = 0.25),
-          numericInput(inputId = "y_n_minor_ticks", label = "Number of miner ticks",
-                       value = 4)
+                       value = 10)
         ),
 
         ## Main panel for displaying outputs ----
@@ -209,52 +204,9 @@ rbioplot_app <- function(){
                        function(i) tapply(data()[[i]], data()[1], mean, na.rm = TRUE))
         Mean <- data.frame(Mean, check.names = FALSE) # add the check.name argument to preserve the name of the variables. same as all the following data.frame() usage
         Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
-        if (input$Nrm){ # normalize to control as 1
-          MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
-                                       function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
-                                Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels=c().
-        } else {
-          MeanNrm <- Mean
-        }
-
-        # calculations for error bar
-        if (input$errorbar == "sem"){
-
-          SEM <- sapply(colnames(data())[-1],
-                        function(i) tapply(data()[[i]], data()[1],
-                                           function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
-          SEM <- data.frame(SEM, check.names = FALSE)
-          SEM$Condition <- factor(rownames(SEM), levels = c(rownames(SEM)))
-
-          if (input$Nrm){
-            SEMNrm <- data.frame(sapply(colnames(SEM)[-length(colnames(SEM))],
-                                        function(i)sapply(SEM[[i]], function(j)j/Mean[[i]][1])),
-                                 Condition = factor(rownames(SEM), levels = c(rownames(SEM))), check.names = FALSE) # keep the correct factor level order with levels=c().
-          } else {
-            SEMNrm <- SEM
-          }
-
-          colnames(SEMNrm)[-length(colnames(SEMNrm))] <- sapply(colnames(data())[-1],
-                                                                function(x)paste(x, "SEM", sep = ""))
-
-        } else if (input$errorbar == "sd"){
-          SD <- sapply(colnames(data())[-1],
-                       function(i) tapply(data()[[i]], data()[1],
-                                          function(j)sd(j, na.rm = TRUE)))
-          SD <- data.frame(SD, check.names = FALSE)
-          SD$Condition <- factor(rownames(SD), levels = c(rownames(SD)))
-
-          if (input$Nrm){
-            SDNrm <- data.frame(sapply(colnames(SD)[-length(colnames(SD))],
-                                       function(i)sapply(SD[[i]], function(j)j/Mean[[i]][1])),
-                                Condition = factor(rownames(SD), levels = c(rownames(SD))), check.names = FALSE)
-          } else {
-            SDNrm <- SD
-          }
-
-          colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(data())[-1],
-                                                              function(x)paste(x, "SD", sep = ""))
-        }
+        MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
+                                     function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
+                              Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels=c().
 
         # for automatic significant labels (Tukey: letters; t-test & Dunnett: asterisks)
         cNm <- colnames(data())
@@ -309,23 +261,14 @@ rbioplot_app <- function(){
         cTtMLT$id <- rownames(cTtMLT)
         cTtMLT[1] <- as.factor(cTtMLT[[1]])
 
-        colnames(MeanNrmMLT)[3] <- "NrmMean" # give unique variable names
-        colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl") # same as above and make sure to have the same "Condition" variable name for merging
+        colnames(MeanNrmMLT)[3] <- "Fold.Change"
+        colnames(cTtMLT)[1:3] <- c(colnames(MeanNrmMLT)[1], "variableLbl", "Lbl")
 
-        if (input$errorbar == "sem"){
-          SEMNrmMLT <- melt(SEMNrm,id.vars = colnames(SEMNrm)[length(colnames(SEMNrm))])
-          SEMNrmMLT$id <- rownames(SEMNrmMLT)
-          colnames(SEMNrmMLT)[2:3] <- c("variableSEM", "NrmErr")
+        DfPlt <- merge(MeanNrmMLT, cTtMLT, by = c("id", "Condition"), sort = FALSE)
 
-          DfPlt <- merge(MeanNrmMLT, SEMNrmMLT, by = c("id", "Condition"), sort = FALSE)
-          DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
-        } else if (input$errorbar == "sd"){
-          SDNrmMLT <- melt(SDNrm,id.vars = colnames(SDNrm)[length(colnames(SDNrm))])
-          SDNrmMLT$id <- rownames(SDNrmMLT)
-          colnames(SDNrmMLT)[2:3] <- c("variableSD", "NrmErr")
-
-          DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
-          DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
+        if (input$rmCntl == TRUE){
+          DfPlt <- DfPlt[DfPlt$Condition %in% levels(DfPlt$Condition)[-1], ]
+          DfPlt$Condition <- factor(DfPlt$Condition, levels = unique(DfPlt$Condition))
         }
 
         return(DfPlt)
@@ -334,57 +277,48 @@ rbioplot_app <- function(){
       ggplotdata <- reactive({
         cNm <- colnames(data())
 
-        y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
-        y_axis_Mn <- input$y_lower_limit
-        major_tick_range <- input$y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
-        n_minor_ticks <- input$y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
-
         loclEnv <- environment()
-        baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
+        baseplt <- ggplot(data = pltdata(), aes(x = Condition, y = variable),
                           environment = loclEnv) +
-          geom_bar(position = "dodge", stat = "identity", color = "black") +
-          geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = input$errorbarWidth,
-                        position = position_dodge(0.9))+
-          scale_y_continuous(expand = c(0, 0),
-                             breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
-                             labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = major_tick_range), n_minor_ticks),
-                             limits = c(y_axis_Mn, y_axis_Mx), oob = rescale_none)+
+          geom_tile(aes(fill = Fold.Change), colour = "white") +
+          scale_fill_gradient(low = input$tileLow, high = input$tileHigh,
+                              breaks = c(ceiling(with(pltdata(), min(Fold.Change) / 0.05)) * 0.05, floor(with(pltdata(), max(Fold.Change)) / 0.05) * 0.05),
+                              guide = guide_colorbar(ticks = FALSE)) +
+          scale_y_discrete(expand = c(0, 0)) +
+          scale_x_discrete(expand = c(0, 0)) +
           ggtitle(input$Title) +
           xlab(input$xLabel) +
           ylab(input$yLabel) +
           theme(panel.background = element_rect(fill = 'white', colour = 'black'),
-                panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+                panel.border = element_blank(),
+                axis.ticks = element_line(colour = "white"),
                 plot.title = element_text(face = "bold", family = input$fontType),
                 axis.title = element_text(face = "bold", family = input$fontType),
-                legend.position = "bottom",
-                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
-                axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5)) +
-          scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+                legend.position = input$legendPos,
+                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign,
+                                           margin = margin(t = 5, r = 5, b = 3, l = 5, unit = "pt")),
+                axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
 
-        if (input$xTickItalic){
+        if (input$tileLbl){
+          baseplt <- baseplt +
+            geom_text(aes(x = Condition, y = variable, label = Lbl), size = input$tileLblSize, vjust = input$tileLblPos,
+                      color = input$tileTxtColour, family = input$fontType)
+        }
+
+        if (input$xTickItalic == TRUE){
           baseplt <- baseplt +
             theme(axis.text.x = element_text(face = "italic"))
         }
 
-        if (input$yTickItalic){
+        if (input$yTickItalic == TRUE){
           baseplt <- baseplt +
             theme(axis.text.y = element_text(face = "italic"))
         }
 
-        if (input$Tp == "Tukey"){
-          pltLbl <- baseplt +
-            geom_text(aes(y = NrmMean + NrmErr + input$errorbarLblSpace, label = Lbl), position = position_dodge(width = 0.9),
-                      color = "black", size = input$errorbarLblSize) # the labels are placed 0.07 (tested optimal for letters) unit higher than the mean + SEM.
-        } else {
-          pltLbl <- baseplt +
-            geom_text(aes(y = NrmMean + NrmErr + input$errorbarLblSpace, label = Lbl), position = position_dodge(width = 0.9),
-                      size = input$errorbarLblSize, color = "black") # font size 6 and 0.06 unit higher is good for asterisks.
-        }
-
         if (input$legendTtl == FALSE){
-          pltLbl <- pltLbl + theme(legend.title = element_blank())
+          pltLbl <- baseplt + theme(legend.title = element_blank())
         } else {
-          pltLbl <- pltLbl + theme(legend.title = element_text(size = 9))
+          pltLbl <- baseplt + theme(legend.title = element_text(size = 9))
         }
 
         if (nlevels(pltdata()$variable) == 1){
@@ -396,27 +330,24 @@ rbioplot_app <- function(){
           plt <- pltLbl
         }
 
-        ## finalize the plot
+        ## switch x axis to top
         grid.newpage()
 
-        if (input$rightsideY){ # add the right-side y axis
-          # extract gtable
-          pltgtb <- ggplot_gtable(ggplot_build(plt))
+        # extract gtable
+        pltgtb <- ggplot_gtable(ggplot_build(plt))
 
-          # add the right side y axis
-          Aa <- which(pltgtb$layout$name == "axis-l")
-          pltgtb_a <- pltgtb$grobs[[Aa]]
-          axs <- pltgtb_a$children[[2]]
-          axs$widths <- rev(axs$widths)
-          axs$grobs <- rev(axs$grobs)
-          axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-          Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-          pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-          pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+        # switch x axis to top
+        Ap <- c(subset(pltgtb$layout, name == "panel", se = t:r))
+        Aa <- which(pltgtb$layout$name == "axis-b")
+        pltgtb_a <- pltgtb$grobs[[Aa]]
+        axs <- pltgtb_a$children[[2]]
+        axs$heights <- rev(axs$heights)
+        axs$grobs <- rev(axs$grobs)
+        axs$grobs[[2]]$y <- axs$grobs[[2]]$y - unit(1, "npc") + unit(0.15, "cm")
+        pltgtb <- gtable_add_rows(pltgtb, pltgtb$heights[pltgtb$layout[Aa, ]$l], Ap$t - 1)
+        pltgtb <- gtable_add_grob(pltgtb, axs, l = Ap$l, t = Ap$t, r = Ap$r)
+        pltgtb <- pltgtb[-(Ap$b + 2), ]
 
-        } else { # no right side y-axis
-          pltgtb <- plt
-        }
         return(pltgtb)
       })
 
