@@ -179,7 +179,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
     ylab(yLabel) +
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_blank(),
-          axis.ticks = element_line(colour = "white"),
+          axis.ticks = element_line(colour = "white", size = 0), # remove ticks
           plot.title = element_text(face = "bold", family = fontType),
           axis.title = element_text(face = "bold", family = fontType),
           legend.position = legendPos,
