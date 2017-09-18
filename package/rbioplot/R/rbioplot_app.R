@@ -430,7 +430,7 @@ rbioplot_app <- function(){
         filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".histogram.pdf", sep = "")},
         content = function(file) {
           ggsave(file, plot = ggplotdata(),
-                 width = input$plotWidth, height = input$plotHeight, units = "mm", dpi = 600, device = "pdf")
+                 width = (input$plotWidth * 25.4) / 72, height = (input$plotHeight * 25.4) / 72, units = "mm", dpi = 600, device = "pdf")
         }
       )
 
