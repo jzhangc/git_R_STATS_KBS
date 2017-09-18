@@ -10,7 +10,6 @@
 #' @export
 rbiostats_app <- function(){
   app <- shinyApp(
-
     ui = fluidPage(
       ## App title ----
       titlePanel(h1("Function: rbiostats()")),
@@ -61,19 +60,25 @@ rbiostats_app <- function(){
           # plot: stats
           radioButtons("Tp", "Statistical anlaysis", choices = c(`t-test` = "t-test", ANOVA = "anova", `ANOVA + Tukey` = "tukey", `ANOVA + Dunnett\'s` = "dunnetts"),
                        selected = "t-test"),
-          div(style = "display:inline-block", downloadButton("dlSummary", "Save stats summary"))
-        ),
+          div(style = "display:inline-block", downloadButton("dlSummary", "Save stats summary")),
 
-        ## Main panel for displaying outputs ----
-        mainPanel(
-          # set up tabs
-          tabsetPanel(type = "tabs",
-                      tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
-                      tabPanel("Stats Summary", verbatimTextOutput("Summary")))
-        ), fluid = FALSE
+          # Horizontal line ----
+          tags$hr(),
+
+          # exit
+          actionButton("close", "Close App", icon = icon("exclamation"),
+                       onclick = "setTimeout(function(){window.close();}, 100);"),
+
+          ## Main panel for displaying outputs ----
+          mainPanel(
+            # set up tabs
+            tabsetPanel(type = "tabs",
+                        tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
+                        tabPanel("Stats Summary", verbatimTextOutput("Summary")))
+          ), fluid = FALSE
+        )
       )
     ),
-
     server = function(input, output){
       ## input data check
       # input$file1 will be NULL initially.
@@ -170,8 +175,12 @@ rbiostats_app <- function(){
       output$Summary <- renderPrint(
         mainstatsdata()
       )
+
+      # stop and close window
+      observe({
+        if (input$close > 0) stopApp()  # stop shiny
+      })
     }
   )
-
   runApp(app, launch.browser = TRUE)
 }

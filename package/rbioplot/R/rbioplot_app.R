@@ -78,6 +78,13 @@ rbioplot_app <- function(){
           # Horizontal line ----
           tags$hr(),
 
+          # exit
+          actionButton("close", "Close App", icon = icon("exclamation"),
+                       onclick = "setTimeout(function(){window.close();}, 100);"),
+
+          # Horizontal line ----
+          tags$hr(),
+
           ## Plot settings
           h2("Detailed plot settings"),
 
@@ -445,6 +452,11 @@ rbioplot_app <- function(){
       # summary
       output$Summary <- renderTable({
         return(pltdata())
+      })
+
+      # stop and close window
+      observe({
+        if (input$close > 0) stopApp()  # stop shiny
       })
     }
   )
