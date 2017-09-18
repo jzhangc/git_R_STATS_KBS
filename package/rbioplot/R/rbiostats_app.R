@@ -140,7 +140,7 @@ rbiostats_app <- function(){
           } else if (input$Tp == "tukey"){
             Eqv <- bartlett.test(formula(fml), data = data())  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
             statsLst <- list(EqualVariance = Eqv, ANOVA = anova(Mdl), Tukey = TukeyHSD(Mdl))
-          } else if (input$Tp == "dunnett"){
+          } else if (input$Tp == "dunnetts"){
             Eqv <- bartlett.test(formula(fml), data = data())  # Bartlett equal variance test. p>0.5 means the variance between groups is equal.
             var <- cNm[1]
             arg <- list("Dunnett")
