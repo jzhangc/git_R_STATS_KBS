@@ -12,7 +12,7 @@
 #' @import shiny
 #' @examples
 #' \dontrun{
-#' rbioplot_app() # launch the app version by running the function
+#' rbioplot_heatmap_app() # launch the app version by running the function
 #' }
 #' @export
 rbioplot_heatmap_app <- function(){

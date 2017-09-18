@@ -22,6 +22,7 @@ Installation
 Change Log
 
     0.4.0 (Sep. 17. 2017)
+      - rbiostats_app() added
       - rbioplot_app() added
       - rbioplot_curve_app() added
       - rbioplot_heatmap_app() added

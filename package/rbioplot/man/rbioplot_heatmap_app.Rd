@@ -11,6 +11,6 @@ The web app version of \code{\link{rbioplot_heatmap}}.
 }
 \examples{
 \dontrun{
-rbioplot_app() # launch the app version by running the function
+rbioplot_heatmap_app() # launch the app version by running the function
 }
 }
