@@ -54,6 +54,7 @@ rbiostats_app <- function(){
           radioButtons("disp", "Display", choices = c(Head = "head", All = "all"),
                        selected = "head"),
 
+
           # Horizontal line ----
           tags$hr(),
 
@@ -64,21 +65,19 @@ rbiostats_app <- function(){
 
           # Horizontal line ----
           tags$hr(),
+          actionButton("close", "Close App", icon = icon("exclamation"), onclick = "setTimeout(function(){window.close();}, 100);")
+        ),
 
-          # exit
-          actionButton("close", "Close App", icon = icon("exclamation"),
-                       onclick = "setTimeout(function(){window.close();}, 100);"),
-
-          ## Main panel for displaying outputs ----
-          mainPanel(
-            # set up tabs
-            tabsetPanel(type = "tabs",
-                        tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
-                        tabPanel("Stats Summary", verbatimTextOutput("Summary")))
-          ), fluid = FALSE
-        )
+        ## Main panel for displaying outputs ----
+        mainPanel(
+          # set up tabs
+          tabsetPanel(type = "tabs",
+                      tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
+                      tabPanel("Stats Summary", verbatimTextOutput("Summary")))
+        ), fluid = FALSE
       )
     ),
+
     server = function(input, output){
       ## input data check
       # input$file1 will be NULL initially.
