@@ -12,7 +12,7 @@ rbiostats_app <- function(){
   shinyApp(
     ui = fluidPage(
       ## App title ----
-      titlePanel(h1("Function: rbioplot_heatmap()")),
+      titlePanel(h1("Function: rbiostats()")),
 
       ## Sidebar layout with input and output definitions ----
       sidebarLayout(
