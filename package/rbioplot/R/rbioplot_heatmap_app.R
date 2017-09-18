@@ -16,7 +16,8 @@
 #' }
 #' @export
 rbioplot_heatmap_app <- function(){
-  shinyApp(
+  app <- shinyApp(
+
     ui = fluidPage(
       ## App title ----
       titlePanel(h1("Function: rbioplot_heatmap()")),
@@ -380,4 +381,5 @@ rbioplot_heatmap_app <- function(){
       })
     }
   )
+  runApp(app, launch.browser = TRUE)
 }

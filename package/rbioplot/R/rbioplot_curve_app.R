@@ -10,7 +10,8 @@
 #' }
 #' @export
 rbioplot_curve_app <- function(){
-  shinyApp(
+  app <- shinyApp(
+
     ui = fluidPage(
       ## App title ----
       titlePanel(h1("Function: rbioplot_curve()")),
@@ -274,7 +275,7 @@ rbioplot_curve_app <- function(){
 
         loclEnv <- environment()
         baseplt <- ggplot(data = pltdata(), aes(x = variable, y = plotMean, shape = Condition, linetype = Condition),
-                        environment = loclEnv) +
+                          environment = loclEnv) +
           geom_line() +
           geom_point(size = input$symbolSize)+
           geom_errorbar(aes(ymin = plotMean - ifelse(is.na(plotErr), 0, plotErr),
@@ -367,4 +368,5 @@ rbioplot_curve_app <- function(){
       })
     }
   )
+  runApp(app, launch.browser = TRUE)
 }

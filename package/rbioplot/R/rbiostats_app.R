@@ -9,7 +9,8 @@
 #' }
 #' @export
 rbiostats_app <- function(){
-  shinyApp(
+  app <- shinyApp(
+
     ui = fluidPage(
       ## App title ----
       titlePanel(h1("Function: rbiostats()")),
@@ -169,6 +170,8 @@ rbiostats_app <- function(){
       output$Summary <- renderPrint(
         mainstatsdata()
       )
-   }
- )
+    }
+  )
+
+  runApp(app, launch.browser = TRUE)
 }
