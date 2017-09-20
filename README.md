@@ -21,14 +21,16 @@ Installation
 
 Change Log
 
-    0.4.0 (Sep. 17. 2017)
-      - rbiostats_app() added
-      - rbioplot_app() added
-      - rbioplot_curve_app() added
-      - rbioplot_heatmap_app() added
+    0.4.0 (Sep. 20. 2017)
+      - Web app version of the main functions added: 
+          - rbiostats_app()
+          - rbioplot_app()
+          - rbioplot_curve_app()
+          - rbioplot_heatmap_app()
       - minor_tick() separeted from the main functions
       - rbioplot(): errorbar label size now can be set via argument errorbarLblSize
       - rbioplot_heatmap(): space between x-axis tick marks and the plot now can be set via arugment xSpace
+      - Bug fixes
       
     0.3.8
       - the case sensitive requirement for the “errorbar" argument of rbioplot(), rbioplot_curve(), autorange_bar_y() and autorange_curve() are now removed.
