@@ -22,7 +22,7 @@ Installation
 Change Log
 
     0.4.0 (Sep. 20. 2017)
-      - Web app version of the main functions added: 
+      - Web app version of the main functions added. To launch the app in the default web browser, run the corresponding app function (see below) in the R console:
           - rbiostats_app()
           - rbioplot_app()
           - rbioplot_curve_app()
