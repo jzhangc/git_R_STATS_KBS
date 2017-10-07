@@ -302,7 +302,7 @@ rbioplot_heatmap_app <- function(){
           theme(panel.background = element_rect(fill = 'white', colour = 'black'),
                 panel.border = element_blank(),
                 axis.ticks = element_line(colour = "white", size = 0),
-                plot.title = element_text(face = "bold", family = input$fontType),
+                plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType),
                 axis.title = element_text(face = "bold", family = input$fontType),
                 legend.position = input$legendPos,
                 axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign,
