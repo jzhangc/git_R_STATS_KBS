@@ -21,8 +21,12 @@ Installation
 
 Change Log
 
-    0.4.0 (Sep. 20. 2017)
-      - Web app version of the main functions added. To launch app in the default web browser, run the corresponding app function (see below) in R console:
+    0.4.1 (Oct. 6. 2017)
+      - The default position for plot titles set to "centre" for the web apps
+      - Bug fixes
+
+    0.4.0
+      - Web app version of the main functions added. To launch the app in the default web browser, run the corresponding app function (see below) in the R console:
           - rbiostats_app()
           - rbioplot_app()
           - rbioplot_curve_app()
