@@ -153,7 +153,7 @@ rbioplot_app <- function(){
                        value = NULL, step = 0.25),
           numericInput(inputId = "y_major_tick_range", label = "Major tick range",
                        value = 0.5, step = 0.25),
-          numericInput(inputId = "y_n_minor_ticks", label = "Number of miner ticks",
+          numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks",
                        value = 4)
         ),
 

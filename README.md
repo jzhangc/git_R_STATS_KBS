@@ -23,6 +23,7 @@ Change Log
 
     0.4.1 (Oct. 6. 2017)
       - The default position for plot titles set to "centre" for the web apps
+      - Typo fixes
       - Bug fixes
 
     0.4.0
