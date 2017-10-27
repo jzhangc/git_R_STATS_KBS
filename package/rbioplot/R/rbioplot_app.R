@@ -169,7 +169,6 @@ rbioplot_app <- function(){
     ),
 
     server = function(input, output){
-
       ## input data check
       # input$file1 will be NULL initially.
       data <- reactive({
