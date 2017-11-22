@@ -22,6 +22,11 @@ Installation
 Change Log
 
     0.4.2 (Oct. 6. 2017)
+      - Font size for axis titles now customizable for all the plotting functions and corresponding apps
+      - Legend font size now cutomizable for all the plotting functions and corresponding apps
+      - Bar graph now can be changed for rbioplot() and rbioplot_app()
+
+    0.4.2
       - Remote deployment concept for rbioplot_app() added
 
     0.4.1

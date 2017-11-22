@@ -6,6 +6,7 @@ library(grid)
 library(gtable)
 library(scales)
 library(shiny)
+library(RBioplot)
 
 function(input, output){
   ## input data check
