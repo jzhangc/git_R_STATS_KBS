@@ -13,15 +13,19 @@
 #' @param tileTxtColour Set the colour of the on tile label. Default is \code{"white"}. For full colour options and names, refer to the website \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param tileLblPos Set the position of the tile lables. Options are \code{0}, \code{0.5} and \code{1}. Default is \code{0.5}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param xLabelSize x axis label size. Default is \code{10}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xSpace Set the space between the plot and the x-axis tick marks. Default is \code{5}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param yLabelSize y axis label size. Default is \code{10}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
+#' @param legendSize Legend size. Default is \code{9}.
 #' @param legendTtl Hide/Display legend title. Default is \code{FALSE}.
+#' @param legendTtlSize Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.
 #' @param legendPos Set the legend position. Options are \code{"top"}, \code{"bottom"}, \code{"left"} and \code{"right"}. Default is \code{"bottom"}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
@@ -65,11 +69,10 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                              Title = NULL,  fontType = "sans",
                              tileLow = "skyblue", tileHigh = "midnightblue",
                              tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
-                             xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
-                             yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                             legendTtl = FALSE, legendPos = "bottom",
+                             xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
+                             yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE,
+                             legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,legendPos = "bottom",
                              plotWidth = 170, plotHeight = 150){
-
   ## load file
   rawData <- read.csv(file = fileName,header = TRUE, na.strings = "NA",stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
@@ -131,11 +134,9 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                  colnames(Lvl) <- c(colnames(rawData)[1], i)
                  Lvl
                },simplify = FALSE)
-  cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
-                                     by = colnames(rawData)[1],sort = FALSE),
+  cTt <- Reduce(function(x, y) merge(x, y, all = TRUE, by = colnames(rawData)[1],sort = FALSE),
                 Tt, accumulate = FALSE)
-  colnames(cTt)[-1] <- sapply(colnames(rawData)[-1],
-                              function(x)paste(x, "Lbl", sep=""))
+  colnames(cTt)[-1] <- sapply(colnames(rawData)[-1], function(x)paste(x, "Lbl", sep=""))
 
   ## generate the master dataframe for plotting
   MeanNrmMLT <- melt(MeanNrm,id.vars = colnames(MeanNrm)[length(colnames(MeanNrm))])
@@ -161,8 +162,6 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
             quote = FALSE, na = "NA", row.names = FALSE)
   cat("Done!\n") # final message
 
-
-
   ## plotting
   loclEnv <- environment()
 
@@ -181,8 +180,10 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
           panel.border = element_blank(),
           axis.ticks = element_line(colour = "white", size = 0), # remove ticks
           plot.title = element_text(face = "bold", family = fontType),
-          axis.title = element_text(face = "bold", family = fontType),
+          axis.title.x = element_text(face = "bold", family = fontType, size = xLabelSize),
+          axis.title.y = element_text(face = "bold", family = fontType, size = yLabelSize),
           legend.position = legendPos,
+          legend.text = element_text(size = legendSize),
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign,
                                      margin = margin(t = 5, r = 5, b = xSpace, l = 5, unit = "pt")),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
@@ -206,7 +207,7 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
   if (legendTtl == FALSE){
     pltLbl<-baseplt + theme(legend.title = element_blank())
   } else {
-    pltLbl<-baseplt + theme(legend.title = element_text(size = 9))
+    pltLbl<-baseplt + theme(legend.title = element_text(size = legendTtlSize))
   }
 
   if (nlevels(DfPlt$variable) == 1){

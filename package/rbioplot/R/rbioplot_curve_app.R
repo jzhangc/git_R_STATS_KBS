@@ -81,6 +81,8 @@ rbioplot_curve_app <- function(){
 
           # Plot: title
           textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
+          numericInput(inputId = "TitleSize", label = "Plot title size", value = 10),
+
 
           # Plot: font
           textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
@@ -96,8 +98,11 @@ rbioplot_curve_app <- function(){
           numericInput(inputId = "plotHeight", label = "Plot height",
                        value = 600, step = 10),
 
-          # Plot: legend title
+          # Plot: legend
+          numericInput(inputId = "legendSize", label = "Legend size", value = 9),
           checkboxInput("legendTtl", "Display legend title", TRUE),
+          numericInput(inputId = "legendTtlSize", label = "Legend title size",
+                       value = 9),
 
           # Plot: right side y
           checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
@@ -119,6 +124,7 @@ rbioplot_curve_app <- function(){
           h4("X-axis"),
           checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
           textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
+          numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
           numericInput(inputId = "xTickLblSize", label = "Tick label size",
                        value = 10),
           numericInput(inputId = "xAngle", label = "Tick label angle",
@@ -141,6 +147,7 @@ rbioplot_curve_app <- function(){
           h4("Y-axis"),
           checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
           textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
+          numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
           numericInput(inputId = "yTickLblSize", label = "Tick label size",
                        value = 10),
           numericInput(inputId = "y_lower_limit", label = "Axis lower limit",
@@ -301,9 +308,13 @@ rbioplot_curve_app <- function(){
           ylab(input$yLabel) +
           theme(panel.background = element_rect(fill = 'white', colour = 'black'),
                 panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
-                plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType),
-                axis.title = element_text(face = "bold", family = input$fontType),
-                legend.position = "bottom", legend.title = element_blank(),legend.key = element_blank(),
+                plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType, size = input$TitleSize),
+                axis.title.x = element_text(face = "bold", family = input$fontType, size = input$xLabelSize),
+                axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
+                legend.position = "bottom",
+                legend.text = element_text(size = input$legendSize),
+                legend.title = element_blank(),
+                legend.key = element_blank(),
                 axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5)) +
           scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(pltdata()$Condition))))) +
@@ -320,7 +331,7 @@ rbioplot_curve_app <- function(){
         }
 
         if (input$legendTtl){
-          plt <- baseplt + theme(legend.title = element_text(size = 9))
+          plt <- baseplt + theme(legend.title = element_text(size = input$legendTtlSize))
         } else {
           plt <- baseplt + theme(legend.title = element_blank())
         }

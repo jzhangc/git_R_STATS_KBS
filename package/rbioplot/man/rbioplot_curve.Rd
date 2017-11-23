@@ -6,9 +6,10 @@
 \usage{
 rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
   errorbarWidth = 0.2, fontType = "sans", symbolSize = 2, xLabel = NULL,
-  xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
-  rightsideY = TRUE, yLabel = NULL, yTickLblSize = 10,
-  yTickItalic = FALSE, legendTtl = FALSE, plotWidth = 170,
+  xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
+  xAlign = 0.5, rightsideY = TRUE, yLabel = NULL, yLabelSize = 10,
+  yTickLblSize = 10, yTickItalic = FALSE, legendSize = 9,
+  legendTtl = FALSE, legendTtlSize = 9, plotWidth = 170,
   plotHeight = 150, x_custom_tick_range = FALSE, x_lower_limit = 0,
   x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
   y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
@@ -29,6 +30,8 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
+\item{xLabelSize}{x axis label size. Default is \code{10}.}
+
 \item{xTickLblSize}{Font size of x axis ticks. Default is \code{10}.}
 
 \item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
@@ -41,11 +44,17 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
+\item{yLabelSize}{y axis label size. Default is \code{10}}
+
 \item{yTickLblSize}{Font size of y axis ticks. Default is 10.}
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
 
+\item{legendSize}{Legend size. Default is \code{9}.}
+
 \item{legendTtl}{Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw data file will display as the legend title. Default is \code{FALSE}.}
+
+\item{legendTtlSize}{Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.}
 
 \item{plotWidth}{The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.}
 

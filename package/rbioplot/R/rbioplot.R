@@ -41,21 +41,26 @@ minor_tick <- function(major, n_minor){
 #' @param Tp Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
+#' @param TitleSize The font size of the plot title. Default is \code{10}.
 #' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
 #' @param errorbarLblSize Set the label size for the errorbar. Default is \code{6}.
 #' @param errorbarLblSpace Set the distance between the errorbar label and errorbar. Defaults is \code{0.07}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
-#' @param xTickLblSize Font size of x axis ticks. Default is 10.
+#' @param xLabelSize x axis label size. Default is \code{10}.
+#' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param rightsideY If to display the right side y-axis. Default is \code{TRUE}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
-#' @param yTickLblSize Font size of y axis ticks. Default is 10.
+#' @param yLabelSize y axis label size. Default is \code{10}.
+#' @param yTickLblSize Font size of y axis ticks. Default is \code{10}.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
+#' @param legendSize Legend size. Default is \code{9}.
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw data file will display as the legend title. Default is \code{FALSE}.
+#' @param legendTtlSize Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
@@ -96,15 +101,15 @@ minor_tick <- function(major, n_minor){
 #' }
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
-                     Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
+                     Title = NULL, TitleSize = 10,
+                     errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
                      fontType = "sans",
-                     xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                     xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                      rightsideY = TRUE,
-                     yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                     legendTtl = FALSE,
+                     yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE,
+                     legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
                      plotWidth = 170, plotHeight = 150,
                      y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
-
   ## load file
   rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
@@ -124,15 +129,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
     MeanNrm <- data.frame(sapply(colnames(Mean)[-length(colnames(Mean))],
                                  function(i)sapply(Mean[[i]], function(j)j/Mean[[i]][1])),
                           Condition = factor(rownames(Mean), levels = c(rownames(Mean))), check.names = FALSE) # keep the correct factor level order with levels=c().
-
   } else {
     MeanNrm <- Mean
   }
 
-
-
   if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
-
     SEM <- sapply(colnames(rawData)[-1],
                   function(i) tapply(rawData[[i]], rawData[1],
                                      function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
@@ -167,7 +168,6 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
     colnames(SDNrm)[-length(colnames(SDNrm))] <- sapply(colnames(rawData)[-1],
                                                         function(x)paste(x, "SD", sep = ""))
-
   } else {stop("Please properly specify the error bar type, SEM or SD")}
 
 
@@ -258,7 +258,6 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
             quote = FALSE, na = "NA", row.names = FALSE)
   cat("Done!\n") # final message
 
-
   ## plotting
   if (y_custom_tick_range == TRUE){ # custome y range and tick settings
     y_axis_Mx <- y_upper_limit
@@ -277,7 +276,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                     environment = loclEnv) +
     geom_bar(position = "dodge", stat = "identity", color = "black") +
     geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = errorbarWidth,
-                  position = position_dodge(0.9))+
+                  position = position_dodge(0.9)) +
     scale_y_continuous(expand = c(0, 0),
                        breaks = seq(y_axis_Mn, y_axis_Mx, by = major_tick_range / (n_minor_ticks + 1)),  # based on "n_minor_ticks = major_tick_range / minor_tick_range - 1"
                        labels = minor_tick(seq(y_axis_Mn, y_axis_Mx, by = major_tick_range), n_minor_ticks),
@@ -287,9 +286,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
     ylab(yLabel) +
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
-          plot.title = element_text(face = "bold", family = fontType),
-          axis.title = element_text(face = "bold", family = fontType),
+          plot.title = element_text(face = "bold", size = TitleSize, family = fontType),
+          axis.title.x = element_text(face = "bold", size = xLabelSize, family = fontType),
+          axis.title.y = element_text(face = "bold", size = xLabelSize, family = fontType),
           legend.position = "bottom",
+          legend.text = element_text(size = legendSize),
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
     scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
@@ -317,7 +318,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   if (legendTtl == FALSE){
     pltLbl <- pltLbl + theme(legend.title = element_blank())
   } else {
-    pltLbl <- pltLbl + theme(legend.title = element_text(size = 9))
+    pltLbl <- pltLbl + theme(legend.title = element_text(size = legendTtlSize))
   }
 
   if (nlevels(DfPlt$variable) == 1){
@@ -331,12 +332,9 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
   ## finalize the plot
   grid.newpage()
-
   if (rightsideY){ # add the right-side y axis
-
     # extract gtable
     pltgtb <- ggplot_gtable(ggplot_build(plt))
-
     # add the right side y axis
     Aa <- which(pltgtb$layout$name == "axis-l")
     pltgtb_a <- pltgtb$grobs[[Aa]]
@@ -347,12 +345,8 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
     Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
     pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
     pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
-
-
   } else { # no right side y-axis
-
     pltgtb <- plt
-
   }
 
   ## export the file and draw a preview
@@ -362,6 +356,5 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   cat("Done!\n") # final message
 
   grid.draw(pltgtb) # preview
-
 }
 

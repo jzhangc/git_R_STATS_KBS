@@ -91,6 +91,8 @@ rbioplot_heatmap_app <- function(){
 
           # Plot: title
           textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
+          numericInput(inputId = "TitleSize", label = "Plot title size",
+                       value = 10),
 
           # Plot: font
           textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
@@ -108,10 +110,12 @@ rbioplot_heatmap_app <- function(){
           # Plot: if to remove control
           checkboxInput("rmCntl", "Remove control", FALSE),
 
-          # Plot: legend title
+          # Plot: legend
+          numericInput(inputId = "legendSize", label = "Legend size", value = 9),
           checkboxInput("legendTtl", "Display legend title", FALSE),
           radioButtons("legendPos", "Legend position", choices = c(none = "none", left = "left", right = "right", bottom = "bottom", top = "top"),
                        selected = "bottom"),
+          numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
 
           # Space ----
           tags$br(),
@@ -134,12 +138,10 @@ rbioplot_heatmap_app <- function(){
           h4("X-axis"),
           checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
           textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-          numericInput(inputId = "xTickLblSize", label = "Tick label size",
-                       value = 10),
-          numericInput(inputId = "xAngle", label = "Tick label angle",
-                       value = 0, step = 15),
-          numericInput(inputId = "xSpace", label = "Tick label space",
-                       value = 5, step = 1),
+          numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
+          numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
+          numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
+          numericInput(inputId = "xSpace", label = "Tick label space", value = 5, step = 1),
           radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                        selected = 0.5),
 
@@ -150,8 +152,8 @@ rbioplot_heatmap_app <- function(){
           h4("Y-axis"),
           checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
           textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-          numericInput(inputId = "yTickLblSize", label = "Tick label size",
-                       value = 10)
+          numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
+          numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10)
         ),
 
         ## Main panel for displaying outputs ----
@@ -302,9 +304,11 @@ rbioplot_heatmap_app <- function(){
           theme(panel.background = element_rect(fill = 'white', colour = 'black'),
                 panel.border = element_blank(),
                 axis.ticks = element_line(colour = "white", size = 0),
-                plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType),
-                axis.title = element_text(face = "bold", family = input$fontType),
+                plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType, size = input$TitleSize),
+                axis.title.x = element_text(face = "bold", family = input$fontType, size = input$xLabelSize),
+                axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
                 legend.position = input$legendPos,
+                legend.text = element_text(size = input$legendSize),
                 axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign,
                                            margin = margin(t = 5, r = 5, b = input$xSpace, l = 5, unit = "pt")),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
@@ -328,7 +332,7 @@ rbioplot_heatmap_app <- function(){
         if (input$legendTtl == FALSE){
           pltLbl <- baseplt + theme(legend.title = element_blank())
         } else {
-          pltLbl <- baseplt + theme(legend.title = element_text(size = 9))
+          pltLbl <- baseplt + theme(legend.title = element_text(size = input$legendTtlSize))
         }
 
         if (nlevels(pltdata()$variable) == 1){
