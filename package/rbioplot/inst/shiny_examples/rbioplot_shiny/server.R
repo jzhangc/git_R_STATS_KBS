@@ -14,8 +14,7 @@ function(input, output){
   data <- reactive({
     req(input$file1)
     df <- read.table(file = input$file1$datapath, header = TRUE, sep = input$sep,
-                     na.strings = "NA", stringsAsFactors = FALSE,
-                     check.names = FALSE)
+                     na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
     df[[1]] <- factor(df[[1]], levels = c(unique(df[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
 
     return(df)
@@ -189,7 +188,7 @@ function(input, output){
     loclEnv <- environment()
     baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
                       environment = loclEnv) +
-      geom_bar(position = "dodge", stat = "identity", color = "black") +
+      geom_bar(position = "dodge", stat = "identity", color = input$barOutline) +
       geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = input$errorbarWidth,
                     position = position_dodge(0.9))+
       scale_y_continuous(expand = c(0, 0),
@@ -201,12 +200,18 @@ function(input, output){
       ylab(input$yLabel) +
       theme(panel.background = element_rect(fill = 'white', colour = 'black'),
             panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
-            plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType),
-            axis.title = element_text(face = "bold", family = input$fontType),
+            plot.title = element_text(hjust = 0.5, face = "bold", family = input$fontType, size = input$TitleSize),
+            axis.title.x = element_text(face = "bold", family = input$fontType, size = input$xLabelSize),
+            axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
             legend.position = "bottom",
+            legend.text = element_text(size = input$legendSize),
             axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
-            axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5)) +
-      scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+            axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
+
+    if (input$greyScale){
+      baseplt <- baseplt +
+        scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+    }
 
     if (input$xTickItalic){
       baseplt <- baseplt +
@@ -228,10 +233,10 @@ function(input, output){
                   size = input$errorbarLblSize, color = "black") # font size 6 and 0.06 unit higher is good for asterisks.
     }
 
-    if (input$legendTtl == FALSE){
-      pltLbl <- pltLbl + theme(legend.title = element_blank())
+    if (input$legendTtl){
+      pltLbl <- pltLbl + theme(legend.title = element_text(size = input$legendTtlSize))
     } else {
-      pltLbl <- pltLbl + theme(legend.title = element_text(size = 9))
+      pltLbl <- pltLbl + theme(legend.title = element_blank())
     }
 
     if (nlevels(pltdata()$variable) == 1){
