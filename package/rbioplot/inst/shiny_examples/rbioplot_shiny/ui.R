@@ -32,9 +32,7 @@ fluidPage(
       # Input: Select a file ----
       fileInput("file1", h2("Input CSV File"), # first quotation has the name of the input argument: input$file1. Same as below
                 multiple = TRUE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")),
+                accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
 
       # Horizontal line ----
       tags$hr(),
@@ -45,12 +43,10 @@ fluidPage(
       # Input: Select separator ----
       radioButtons("sep",
                    "Separator",
-                   choices = c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                   selected = ","), # selected = "," term sets the default value
+                   choices = c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = ","), # selected = "," term sets the default value
 
       # Input: Select number of rows to display ----
-      radioButtons("disp", "Display", choices = c(Head = "head", All = "all"),
-                   selected = "head"),
+      radioButtons("disp", "Display", choices = c(Head = "head", All = "all"), selected = "head"),
 
       # Horizontal line ----
       tags$hr(),
@@ -79,24 +75,29 @@ fluidPage(
       ## Plot settings
       h2("Detailed plot settings"),
 
+      # Plot: colour
+      checkboxInput("greyScale", "Grey Scale", TRUE),
+      colourInput("barOutline", "Bar ourline colour", value = "black", returnName = TRUE, palette = "limited"),
+
       # Plot: title
       textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
+      numericInput(inputId = "TitleSize", label = "Plot title size", value = 10),
 
       # Plot: font
       textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
       actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
 
       # Plot: size
-      numericInput(inputId = "plotWidth", label = "Plot width",
-                   value = 800, step = 10),
-      numericInput(inputId = "plotHeight", label = "Plot height",
-                   value = 600, step = 10),
+      numericInput(inputId = "plotWidth", label = "Plot width", value = 800, step = 10),
+      numericInput(inputId = "plotHeight", label = "Plot height", value = 600, step = 10),
 
       # Plot: if to normalized to 1
       checkboxInput("Nrm", "Normalize to control as 1", TRUE),
 
-      # Plot: legend title
+      # Plot: legend
+      numericInput(inputId = "legendSize", label = "Legend size", value = 9),
       checkboxInput("legendTtl", "Display legend title", FALSE),
+      numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
 
       # Plot: right side y
       checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
@@ -108,12 +109,9 @@ fluidPage(
       h4("Error bar"),
       radioButtons("errorbar", "Type", choices = c(SEM = "sem", SD = "sd"),
                    selected = "sem"),
-      numericInput(inputId = "errorbarWidth", label = "Width",
-                   value = 0.1, step = 0.01),
-      numericInput(inputId = "errorbarLblSize", label = "Label size",
-                   value = 6, step = 1),
-      numericInput(inputId = "errorbarLblSpace", label = "Space below label",
-                   value = 0.07, step = 0.01),
+      numericInput(inputId = "errorbarWidth", label = "Width", value = 0.1, step = 0.01),
+      numericInput(inputId = "errorbarLblSize", label = "Label size", value = 6, step = 1),
+      numericInput(inputId = "errorbarLblSpace", label = "Space below label", value = 0.07, step = 0.01),
 
       # Space ----
       tags$br(),
@@ -122,10 +120,9 @@ fluidPage(
       h4("X-axis"),
       checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
       textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-      numericInput(inputId = "xTickLblSize", label = "Tick label size",
-                   value = 10),
-      numericInput(inputId = "xAngle", label = "Tick label angle",
-                   value = 0, step = 15),
+      numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
+      numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
+      numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
       radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                    selected = 0.5),
 
@@ -136,16 +133,12 @@ fluidPage(
       h4("Y-axis"),
       checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
       textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-      numericInput(inputId = "yTickLblSize", label = "Tick label size",
-                   value = 10),
-      numericInput(inputId = "y_lower_limit", label = "Axis lower limit",
-                   value = 0, step = 0.25),
-      numericInput(inputId = "y_upper_limit", label = "Axis upper limit",
-                   value = NULL, step = 0.25),
-      numericInput(inputId = "y_major_tick_range", label = "Major tick range",
-                   value = 0.5, step = 0.25),
-      numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks",
-                   value = 4)
+      numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
+      numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10),
+      numericInput(inputId = "y_lower_limit", label = "Axis lower limit", value = 0, step = 0.25),
+      numericInput(inputId = "y_upper_limit", label = "Axis upper limit", value = NULL, step = 0.25),
+      numericInput(inputId = "y_major_tick_range", label = "Major tick range", value = 0.5, step = 0.25),
+      numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks", value = 4)
     ),
 
     ## Main panel for displaying outputs ----

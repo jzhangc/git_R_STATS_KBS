@@ -8,15 +8,19 @@
 #' @param symbolSize Set the size of symbols. Default is \code{2}.
 #' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param xLabelSize x axis label size. Default is \code{10}.
 #' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param rightsideY If to display the right side y-axis. Default is \code{TRUE}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
+#' @param yLabelSize y axis label size. Default is \code{10}
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
+#' @param legendSize Legend size. Default is \code{9}.
 #' @param legendTtl Hide/Display legend title. If \code{TRUE} or \code{T}, the name of the first column of the raw data file will display as the legend title. Default is \code{FALSE}.
+#' @param legendTtlSize Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param x_custom_tick_range To initiate setting the custom \code{x_upper_limit}, \code{x_lower_limit}, \code{x_major_tick_range}, \code{x_n_minor_ticks}. Default is \code{FALSE}.
@@ -44,16 +48,16 @@
 #' @export
 rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
                            symbolSize = 2,
-                           xLabel = NULL, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
+                           xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
                            rightsideY = TRUE,
-                           yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-                           legendTtl=FALSE, plotWidth = 170, plotHeight = 150,
+                           yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE,
+                           legendSize = 9, legendTtl=FALSE, legendTtlSize = 9,
+                           plotWidth = 170, plotHeight = 150,
                            x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
                            y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
   ## load file
   rawData <- read.csv(file=fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
-
   cNm <- colnames(rawData) # load all the column names
 
   ## calculate mean and SEM
@@ -63,7 +67,6 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   Mean$Condition <- factor(rownames(Mean),levels = c(rownames(Mean)))
 
   if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
-
     SEM <- sapply(colnames(rawData)[-1],
                   function(i)tapply(rawData[[i]], rawData[1],
                                     function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
@@ -82,7 +85,6 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
                                                   function(x)paste(x, "SD", sep = ""))
 
   } else {stop("Please properly specify the error bar type, SEM or SD")}
-
 
   ## generate the master dataframe for plotting
   MeanMLT <- melt(Mean, id.vars = colnames(Mean)[length(colnames(Mean))])
@@ -166,8 +168,11 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
     theme(panel.background = element_rect(fill = 'white', colour = 'black'),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
           plot.title = element_text(face = "bold", family = fontType),
-          axis.title = element_text(face = "bold", family = fontType),
-          legend.position = "bottom",legend.title = element_blank(),legend.key = element_blank(),
+          axis.title.x = element_text(face = "bold", family = fontType, size = xLabelSize),
+          axis.title.y = element_text(face = "bold", family = fontType, size = yLabelSize),
+          legend.position = "bottom", legend.text = element_text(size = legendSize),
+          legend.title = element_blank(),
+          legend.key = element_blank(),
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
     scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(DfPlt$Condition))))) +
@@ -185,16 +190,14 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 
   if (legendTtl == FALSE){
     plt <- baseplt + theme(legend.title = element_blank())
-
   } else {
-    plt <- baseplt + theme(legend.title = element_text(size=9))
+    plt <- baseplt + theme(legend.title = element_text(size = legendTtlSize))
   }
 
   ## finalize the plot
   grid.newpage()
 
   if (rightsideY){ # add the right-side y axis
-
     # extract gtable
     pltgtb <- ggplot_gtable(ggplot_build(plt))
 
@@ -208,12 +211,8 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
     Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
     pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
     pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
-
-
   } else { # no right side y-axis
-
     pltgtb <- plt
-
   }
 
   ## export the file and draw a preview
@@ -244,7 +243,6 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 #' @export
 autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_DfltZero = TRUE,
                       y_nMajorTicks = 10, y_DfltZero = TRUE){
-
   ## load file
   rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
   rawData[[1]] <- factor(rawData[[1]], levels = c(unique(rawData[[1]])))
@@ -255,10 +253,7 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
   Mean <- data.frame(Mean)
   Mean$Condition <- factor(rownames(Mean), levels = c(rownames(Mean)))
 
-
-
   if (tolower(errorbar) %in% c("sem", "standard error", "standard error of the mean")){
-
     SEM <- sapply(colnames(rawData)[-1],
                   function(i) tapply(rawData[[i]], rawData[1],
                                      function(j)sd(j, na.rm = TRUE)/sqrt(length(!is.na(j)))))
@@ -322,7 +317,6 @@ autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_Dfl
   } else {
     x_minor_tick_n<-sapply(all_dvsr(x_rd_intvl), function(i)round(x_rd_intvl/i - 1))
   }
-
 
   ## calculate optimal lower/upper limits (y_lw_lmt/y_upr_lmt) and major tick range (y_rd_intvl) for y axis
   # setting the raw y lower/upper limit

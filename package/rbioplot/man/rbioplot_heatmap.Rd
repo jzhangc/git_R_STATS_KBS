@@ -7,10 +7,11 @@
 rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
   fontType = "sans", tileLow = "skyblue", tileHigh = "midnightblue",
   tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
-  tileLblPos = 0.5, xLabel = NULL, xTickLblSize = 10,
+  tileLblPos = 0.5, xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
   xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
-  yLabel = NULL, yTickLblSize = 10, yTickItalic = FALSE,
-  legendTtl = FALSE, legendPos = "bottom", plotWidth = 170,
+  yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
+  yTickItalic = FALSE, legendSize = 9, legendTtl = FALSE,
+  legendTtlSize = 9, legendPos = "bottom", plotWidth = 170,
   plotHeight = 150)
 }
 \arguments{
@@ -38,6 +39,8 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 
 \item{xLabel}{x axis label. Type with quotation marks. Default is \code{NULL}.}
 
+\item{xLabelSize}{x axis label size. Default is \code{10}.}
+
 \item{xTickLblSize}{Font size of x axis ticks. Default is 10.}
 
 \item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
@@ -50,11 +53,17 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
+\item{yLabelSize}{y axis label size. Default is \code{10}.}
+
 \item{yTickLblSize}{Font size of y axis ticks. Default is 10.}
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
 
+\item{legendSize}{Legend size. Default is \code{9}.}
+
 \item{legendTtl}{Hide/Display legend title. Default is \code{FALSE}.}
+
+\item{legendTtlSize}{Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.}
 
 \item{legendPos}{Set the legend position. Options are \code{"top"}, \code{"bottom"}, \code{"left"} and \code{"right"}. Default is \code{"bottom"}.}
 
