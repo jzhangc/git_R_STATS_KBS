@@ -5,9 +5,9 @@
 \title{rbioplot}
 \usage{
 rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
-  TitleSize = 10, errorbar = "SEM", errorbarWidth = 0.2,
-  errorbarLblSize = 6, errorbarLblSpace = 0.07, fontType = "sans",
-  xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
+  TitleSize = 10, greyScale = TRUE, errorbar = "SEM",
+  errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
+  fontType = "sans", xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
   xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, rightsideY = TRUE,
   yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
   yTickItalic = FALSE, legendSize = 9, legendTtl = FALSE,
@@ -25,6 +25,8 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
 \item{TitleSize}{The font size of the plot title. Default is \code{10}.}
+
+\item{greyScale}{To set the graph in grey scale. Default is \code{TRUE}.}
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.}
 

@@ -42,6 +42,7 @@ minor_tick <- function(major, n_minor){
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param TitleSize The font size of the plot title. Default is \code{10}.
+#' @param greyScale To set the graph in grey scale. Default is \code{TRUE}.
 #' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
 #' @param errorbarLblSize Set the label size for the errorbar. Default is \code{6}.
@@ -102,6 +103,7 @@ minor_tick <- function(major, n_minor){
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Title = NULL, TitleSize = 10,
+                     greyScale = TRUE,
                      errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
                      fontType = "sans",
                      xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0, xAlign = 0.5,
@@ -292,8 +294,12 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
           legend.position = "bottom",
           legend.text = element_text(size = legendSize),
           axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
-          axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
-    scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+          axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
+
+  if (greyScale){
+    baseplt <- baseplt +
+      scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+  }
 
   if (xTickItalic == TRUE){
     baseplt <- baseplt +

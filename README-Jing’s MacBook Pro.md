@@ -21,19 +21,6 @@ Installation
 
 Change Log
 
-    0.4.3 (Nov. 23. 2017)
-      - Font size for axis labels now customizable for all the plotting functions via arguments xLabelSize, yLabelSize
-      - Font size for axis labels now customizable for all the plotting Shiny apps
-      - Font size for axis title now customizable for all the plotting functions vis argument TitleSize
-      - Font size for axis title now customizable for all the plotting Shiny apps
-      - Font size for legend now customizable for all the plotting functions via argument legendSize
-      - Font size for legend now customizable for all the plotting Shiny apps
-      - Font size for legend title now customizable for all the plotting functions via argument legendTtlSize
-      - Font size for legend title now customizable for all the plotting Shiny apps
-      - Bar graph now can set as grey scale or automatic colour for rbioplot() via argument greyScale
-      - Bar graph now can set as grey scale or automatic colour for rbioplot_app()
-      - Bar graph outline customizable for rbioplot_app()
-
     0.4.2
       - Remote deployment concept for rbioplot_app() added
 
