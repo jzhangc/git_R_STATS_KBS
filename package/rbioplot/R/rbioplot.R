@@ -356,8 +356,8 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   }
 
   ## export the file and draw a preview
-  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.pdf ...", sep = "")) # initial message
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".histogram.pdf", sep = ""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".bar.pdf ...", sep = "")) # initial message
+  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".bar.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   cat("Done!\n") # final message
 

@@ -21,7 +21,14 @@ Installation
 
 Change Log
 
-    0.4.3 (Nov. 23. 2017)
+    0.4.4 (Nov. 25. 2017)
+      - Manual colour change added for rbioplot() via argument barCol
+      - Manual colour change addd for rbioplot_app()
+      - Bar graph outline colour customizable for rbioplot() via argument outlineCol
+      - Output file suffix for rbioplot() changed to ".bar.pdf"
+      - Bug fixes
+    
+    0.4.3
       - Font size for axis labels now customizable for all plotting functions via arguments xLabelSize, yLabelSize
       - Font size for axis labels now customizable for all plotting Shiny apps
       - Font size for axis title now customizable for all plotting functions vis argument TitleSize
