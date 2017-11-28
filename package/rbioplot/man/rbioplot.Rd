@@ -5,15 +5,15 @@
 \title{rbioplot}
 \usage{
 rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
-  TitleSize = 10, greyScale = TRUE, errorbar = "SEM",
-  errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
-  fontType = "sans", xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
-  xTickItalic = FALSE, xAngle = 0, xAlign = 0.5, rightsideY = TRUE,
-  yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
-  yTickItalic = FALSE, legendSize = 9, legendTtl = FALSE,
-  legendTtlSize = 9, plotWidth = 170, plotHeight = 150,
-  y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit,
-  y_major_tick_range, y_n_minor_ticks = 4)
+  TitleSize = 10, outlineCol = "black", greyScale = TRUE,
+  errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6,
+  errorbarLblSpace = 0.07, fontType = "sans", xLabel = NULL,
+  xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
+  xAlign = 0.5, rightsideY = TRUE, yLabel = NULL, yLabelSize = 10,
+  yTickLblSize = 10, yTickItalic = FALSE, legendSize = 9,
+  legendTtl = FALSE, legendTtlSize = 9, plotWidth = 170,
+  plotHeight = 150, y_custom_tick_range = FALSE, y_lower_limit = 0,
+  y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -25,6 +25,8 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
 \item{Title}{The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.}
 
 \item{TitleSize}{The font size of the plot title. Default is \code{10}.}
+
+\item{outlineCol}{The outline colour for the bar gars. Default is \code{"black"}.}
 
 \item{greyScale}{To set the graph in grey scale. Default is \code{TRUE}.}
 

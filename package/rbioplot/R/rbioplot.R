@@ -42,6 +42,7 @@ minor_tick <- function(major, n_minor){
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param TitleSize The font size of the plot title. Default is \code{10}.
+#' @param outlineCol The outline colour for the bar gars. Default is \code{"black"}.
 #' @param greyScale To set the graph in grey scale. Default is \code{TRUE}.
 #' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
@@ -103,6 +104,7 @@ minor_tick <- function(major, n_minor){
 #' @export
 rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      Title = NULL, TitleSize = 10,
+                     outlineCol = "black",
                      greyScale = TRUE,
                      errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
                      fontType = "sans",
@@ -276,7 +278,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   loclEnv <- environment()
   baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
                     environment = loclEnv) +
-    geom_bar(position = "dodge", stat = "identity", color = "black") +
+    geom_bar(position = "dodge", stat = "identity", color = outlineCol) +
     geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = errorbarWidth,
                   position = position_dodge(0.9)) +
     scale_y_continuous(expand = c(0, 0),
