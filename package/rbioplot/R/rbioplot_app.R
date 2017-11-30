@@ -18,7 +18,7 @@
 rbioplot_app <- function(){
   app <- shinyApp(
     ui = navbarPage(
-      "rbioplot",
+      "Function: rbioplot",
       tabPanel("Raw data", sidebarLayout(sidebarPanel(
         # adjust the size and scroll
         tags$head(
