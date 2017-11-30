@@ -21,7 +21,8 @@ Installation
 
 Change Log
 
-    0.4.4 (Nov. 25. 2017)
+    0.5.0 (beta)
+      - Shiny app interface overhaul with navigation bar at top
       - Manual colour change added for rbioplot() via argument barCol
       - Manual colour change addd for rbioplot_app()
       - Bar graph outline colour customizable for rbioplot() via argument outlineCol
