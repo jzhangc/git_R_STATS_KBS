@@ -30,7 +30,7 @@ Change Log
       - Intermediate function set_hue() added
       - Manual colour change addd for rbioplot_app()
       - Bar graph outline colour customizable for rbioplot() via argument outlineCol
-      - Output file suffix for rbioplot() changed to ".bar.pdf"
+      - Output file suffix for rbioplot() and rbioplot_app() changed to ".bar.pdf"
       - Bug fixes
     
     0.4.3
