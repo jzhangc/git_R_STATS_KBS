@@ -18,7 +18,7 @@
 rbioplot_app <- function(){
   app <- shinyApp(
     ui = navbarPage(
-      "Function: rbioplot",
+      "FUNCTION: rbioplot",
       tabPanel("Raw data", sidebarLayout(sidebarPanel(
         # adjust the size and scroll
         tags$head(
@@ -147,7 +147,8 @@ rbioplot_app <- function(){
         numericInput(inputId = "y_major_tick_range", label = "Major tick range", value = 0.5, step = 0.25),
         numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks", value = 4)
       ),
-      mainPanel(plotOutput("Plot", height = 480, width = 550))
+      mainPanel(uiOutput("barCol"),
+                plotOutput("Plot", height = 480, width = 550))
       )),
 
       tabPanel("Plot summary", sidebarLayout(sidebarPanel(
@@ -192,6 +193,20 @@ rbioplot_app <- function(){
 
 
       ## Plot
+      output$barCol <- renderUI({  # colour picker
+        lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+        cols <- gg_fill_hue(length(lev))
+
+        # New IDs "colX1" so that it partly coincide with input$select...
+        lapply(seq_along(lev), function(i) {
+          colourInput(inputId = paste0("col", lev[i]),
+                      label = paste0("Choose colour for ", lev[i]),
+                      value = cols[i]
+          )
+        })
+      })
+
+
       pltdata <- reactive({
         # validate
         if (input$Tp == "t-test"){
@@ -365,6 +380,12 @@ rbioplot_app <- function(){
         if (input$greyScale){
           baseplt <- baseplt +
             scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+        } else {
+          cols <- paste0("c(", paste0("input$col", sort(unique(pltdata()$Condition)), collapse = ", "), ")")
+          cols <- eval(parse(text = cols))
+
+          baseplt <- baseplt +
+            scale_fill_manual(values = cols)
         }
 
         if (input$xTickItalic){
