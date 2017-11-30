@@ -10,72 +10,61 @@
 #' @export
 rbiostats_app <- function(){
   app <- shinyApp(
-    ui = fluidPage(
-      ## App title ----
-      titlePanel(h1("Function: rbiostats()")),
+    ui = navbarPage(inverse = TRUE,
+                    title = HTML("<a style = color:white; href = \"http://http://kenstoreylab.com/?page_id=2448\" target = \"_blank\">FUNCTION: rbiostats</a>"),
+                    tabPanel("Raw data", sidebarLayout(sidebarPanel(
+                      # adjust the size and scroll
+                      tags$head(
+                        tags$style(type = "text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
+                        tags$style(type = "text/css", "select { max-width: 200px; }"),
+                        tags$style(type = "text/css", "textarea { max-width: 185px; }"),
+                        tags$style(type = "text/css", ".jslider { max-width: 200px; }"),
+                        tags$style(type = "text/css", ".well { max-width: 310px; }"), # size
+                        tags$style(type = "text/css", ".well { min-width: 310px; }"), # size
+                        tags$style(type = "text/css", ".span4 { max-width: 310px; }"),
+                        tags$style(type = "text/css", "form.well { max-height: 95vh; overflow-y: auto; }") # scroll
+                      ),
+                      # Input: Select a file ----
+                      fileInput("file1", h2("Input CSV File"), # first quotation has the name of the input argument: input$file1. Same as below
+                                multiple = TRUE,
+                                accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
 
-      ## Sidebar layout with input and output definitions ----
-      sidebarLayout(
+                      # Horizontal line ----
+                      tags$hr(),
 
-        ## Sidebar panel for inputs ----
-        sidebarPanel(
-          # adjust the size and scroll
-          tags$head(
-            tags$style(type = "text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
-            tags$style(type = "text/css", "select { max-width: 200px; }"),
-            tags$style(type = "text/css", "textarea { max-width: 185px; }"),
-            tags$style(type = "text/css", ".jslider { max-width: 200px; }"),
-            tags$style(type = "text/css", ".well { max-width: 310px; }"), # size
-            tags$style(type = "text/css", ".well { min-width: 310px; }"), # size
-            tags$style(type = "text/css", ".span4 { max-width: 310px; }"),
-            tags$style(type = "text/css", "form.well { max-height: 95vh; overflow-y: auto; }") # scroll
-          ),
+                      ## Input block
+                      h2("Input file settings"),
 
-          # Input: Select a file ----
-          fileInput("file1", h2("Input CSV File"), # first quotation has the name of the input argument: input$file1. Same as below
-                    multiple = TRUE,
-                    accept = c("text/csv",
-                               "text/comma-separated-values,text/plain",
-                               ".csv")),
+                      # Input: Select separator ----
+                      radioButtons("sep",
+                                   "Separator",
+                                   choices = c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = ","), # selected = "," term sets the default value
 
-          # Horizontal line ----
-          tags$hr(),
+                      # Input: Select number of rows to display ----
+                      radioButtons("disp", "Display", choices = c(Head = "head", All = "all"), selected = "head"),
 
-          ## Input block
-          h2("Input file settings"),
+                      # Horizontal line ----
+                      tags$hr(),
+                      actionButton("close", "Close App", icon = icon("exclamation"),
+                                   onclick = "setTimeout(function(){window.close();}, 100);")
+                    ),
+                    mainPanel(tableOutput("contents"))
+                    )),
 
-          # Input: Select separator ----
-          radioButtons("sep",
-                       "Separator",
-                       choices = c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                       selected = ","), # selected = "," term sets the default value
+                    tabPanel("Stats summary", sidebarLayout(sidebarPanel(
+                      h2("Stats summary"),
+                      # plot: stats
+                      radioButtons("Tp", "Statistical anlaysis", choices = c(`t-test` = "t-test", ANOVA = "anova", `ANOVA + Tukey` = "tukey", `ANOVA + Dunnett\'s` = "dunnetts"),
+                                   selected = "t-test"),
+                      div(style = "display:inline-block", downloadButton("dlSummary", "Save stats summary")),
 
-          # Input: Select number of rows to display ----
-          radioButtons("disp", "Display", choices = c(Head = "head", All = "all"),
-                       selected = "head"),
-
-
-          # Horizontal line ----
-          tags$hr(),
-
-          # plot: stats
-          radioButtons("Tp", "Statistical anlaysis", choices = c(`t-test` = "t-test", ANOVA = "anova", `ANOVA + Tukey` = "tukey", `ANOVA + Dunnett\'s` = "dunnetts"),
-                       selected = "t-test"),
-          div(style = "display:inline-block", downloadButton("dlSummary", "Save stats summary")),
-
-          # Horizontal line ----
-          tags$hr(),
-          actionButton("close", "Close App", icon = icon("exclamation"), onclick = "setTimeout(function(){window.close();}, 100);")
-        ),
-
-        ## Main panel for displaying outputs ----
-        mainPanel(
-          # set up tabs
-          tabsetPanel(type = "tabs",
-                      tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
-                      tabPanel("Stats Summary", verbatimTextOutput("Summary")))
-        ), fluid = FALSE
-      )
+                      # Horizontal line ----
+                      tags$hr(),
+                      actionButton("close2", "Close App", icon = icon("exclamation"),
+                                   onclick = "setTimeout(function(){window.close();}, 100);")
+                    ),
+                    mainPanel(verbatimTextOutput("Summary"))
+                    ))
     ),
 
     server = function(input, output){
@@ -178,6 +167,9 @@ rbiostats_app <- function(){
       # stop and close window
       observe({
         if (input$close > 0) stopApp()  # stop shiny
+      })
+      observe({
+        if (input$close2 > 0) stopApp()  # stop shiny
       })
     }
   )

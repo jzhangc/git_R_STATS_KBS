@@ -24,6 +24,7 @@ Change Log
     0.5.0 (beta)
       - Shiny app interface overhaul with navigation bar at top
       - Manual colour change added for rbioplot() via argument barCol
+      - Intermediate function set_hue() added
       - Manual colour change addd for rbioplot_app()
       - Bar graph outline colour customizable for rbioplot() via argument outlineCol
       - Output file suffix for rbioplot() changed to ".bar.pdf"
