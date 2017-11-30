@@ -11,7 +11,7 @@
 rbiostats_app <- function(){
   app <- shinyApp(
     ui = navbarPage(inverse = TRUE,
-                    title = HTML("<a style = color:white; href = \"http://http://kenstoreylab.com/?page_id=2448\" target = \"_blank\">FUNCTION: rbiostats</a>"),
+                    title = HTML("<a style = color:white; href = \"http://kenstoreylab.com/?page_id=2448\" target = \"_blank\">FUNCTION: rbiostats</a>"),
                     tabPanel("Raw data", sidebarLayout(sidebarPanel(
                       # adjust the size and scroll
                       tags$head(
