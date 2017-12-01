@@ -95,9 +95,11 @@ rbioplot_app <- function(){
                       ## Plot settings
                       h2("Detailed plot settings"),
 
-                      # Plot: colour
-                      checkboxInput("greyScale", "Grey Scale", TRUE),
-                      colourInput("barOutline", "Bar ourline colour", value = "black", returnName = TRUE, palette = "limited"),
+                      # Space ----
+                      tags$br(),
+
+                      # General
+                      h4("General settings"),
 
                       # Plot: title
                       textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
@@ -114,19 +116,36 @@ rbioplot_app <- function(){
                       # Plot: if to normalized to 1
                       checkboxInput("Nrm", "Normalize to control as 1", TRUE),
 
-                      # Plot: legend
-                      numericInput(inputId = "legendSize", label = "Legend size", value = 9),
-                      checkboxInput("legendTtl", "Display legend title", FALSE),
-                      numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
-
                       # Plot: right side y
                       checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
 
                       # Space ----
                       tags$br(),
 
+                      # colour
+                      h4("Colour settings"),
+
+                      # Plot: colour
+                      checkboxInput("greyScale", "Grey Scale", TRUE),
+                      actionButton("resetCol", "Reset bar colours", icon = icon("undo")),
+                      colourInput("barOutline", "Bar ourline colour", value = "black", returnName = TRUE, palette = "limited"),
+
+                      # Space ----
+                      tags$br(),
+
+                      # Legend
+                      h4("Legend settings"),
+
+                      # Plot: legend
+                      numericInput(inputId = "legendSize", label = "Legend size", value = 9),
+                      checkboxInput("legendTtl", "Display legend title", FALSE),
+                      numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
+
+                      # Space ----
+                      tags$br(),
+
                       # error bar
-                      h4("Error bar"),
+                      h4("Error bar settings"),
                       radioButtons("errorbar", "Type", choices = c(SEM = "sem", SD = "sd"),
                                    selected = "sem"),
                       numericInput(inputId = "errorbarWidth", label = "Width", value = 0.1, step = 0.01),
@@ -137,7 +156,7 @@ rbioplot_app <- function(){
                       tags$br(),
 
                       # Plot: x-axis
-                      h4("X-axis"),
+                      h4("X-axis settings"),
                       checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
                       textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
@@ -150,7 +169,7 @@ rbioplot_app <- function(){
                       tags$br(),
 
                       # Plot: y-axis
-                      h4("Y-axis"),
+                      h4("Y-axis settings"),
                       checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
                       textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
@@ -175,7 +194,7 @@ rbioplot_app <- function(){
                     ))
     ),
 
-    server = function(input, output){
+    server = function(input, output, session){
       ## input data check
       # input$file1 will be NULL initially.
       data <- reactive({
@@ -215,6 +234,21 @@ rbioplot_app <- function(){
           colourInput(inputId = paste0("col", gsub(" ", "", lev[i])), # use gsub to get rid of the spaces for the ID
                       label = paste0("Choose colour for ", lev[i]),
                       value = cols[i]
+          )
+        })
+      })
+
+      observeEvent(input$resetCol, {  # colour reset button
+        lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+        cols <- set_hue(length(lev))
+
+        lapply(seq_along(lev), function(i) {
+          do.call(what = "updateColourInput",
+                  args = list(
+                    session = session,
+                    inputId = paste0("col", gsub(" ", "", lev[i])),
+                    value = cols[i]
+                  )
           )
         })
       })

@@ -9,7 +9,7 @@ library(shiny)
 library(colourpicker)
 library(RBioplot)
 
-function(input, output){
+function(input, output, session){
   ## input data check
   # input$file1 will be NULL initially.
   data <- reactive({
@@ -49,6 +49,21 @@ function(input, output){
       colourInput(inputId = paste0("col", gsub(" ", "", lev[i])), # use gsub to get rid of the spaces for the ID
                   label = paste0("Choose colour for ", lev[i]),
                   value = cols[i]
+      )
+    })
+  })
+
+  observeEvent(input$resetCol, {  # colour reset button
+    lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+    cols <- set_hue(length(lev))
+
+    lapply(seq_along(lev), function(i) {
+      do.call(what = "updateColourInput",
+              args = list(
+                session = session,
+                inputId = paste0("col", gsub(" ", "", lev[i])),
+                value = cols[i]
+              )
       )
     })
   })
