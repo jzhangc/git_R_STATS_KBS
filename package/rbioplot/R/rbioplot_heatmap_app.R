@@ -81,6 +81,12 @@ rbioplot_heatmap_app <- function(){
                       ## Plot settings
                       h2("Detailed plot settings"),
 
+                      # Space ----
+                      tags$br(),
+
+                      # General
+                      h4("General settings"),
+
                       # Plot: title
                       textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "TitleSize", label = "Plot title size",
@@ -90,8 +96,6 @@ rbioplot_heatmap_app <- function(){
                       textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
                       actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
 
-                      ## Plot settings
-                      h2("Detailed plot settings"),
 
                       # Plot: size
                       numericInput(inputId = "plotWidth", label = "Plot width",
@@ -101,6 +105,12 @@ rbioplot_heatmap_app <- function(){
 
                       # Plot: if to remove control
                       checkboxInput("rmCntl", "Remove control", FALSE),
+
+                      # Space ----
+                      tags$br(),
+
+                      # Legend
+                      h4("Legend settings"),
 
                       # Plot: legend
                       numericInput(inputId = "legendSize", label = "Legend size", value = 9),
@@ -113,7 +123,7 @@ rbioplot_heatmap_app <- function(){
                       tags$br(),
 
                       # Plot: tiles
-                      h2("Tile settings"),
+                      h4("Tile settings"),
                       # tile colour code
                       colourInput("tileLow", "Lower end colour", value = "skyblue", returnName = TRUE, palette = "square"),
                       colourInput("tileHigh", "Higher end colour", value = "midnightblue", returnName = TRUE, palette = "square"),
@@ -127,7 +137,7 @@ rbioplot_heatmap_app <- function(){
                       tags$br(),
 
                       # Plot: x-axis
-                      h4("X-axis"),
+                      h4("X-axis settings"),
                       checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
                       textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
@@ -141,14 +151,13 @@ rbioplot_heatmap_app <- function(){
                       tags$br(),
 
                       # Plot: y-axis
-                      h4("Y-axis"),
+                      h4("Y-axis settings"),
                       checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
                       textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10)
                     ),
-                    mainPanel(uiOutput("barCol"),
-                              plotOutput("Plot", height = 480, width = 550))
+                    mainPanel(plotOutput("Plot", height = 480, width = 550))
                     )),
 
                     tabPanel("Plot summary", sidebarLayout(sidebarPanel(
