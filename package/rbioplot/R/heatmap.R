@@ -16,6 +16,7 @@
 #' @param xLabelSize x axis label size. Default is \code{10}.
 #' @param xTickLblSize Font size of x axis ticks. Default is 10.
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
+#' @param xTickBold Set x axis tick font to bold. Default is \code{FALSE}.
 #' @param xSpace Set the space between the plot and the x-axis tick marks. Default is \code{5}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
 #' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
@@ -23,6 +24,7 @@
 #' @param yLabelSize y axis label size. Default is \code{10}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
 #' @param yTickItalic Set y axis tick font to italic. Default is \code{FALSE}.
+#' @param yTickBold Set y axis tick font to bold. Default is \code{FALSE}.
 #' @param legendSize Legend size. Default is \code{9}.
 #' @param legendTtl Hide/Display legend title. Default is \code{FALSE}.
 #' @param legendTtlSize Set when \code{legendTtl = TRUE}, font size of the legend title. Default is \code{9}.
@@ -69,8 +71,8 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                              Title = NULL,  fontType = "sans",
                              tileLow = "skyblue", tileHigh = "midnightblue",
                              tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
-                             xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
-                             yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE,
+                             xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
+                             yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
                              legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,legendPos = "bottom",
                              plotWidth = 170, plotHeight = 150){
   ## load file
@@ -194,14 +196,26 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                 color = tileTxtColour, family = fontType)
   }
 
-  if (xTickItalic == TRUE){
+  if (xTickItalic & xTickBold){
+    baseplt <- baseplt +
+      theme(axis.text.x = element_text(face = "bold.italic"))
+  } else if (xTickItalic & !xTickBold){
     baseplt <- baseplt +
       theme(axis.text.x = element_text(face = "italic"))
+  } else if (xTickBold & !xTickItalic){
+    baseplt <- baseplt +
+      theme(axis.text.x = element_text(face = "bold"))
   }
 
-  if (yTickItalic == TRUE){
+  if (yTickItalic & yTickBold){
+    baseplt <- baseplt +
+      theme(axis.text.y  = element_text(face = "bold.italic"))
+  } else if (yTickItalic & !yTickBold){
     baseplt <- baseplt +
       theme(axis.text.y = element_text(face = "italic"))
+  } else if (yTickBold & !yTickItalic){
+    baseplt <- baseplt +
+      theme(axis.text.y = element_text(face = "bold"))
   }
 
   if (legendTtl == FALSE){

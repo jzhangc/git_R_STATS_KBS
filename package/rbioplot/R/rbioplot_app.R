@@ -158,6 +158,7 @@ rbioplot_app <- function(){
                       # Plot: x-axis
                       h4("X-axis settings"),
                       checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
+                      checkboxInput("xTickBold", "Bold axis ticks", FALSE),
                       textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
@@ -171,6 +172,7 @@ rbioplot_app <- function(){
                       # Plot: y-axis
                       h4("Y-axis settings"),
                       checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
+                      checkboxInput("yTickBold", "Bold axis ticks", FALSE),
                       textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
                       numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10),
@@ -435,14 +437,26 @@ rbioplot_app <- function(){
             scale_fill_manual(values = cols)
         }
 
-        if (input$xTickItalic){
+        if (input$xTickItalic & input$xTickBold){
+          baseplt <- baseplt +
+            theme(axis.text.x = element_text(face = "bold.italic"))
+        } else if (input$xTickItalic & !input$xTickBold){
           baseplt <- baseplt +
             theme(axis.text.x = element_text(face = "italic"))
+        } else if (input$xTickBold & !input$xTickItalic){
+          baseplt <- baseplt +
+            theme(axis.text.x = element_text(face = "bold"))
         }
 
-        if (input$yTickItalic){
+        if (input$yTickItalic & input$yTickBold){
+          baseplt <- baseplt +
+            theme(axis.text.y  = element_text(face = "bold.italic"))
+        } else if (input$yTickItalic & !input$yTickBold){
           baseplt <- baseplt +
             theme(axis.text.y = element_text(face = "italic"))
+        } else if (input$yTickBold & !input$yTickItalic){
+          baseplt <- baseplt +
+            theme(axis.text.y = element_text(face = "bold"))
         }
 
         if (input$Tp == "Tukey"){

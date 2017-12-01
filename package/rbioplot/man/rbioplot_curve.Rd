@@ -6,9 +6,10 @@
 \usage{
 rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
   errorbarWidth = 0.2, fontType = "sans", symbolSize = 2, xLabel = NULL,
-  xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xAngle = 0,
-  xAlign = 0.5, rightsideY = TRUE, yLabel = NULL, yLabelSize = 10,
-  yTickLblSize = 10, yTickItalic = FALSE, legendSize = 9,
+  xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE,
+  xTickBold = FALSE, xAngle = 0, xAlign = 0.5, rightsideY = TRUE,
+  yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
+  yTickItalic = FALSE, yTickBold = FALSE, legendSize = 9,
   legendTtl = FALSE, legendTtlSize = 9, plotWidth = 170,
   plotHeight = 150, x_custom_tick_range = FALSE, x_lower_limit = 0,
   x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
@@ -36,6 +37,8 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 
 \item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
 
+\item{xTickBold}{Set x axis tick font to bold. Default is \code{FALSE}.}
+
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 
 \item{xAlign}{The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
@@ -49,6 +52,8 @@ rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
 \item{yTickLblSize}{Font size of y axis ticks. Default is 10.}
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
+
+\item{yTickBold}{Set y axis tick font to bold. Default is \code{FALSE}.}
 
 \item{legendSize}{Legend size. Default is \code{9}.}
 
