@@ -14,14 +14,30 @@ Installation
   
         install.packages("devtools")
     
-  - Install the package
+  - Install stable release
   
-        devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot")   
+        devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot")
+        
+  - Install development build
+  
+        devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot", ref = "beta")   
 
 
 Change Log
 
-    0.4.3 (Nov. 23. 2017)
+    0.5.0 (Dec.1.2017)
+      - Shiny app interface overhaul with navigation bar at top
+      - Manual colour change added for rbioplot_app()
+      - Reset bar colour button added for rbioplot_app()
+      - Control panel items re-arranged for all shiny apps for a clearer presentation
+      - Output file suffix for rbioplot() and rbioplot_app() changed to ".bar.pdf"
+      - Bar graph outline colour customizable for rbioplot() via argument outlineCol
+      - Axes tick labels now can set as bold for the plotting functions via arguments xTickBold and yTickBold
+      - Axes tick labels now can set as bold for all plotting Shiny apps
+      - Intermediate function set_hue() added
+      - Bug fixes
+    
+    0.4.3
       - Font size for axis labels now customizable for all plotting functions via arguments xLabelSize, yLabelSize
       - Font size for axis labels now customizable for all plotting Shiny apps
       - Font size for axis title now customizable for all plotting functions vis argument TitleSize

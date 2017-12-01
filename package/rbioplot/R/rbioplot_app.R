@@ -1,3 +1,16 @@
+#' @title set_hue
+#' @description Intermediate function enables the colour change functionality for \code{\link{rbioplot_app}}.
+#' @param n Number of variables to plot.
+#' @examples
+#' \dontrun{
+#' col <- set_hue(n = 4) # launch the app version by running the function
+#' }
+#' @export
+set_hue <- function(n) {  # colour picking function if !greyScale
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
 #' @title rbioplot_app
 #'
 #' @description The web app version of \code{\link{rbioplot}}.
@@ -17,151 +30,173 @@
 #' @export
 rbioplot_app <- function(){
   app <- shinyApp(
-    ui = fluidPage(
-      ## App title ----
-      titlePanel(h1("Function: rbioplot()")),
+    ui = navbarPage(inverse = TRUE,
+                    title = HTML("<a style = color:white; href = \"http://kenstoreylab.com/?page_id=2448\" target = \"_blank\">FUNCTION: rbioplot</a>"),
+                    tabPanel("Raw data", sidebarLayout(sidebarPanel(
+                      # adjust the size and scroll
+                      tags$head(
+                        tags$style(type = "text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
+                        tags$style(type = "text/css", "select { max-width: 200px; }"),
+                        tags$style(type = "text/css", "textarea { max-width: 185px; }"),
+                        tags$style(type = "text/css", ".jslider { max-width: 200px; }"),
+                        tags$style(type = "text/css", ".well { max-width: 310px; }"), # size
+                        tags$style(type = "text/css", ".well { min-width: 310px; }"), # size
+                        tags$style(type = "text/css", ".span4 { max-width: 310px; }"),
+                        tags$style(type = "text/css", "form.well { max-height: 95vh; overflow-y: auto; }") # scroll
+                      ),
+                      # Input: Select a file ----
+                      fileInput("file1", h2("Input CSV File"), # first quotation has the name of the input argument: input$file1. Same as below
+                                multiple = TRUE,
+                                accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
 
-      ## Sidebar layout with input and output definitions ----
-      sidebarLayout(
+                      # Horizontal line ----
+                      tags$hr(),
 
-        ## Sidebar panel for inputs ----
-        sidebarPanel(
-          # adjust the size and scroll
-          tags$head(
-            tags$style(type = "text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
-            tags$style(type = "text/css", "select { max-width: 200px; }"),
-            tags$style(type = "text/css", "textarea { max-width: 185px; }"),
-            tags$style(type = "text/css", ".jslider { max-width: 200px; }"),
-            tags$style(type = "text/css", ".well { max-width: 310px; }"), # size
-            tags$style(type = "text/css", ".well { min-width: 310px; }"), # size
-            tags$style(type = "text/css", ".span4 { max-width: 310px; }"),
-            tags$style(type = "text/css", "form.well { max-height: 95vh; overflow-y: auto; }") # scroll
-          ),
+                      ## Input block
+                      h2("Input file settings"),
 
-          # Input: Select a file ----
-          fileInput("file1", h2("Input CSV File"), # first quotation has the name of the input argument: input$file1. Same as below
-                    multiple = TRUE,
-                    accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                      # Input: Select separator ----
+                      radioButtons("sep",
+                                   "Separator",
+                                   choices = c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = ","), # selected = "," term sets the default value
 
-          # Horizontal line ----
-          tags$hr(),
+                      # Input: Select number of rows to display ----
+                      radioButtons("disp", "Display", choices = c(Head = "head", All = "all"), selected = "head"),
 
-          ## Input block
-          h2("Input file settings"),
+                      # Horizontal line ----
+                      tags$hr(),
+                      actionButton("close", "Close App", icon = icon("exclamation"),
+                                   onclick = "setTimeout(function(){window.close();}, 100);")
+                    ),
+                    mainPanel(tableOutput("contents"))
+                    )),
 
-          # Input: Select separator ----
-          radioButtons("sep",
-                       "Separator",
-                       choices = c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = ","), # selected = "," term sets the default value
+                    tabPanel("Plot", sidebarLayout(sidebarPanel(
+                      ## Quick plot
+                      h2("Plot"),
 
-          # Input: Select number of rows to display ----
-          radioButtons("disp", "Display", choices = c(Head = "head", All = "all"), selected = "head"),
+                      # plot: stats
+                      radioButtons("Tp", "Statistical anlaysis", choices = c(`t-test` = "t-test", `ANOVA + Tukey` = "tukey", `ANOVA + Dunnett\'s` = "dunnetts"),
+                                   selected = "t-test"),
 
-          # Horizontal line ----
-          tags$hr(),
+                      # Buttons
+                      div(style = "display:inline-block", downloadButton("dlPlot", "Save plot")),
 
-          ## Quick plot
-          h2("Plot"),
+                      # Horizontal line ----
+                      tags$hr(),
 
-          # plot: stats
-          radioButtons("Tp", "Statistical anlaysis", choices = c(`t-test` = "t-test", `ANOVA + Tukey` = "tukey", `ANOVA + Dunnett\'s` = "dunnetts"),
-                       selected = "t-test"),
+                      # exit
+                      actionButton("close2", "Close App", icon = icon("exclamation"),
+                                   onclick = "setTimeout(function(){window.close();}, 100);"),
 
-          # Buttons
-          div(style = "display:inline-block", downloadButton("dlPlot", "Save plot")),
-          div(style = "display:inline-block", downloadButton("dlSummary", "Save plot summary")),
+                      # Horizontal line ----
+                      tags$hr(),
 
-          # Horizontal line ----
-          tags$hr(),
+                      ## Plot settings
+                      h2("Detailed plot settings"),
 
-          # exit
-          actionButton("close", "Close App", icon = icon("exclamation"),
-                       onclick = "setTimeout(function(){window.close();}, 100);"),
+                      # Space ----
+                      tags$br(),
 
-          # Horizontal line ----
-          tags$hr(),
+                      # General
+                      h4("General settings"),
 
-          ## Plot settings
-          h2("Detailed plot settings"),
+                      # Plot: title
+                      textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
+                      numericInput(inputId = "TitleSize", label = "Plot title size", value = 10),
 
-          # Plot: colour
-          checkboxInput("greyScale", "Grey Scale", TRUE),
-          colourInput("barOutline", "Bar ourline colour", value = "black", returnName = TRUE, palette = "limited"),
+                      # Plot: font
+                      textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
+                      actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
 
-          # Plot: title
-          textInput("Title", "Plot title", value = NULL, width = NULL, placeholder = NULL),
-          numericInput(inputId = "TitleSize", label = "Plot title size", value = 10),
+                      # Plot: size
+                      numericInput(inputId = "plotWidth", label = "Plot width", value = 800, step = 10),
+                      numericInput(inputId = "plotHeight", label = "Plot height", value = 600, step = 10),
 
-          # Plot: font
-          textInput("fontType", "Font type", value = "sans", width = NULL, placeholder = NULL),
-          actionButton(inputId = "fontTable", "Font table", icon = icon("th"), onclick = "window.open('http://kenstoreylab.com/wp-content/uploads/2015/08/R-font-table.png', '_blank')"),
+                      # Plot: if to normalized to 1
+                      checkboxInput("Nrm", "Normalize to control as 1", TRUE),
 
-          # Plot: size
-          numericInput(inputId = "plotWidth", label = "Plot width", value = 800, step = 10),
-          numericInput(inputId = "plotHeight", label = "Plot height", value = 600, step = 10),
+                      # Plot: right side y
+                      checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
 
-          # Plot: if to normalized to 1
-          checkboxInput("Nrm", "Normalize to control as 1", TRUE),
+                      # Space ----
+                      tags$br(),
 
-          # Plot: legend
-          numericInput(inputId = "legendSize", label = "Legend size", value = 9),
-          checkboxInput("legendTtl", "Display legend title", FALSE),
-          numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
+                      # colour
+                      h4("Colour settings"),
 
-          # Plot: right side y
-          checkboxInput("rightsideY", "Display right-side y-axis", TRUE),
+                      # Plot: colour
+                      checkboxInput("greyScale", "Grey Scale", TRUE),
+                      actionButton("resetCol", "Reset bar colours", icon = icon("undo")),
+                      colourInput("barOutline", "Bar ourline colour", value = "black", returnName = TRUE, palette = "limited"),
 
-          # Space ----
-          tags$br(),
+                      # Space ----
+                      tags$br(),
 
-          # error bar
-          h4("Error bar"),
-          radioButtons("errorbar", "Type", choices = c(SEM = "sem", SD = "sd"),
-                       selected = "sem"),
-          numericInput(inputId = "errorbarWidth", label = "Width", value = 0.1, step = 0.01),
-          numericInput(inputId = "errorbarLblSize", label = "Label size", value = 6, step = 1),
-          numericInput(inputId = "errorbarLblSpace", label = "Space below label", value = 0.07, step = 0.01),
+                      # Legend
+                      h4("Legend settings"),
 
-          # Space ----
-          tags$br(),
+                      # Plot: legend
+                      numericInput(inputId = "legendSize", label = "Legend size", value = 9),
+                      checkboxInput("legendTtl", "Display legend title", FALSE),
+                      numericInput(inputId = "legendTtlSize", label = "Legend title size", value = 9),
 
-          # Plot: x-axis
-          h4("X-axis"),
-          checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
-          textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-          numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
-          numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
-          numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
-          radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
-                       selected = 0.5),
+                      # Space ----
+                      tags$br(),
 
-          # Space ----
-          tags$br(),
+                      # error bar
+                      h4("Error bar settings"),
+                      radioButtons("errorbar", "Type", choices = c(SEM = "sem", SD = "sd"),
+                                   selected = "sem"),
+                      numericInput(inputId = "errorbarWidth", label = "Width", value = 0.1, step = 0.01),
+                      numericInput(inputId = "errorbarLblSize", label = "Label size", value = 6, step = 1),
+                      numericInput(inputId = "errorbarLblSpace", label = "Space below label", value = 0.07, step = 0.01),
 
-          # Plot: y-axis
-          h4("Y-axis"),
-          checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
-          textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
-          numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
-          numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10),
-          numericInput(inputId = "y_lower_limit", label = "Axis lower limit", value = 0, step = 0.25),
-          numericInput(inputId = "y_upper_limit", label = "Axis upper limit", value = NULL, step = 0.25),
-          numericInput(inputId = "y_major_tick_range", label = "Major tick range", value = 0.5, step = 0.25),
-          numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks", value = 4)
-        ),
+                      # Space ----
+                      tags$br(),
 
-        ## Main panel for displaying outputs ----
-        mainPanel(
-          # set up tabs
-          tabsetPanel(type = "tabs",
-                      tabPanel("Raw data", tableOutput("contents")), # "contents" means go to output to find the variable output$contents
-                      tabPanel("Plot", plotOutput("Plot", height = 480, width = 550)),
-                      tabPanel("Plot Summary", tableOutput("Summary")))
-        ), fluid = FALSE
-      )
+                      # Plot: x-axis
+                      h4("X-axis settings"),
+                      checkboxInput("xTickItalic", "Italic axis ticks", FALSE),
+                      checkboxInput("xTickBold", "Bold axis ticks", FALSE),
+                      textInput("xLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
+                      numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
+                      numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
+                      numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
+                      radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                                   selected = 0.5),
+
+                      # Space ----
+                      tags$br(),
+
+                      # Plot: y-axis
+                      h4("Y-axis settings"),
+                      checkboxInput("yTickItalic", "Italic axis ticks", FALSE),
+                      checkboxInput("yTickBold", "Bold axis ticks", FALSE),
+                      textInput("yLabel", "Axis label", value = NULL, width = NULL, placeholder = NULL),
+                      numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
+                      numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10),
+                      numericInput(inputId = "y_lower_limit", label = "Axis lower limit", value = 0, step = 0.25),
+                      numericInput(inputId = "y_upper_limit", label = "Axis upper limit", value = NULL, step = 0.25),
+                      numericInput(inputId = "y_major_tick_range", label = "Major tick range", value = 0.5, step = 0.25),
+                      numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks", value = 4)
+                    ),
+                    mainPanel(uiOutput("barCol"),
+                              plotOutput("Plot", height = 480, width = 550))
+                    )),
+
+                    tabPanel("Plot summary", sidebarLayout(sidebarPanel(
+                      h2("Plot summary"),
+                      div(style = "display:inline-block", downloadButton("dlSummary", "Save plot summary")),
+                      tags$hr(),
+                      actionButton("close3", "Close App", icon = icon("exclamation"),
+                                   onclick = "setTimeout(function(){window.close();}, 100);")
+                    ),
+                    mainPanel(tableOutput("Summary"))
+                    ))
     ),
 
-    server = function(input, output){
+    server = function(input, output, session){
       ## input data check
       # input$file1 will be NULL initially.
       data <- reactive({
@@ -190,7 +225,37 @@ rbioplot_app <- function(){
         }
       })
 
+
       ## Plot
+      output$barCol <- renderUI({  # colour picker
+        lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+        cols <- set_hue(length(lev))
+
+        # New IDs "colX1" so that it partly coincide with input$select...
+        lapply(seq_along(lev), function(i) {
+          colourInput(inputId = paste0("col", gsub(" ", "", lev[i])), # use gsub to get rid of the spaces for the ID
+                      label = paste0("Choose colour for ", lev[i]),
+                      value = cols[i]
+          )
+        })
+      })
+
+      observeEvent(input$resetCol, {  # colour reset button
+        lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+        cols <- set_hue(length(lev))
+
+        lapply(seq_along(lev), function(i) {
+          do.call(what = "updateColourInput",
+                  args = list(
+                    session = session,
+                    inputId = paste0("col", gsub(" ", "", lev[i])),
+                    value = cols[i]
+                  )
+          )
+        })
+      })
+
+
       pltdata <- reactive({
         # validate
         if (input$Tp == "t-test"){
@@ -364,16 +429,34 @@ rbioplot_app <- function(){
         if (input$greyScale){
           baseplt <- baseplt +
             scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+        } else {
+          cols <- paste0("c(", paste0("input$col", gsub(" ", "", sort(unique(pltdata()$Condition))), collapse = ", "), ")")
+          cols <- eval(parse(text = cols))
+
+          baseplt <- baseplt +
+            scale_fill_manual(values = cols)
         }
 
-        if (input$xTickItalic){
+        if (input$xTickItalic & input$xTickBold){
+          baseplt <- baseplt +
+            theme(axis.text.x = element_text(face = "bold.italic"))
+        } else if (input$xTickItalic & !input$xTickBold){
           baseplt <- baseplt +
             theme(axis.text.x = element_text(face = "italic"))
+        } else if (input$xTickBold & !input$xTickItalic){
+          baseplt <- baseplt +
+            theme(axis.text.x = element_text(face = "bold"))
         }
 
-        if (input$yTickItalic){
+        if (input$yTickItalic & input$yTickBold){
+          baseplt <- baseplt +
+            theme(axis.text.y  = element_text(face = "bold.italic"))
+        } else if (input$yTickItalic & !input$yTickBold){
           baseplt <- baseplt +
             theme(axis.text.y = element_text(face = "italic"))
+        } else if (input$yTickBold & !input$yTickItalic){
+          baseplt <- baseplt +
+            theme(axis.text.y = element_text(face = "bold"))
         }
 
         if (input$Tp == "Tukey"){
@@ -432,7 +515,7 @@ rbioplot_app <- function(){
       })
 
       output$dlPlot <- downloadHandler(
-        filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".histogram.pdf", sep = "")},
+        filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".bar.pdf", sep = "")},
         content = function(file) {
           ggsave(file, plot = ggplotdata(),
                  width = (input$plotWidth * 25.4) / 72, height = (input$plotHeight * 25.4) / 72, units = "mm", dpi = 600, device = "pdf")
@@ -440,7 +523,7 @@ rbioplot_app <- function(){
       )
 
       output$dlSummary <- downloadHandler(
-        filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".histogram.csv", sep = "")},
+        filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".bar.csv", sep = "")},
         content = function(file){
           write.csv(pltdata(), file, quote = FALSE, na = "NA", row.names = FALSE)
         }
@@ -451,9 +534,16 @@ rbioplot_app <- function(){
         return(pltdata())
       })
 
+
       # stop and close window
       observe({
         if (input$close > 0) stopApp()  # stop shiny
+      })
+      observe({
+        if (input$close2 > 0) stopApp()  # stop shiny
+      })
+      observe({
+        if (input$close3 > 0) stopApp()  # stop shiny
       })
     }
   )

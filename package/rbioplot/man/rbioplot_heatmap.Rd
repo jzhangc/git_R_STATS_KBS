@@ -8,11 +8,11 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
   fontType = "sans", tileLow = "skyblue", tileHigh = "midnightblue",
   tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
   tileLblPos = 0.5, xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
-  xTickItalic = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
-  yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
-  yTickItalic = FALSE, legendSize = 9, legendTtl = FALSE,
-  legendTtlSize = 9, legendPos = "bottom", plotWidth = 170,
-  plotHeight = 150)
+  xTickItalic = FALSE, xTickBold = FALSE, xSpace = 5, xAngle = 0,
+  xAlign = 0.5, yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
+  yTickItalic = FALSE, yTickBold = FALSE, legendSize = 9,
+  legendTtl = FALSE, legendTtlSize = 9, legendPos = "bottom",
+  plotWidth = 170, plotHeight = 150)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -45,6 +45,8 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 
 \item{xTickItalic}{Set x axis tick font to italic. Default is \code{FALSE}.}
 
+\item{xTickBold}{Set x axis tick font to bold. Default is \code{FALSE}.}
+
 \item{xSpace}{Set the space between the plot and the x-axis tick marks. Default is \code{5}.}
 
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
@@ -58,6 +60,8 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 \item{yTickLblSize}{Font size of y axis ticks. Default is 10.}
 
 \item{yTickItalic}{Set y axis tick font to italic. Default is \code{FALSE}.}
+
+\item{yTickBold}{Set y axis tick font to bold. Default is \code{FALSE}.}
 
 \item{legendSize}{Legend size. Default is \code{9}.}
 

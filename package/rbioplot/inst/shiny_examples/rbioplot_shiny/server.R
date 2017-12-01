@@ -9,7 +9,7 @@ library(shiny)
 library(colourpicker)
 library(RBioplot)
 
-function(input, output){
+function(input, output, session){
   ## input data check
   # input$file1 will be NULL initially.
   data <- reactive({
@@ -38,7 +38,37 @@ function(input, output){
     }
   })
 
+
   ## Plot
+  output$barCol <- renderUI({  # colour picker
+    lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+    cols <- set_hue(length(lev))
+
+    # New IDs "colX1" so that it partly coincide with input$select...
+    lapply(seq_along(lev), function(i) {
+      colourInput(inputId = paste0("col", gsub(" ", "", lev[i])), # use gsub to get rid of the spaces for the ID
+                  label = paste0("Choose colour for ", lev[i]),
+                  value = cols[i]
+      )
+    })
+  })
+
+  observeEvent(input$resetCol, {  # colour reset button
+    lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
+    cols <- set_hue(length(lev))
+
+    lapply(seq_along(lev), function(i) {
+      do.call(what = "updateColourInput",
+              args = list(
+                session = session,
+                inputId = paste0("col", gsub(" ", "", lev[i])),
+                value = cols[i]
+              )
+      )
+    })
+  })
+
+
   pltdata <- reactive({
     # validate
     if (input$Tp == "t-test"){
@@ -212,6 +242,12 @@ function(input, output){
     if (input$greyScale){
       baseplt <- baseplt +
         scale_fill_grey(start = 0, name = cNm[1]) # set the colour as gray scale and legend tile as the name of the first column in the raw data.
+    } else {
+      cols <- paste0("c(", paste0("input$col", gsub(" ", "", sort(unique(pltdata()$Condition))), collapse = ", "), ")")
+      cols <- eval(parse(text = cols))
+
+      baseplt <- baseplt +
+        scale_fill_manual(values = cols)
     }
 
     if (input$xTickItalic){
@@ -280,7 +316,7 @@ function(input, output){
   })
 
   output$dlPlot <- downloadHandler(
-    filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".histogram.pdf", sep = "")},
+    filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".bar.pdf", sep = "")},
     content = function(file) {
       ggsave(file, plot = ggplotdata(),
              width = (input$plotWidth * 25.4) / 72, height = (input$plotHeight * 25.4) / 72, units = "mm", dpi = 600, device = "pdf")
@@ -288,7 +324,7 @@ function(input, output){
   )
 
   output$dlSummary <- downloadHandler(
-    filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".histogram.csv", sep = "")},
+    filename = function(){paste(substr(noquote(input$file1), 1, nchar(input$file1) - 4),".bar.csv", sep = "")},
     content = function(file){
       write.csv(pltdata(), file, quote = FALSE, na = "NA", row.names = FALSE)
     }
@@ -299,8 +335,15 @@ function(input, output){
     return(pltdata())
   })
 
+
   # stop and close window
   observe({
     if (input$close > 0) stopApp()  # stop shiny
+  })
+  observe({
+    if (input$close2 > 0) stopApp()  # stop shiny
+  })
+  observe({
+    if (input$close3 > 0) stopApp()  # stop shiny
   })
 }
