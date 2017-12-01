@@ -27,7 +27,7 @@ Change Log
 
     0.5.0 (beta)
       - Shiny app interface overhaul with navigation bar at top
-      - Manual colour change addd for rbioplot_app()
+      - Manual colour change added for rbioplot_app()
       - Reset bar colour button added for rbioplot_app()
       - Control panel items re-arranged for all shiny apps for a clearer presentation
       - Output file suffix for rbioplot() and rbioplot_app() changed to ".bar.pdf"
