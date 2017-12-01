@@ -5,6 +5,6 @@ account: jzhangc
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 229835
-bundleId: 1107122
+bundleId: 1107555
 url: https://jzhangc.shinyapps.io/rbioplot_shiny/
-when: 1512073761.38016
+when: 1512090144.26327

@@ -14,11 +14,11 @@ Installation
   
         install.packages("devtools")
     
-  - Install the stable release
+  - Install stable release
   
         devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot")
         
-  - Install the development version
+  - Install development build
   
         devtools::install_github("jzhangc/git_R_STATS_KBS/package/rbioplot", ref = "beta")   
 
