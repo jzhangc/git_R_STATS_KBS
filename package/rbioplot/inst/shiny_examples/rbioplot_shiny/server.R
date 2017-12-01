@@ -9,7 +9,7 @@ library(shiny)
 library(colourpicker)
 library(RBioplot)
 
-function(input, output, session){
+server = function(input, output, session){
   ## input data check
   # input$file1 will be NULL initially.
   data <- reactive({
@@ -250,14 +250,26 @@ function(input, output, session){
         scale_fill_manual(values = cols)
     }
 
-    if (input$xTickItalic){
+    if (input$xTickItalic & input$xTickBold){
+      baseplt <- baseplt +
+        theme(axis.text.x = element_text(face = "bold.italic"))
+    } else if (input$xTickItalic & !input$xTickBold){
       baseplt <- baseplt +
         theme(axis.text.x = element_text(face = "italic"))
+    } else if (input$xTickBold & !input$xTickItalic){
+      baseplt <- baseplt +
+        theme(axis.text.x = element_text(face = "bold"))
     }
 
-    if (input$yTickItalic){
+    if (input$yTickItalic & input$yTickBold){
+      baseplt <- baseplt +
+        theme(axis.text.y  = element_text(face = "bold.italic"))
+    } else if (input$yTickItalic & !input$yTickBold){
       baseplt <- baseplt +
         theme(axis.text.y = element_text(face = "italic"))
+    } else if (input$yTickBold & !input$yTickItalic){
+      baseplt <- baseplt +
+        theme(axis.text.y = element_text(face = "bold"))
     }
 
     if (input$Tp == "Tukey"){
