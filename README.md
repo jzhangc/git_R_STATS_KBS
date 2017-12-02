@@ -25,7 +25,12 @@ Installation
 
 Change Log
 
-    0.5.0 (Dec.1.2017)
+    0.5.1 (beta)
+      - Manual curve colour change added for rbioplot_curve_app()
+      - Manual bar colour change added for rbioplot() via argument barCol
+      - Bug fixes
+
+    0.5.0
       - Shiny app interface overhaul with navigation bar at top
       - Manual colour change added for rbioplot_app()
       - Reset bar colour button added for rbioplot_app()
