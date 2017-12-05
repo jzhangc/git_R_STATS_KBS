@@ -25,7 +25,7 @@ Installation
 
 Change Log
 
-    0.5.1 (beta)
+    0.5.1 (feature preview)
       - Manual curve colour change added for rbioplot_curve_app()
       - Manual bar colour change added for rbioplot() via argument barCol
       - Bug fixes

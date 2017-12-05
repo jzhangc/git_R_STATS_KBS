@@ -225,7 +225,6 @@ rbioplot_app <- function(){
         }
       })
 
-
       ## Plot
       output$barCol <- renderUI({  # colour picker
         lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
@@ -254,7 +253,6 @@ rbioplot_app <- function(){
           )
         })
       })
-
 
       pltdata <- reactive({
         # validate
@@ -533,7 +531,6 @@ rbioplot_app <- function(){
       output$Summary <- renderTable({
         return(pltdata())
       })
-
 
       # stop and close window
       observe({
