@@ -55,7 +55,8 @@ minor_tick <- function(major, n_minor){
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xTickBold Set x axis tick font to bold. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
-#' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xhAlign The horizontal alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}, as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xvAlign The vertical alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1},  as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param rightsideY If to display the right side y-axis. Default is \code{TRUE}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yLabelSize y axis label size. Default is \code{10}.
@@ -110,7 +111,8 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                      greyScale = TRUE,
                      errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
                      fontType = "sans",
-                     xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0, xAlign = 0.5,
+                     xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
+                     xhAlign = 0.5, xvAlign = 0.5,
                      rightsideY = TRUE,
                      yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
                      legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
@@ -297,7 +299,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
           axis.title.y = element_text(face = "bold", size = xLabelSize, family = fontType),
           legend.position = "bottom",
           legend.text = element_text(size = legendSize),
-          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xhAlign, vjust = xvAligh),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
 
   if (greyScale){

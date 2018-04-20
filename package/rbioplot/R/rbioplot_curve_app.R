@@ -136,7 +136,9 @@ rbioplot_curve_app <- function(){
                                    value = 10),
                       numericInput(inputId = "xAngle", label = "Tick label angle",
                                    value = 0, step = 15),
-                      radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                      radioButtons("xhAlign", "Tick label horizontal alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                                   selected = 0.5),
+                      radioButtons("xvAlign", "Tick label vertical alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                                    selected = 0.5),
                       numericInput(inputId = "x_lower_limit", label = "Axis lower limit",
                                    value = 0, step = 0.25),
@@ -324,7 +326,8 @@ rbioplot_curve_app <- function(){
                 legend.text = element_text(size = input$legendSize),
                 legend.title = element_blank(),
                 legend.key = element_blank(),
-                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
+                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle,
+                                           hjust = input$xhAlign, vjust = input$xvAlign),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5)) +
           scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(pltdata()$Condition))))) +
           scale_linetype_manual(name = cNm[1],values = c(1:(1 + length(unique(pltdata()$Condition)))))

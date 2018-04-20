@@ -163,7 +163,9 @@ rbioplot_app <- function(){
                       numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
                       numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
-                      radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                      radioButtons("xhAlign", "Tick label horizontal alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                                   selected = 0.5),
+                      radioButtons("xvAlign", "Tick label vetical alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                                    selected = 0.5),
 
                       # Space ----
@@ -421,7 +423,8 @@ rbioplot_app <- function(){
                 axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
                 legend.position = "bottom",
                 legend.text = element_text(size = input$legendSize),
-                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
+                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle,
+                                           hjust = input$xhAlign, vjust = input$xvAlign),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
 
         if (input$greyScale){

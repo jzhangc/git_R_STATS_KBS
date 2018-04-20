@@ -9,10 +9,10 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
   tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white",
   tileLblPos = 0.5, xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
   xTickItalic = FALSE, xTickBold = FALSE, xSpace = 5, xAngle = 0,
-  xAlign = 0.5, yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
-  yTickItalic = FALSE, yTickBold = FALSE, legendSize = 9,
-  legendTtl = FALSE, legendTtlSize = 9, legendPos = "bottom",
-  plotWidth = 170, plotHeight = 150)
+  xhAlign = 0.5, xvAlign = 0.5, yLabel = NULL, yLabelSize = 10,
+  yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
+  legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
+  legendPos = "bottom", plotWidth = 170, plotHeight = 150)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
@@ -51,7 +51,9 @@ rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE, Title = NULL,
 
 \item{xAngle}{The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.}
 
-\item{xAlign}{The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
+\item{xhAlign}{The horizontal alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}, as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
+
+\item{xvAlign}{The vertical alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1},  as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.}
 
 \item{yLabel}{y axis label. Type with quotation marks. Default is \code{NULL}.}
 
@@ -93,25 +95,8 @@ A function for plotting simple heatmap basing on the statistical analysis of cho
 }
 \examples{
 \dontrun{
-rbioplot("data.csv", Tp = "Tukey",
+rbioplot_heatmap("data.csv", Tp = "Tukey",
 yLabel = "Relative fluorescence level")
 
-rbioplot("data2.csv", Tp = "t-test", xAngle = -90,
-xAlign=0,yLabel="Relative fluorescence level")
-
-rbioplot("data3.csv", Tp = "Tukey",
-yLabel = "Relative fluorescence level")
-
-rbioplot("data4.csv", Tp = "Dunnett",
-yLabel = "Relative fluorescence level")
-
-rbioplot("data5.csv", Tp = "Tukey",
-yLabel = "Relative fluorescence level", plotWidth = 300)
-
-rbioplot("data8.csv", Tp = "Tukey", errorbar = "SD"
-yLabel = "Relative fluorescence level",
-y_custom_tick_range = TRUE, y_upper_limit = 4,
-y_lower_limit = 0, y_major_tick_range = 1,
-y_n_minor_ticks = 4)
 }
 }
