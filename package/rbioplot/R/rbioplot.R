@@ -39,7 +39,6 @@ minor_tick <- function(major, n_minor){
 #' @description A function to calculate space for minor ticks
 #' @param ggobject Input ggplot2 object.
 #' @return A ggplot2 object with rightside y axis
-#' @importFrom grid grid.newpage grid.draw
 #' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @examples
 #' \dontrun{
@@ -112,6 +111,7 @@ rightside_y <- function(ggobject){
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
+#' @importFrom grid grid.newpage grid.draw
 #' @importFrom scales rescale_none
 #' @import ggplot2
 #' @examples

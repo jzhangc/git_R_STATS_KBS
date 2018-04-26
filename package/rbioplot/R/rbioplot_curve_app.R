@@ -2,6 +2,7 @@
 #'
 #' @description The web app version of \code{\link{rbioplot_curve}}.
 #' @importFrom reshape2 melt
+#' @importFrom grid grid.newpage grid.draw
 #' @import ggplot2
 #' @import shiny
 #' @examples
