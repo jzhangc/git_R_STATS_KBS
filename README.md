@@ -25,6 +25,12 @@ Installation
 
 Change Log
 
+    0.5.2 (update preview)
+    (ICEBOX)
+      - Tick label alignment option added for both horizontal and vertical directions, for all the plotting functions and web apps
+      - Manual curve colour change added for rbioplot_curve_app()
+      - Manual bar colour change added for rbioplot() via argument barCol
+
     0.5.1 (4.26.2018)
       - rightside y-axis now a seperate function: rightside_y()
       - Bug fixes
