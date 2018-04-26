@@ -38,6 +38,7 @@
 #' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean and SEM, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 #' @importFrom reshape2 melt
+#' @importFrom grid grid.newpage grid.draw
 #' @import ggplot2
 #' @examples
 #' \dontrun{
