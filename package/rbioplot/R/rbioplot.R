@@ -34,6 +34,41 @@ minor_tick <- function(major, n_minor){
 }
 
 
+#' @title rightside_y()
+#'
+#' @description A function to calculate space for minor ticks
+#' @param ggobject Input ggplot2 object.
+#' @return A ggplot2 object with rightside y axis
+#' @importFrom grid grid.newpage grid.draw
+#' @importFrom gtable gtable_add_cols gtable_add_grob
+#' @examples
+#' \dontrun{
+#' plt <- rightside_y(plt)
+#' }
+#' @export
+rightside_y <- function(ggobject){
+  # check object type
+  if (!class(ggobject) %in% c("gg", "gglot")){
+    stop("this rightside y-axis function only works on ggplot2 objects.")
+  }
+
+  # extract gtable
+  pltgtb <- ggplot_gtable(ggplot_build(ggobject))
+  # add the right side y axis
+  Aa <- which(pltgtb$layout$name == "axis-l")
+  pltgtb_a <- pltgtb$grobs[[Aa]]
+  axs <- pltgtb_a$children[[2]]
+  axs$widths <- rev(axs$widths)
+  axs$grobs <- rev(axs$grobs)
+  axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
+  Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
+  pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
+  pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+
+  # output
+  return(pltgtb)
+}
+
 #' @title rbioplot
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
@@ -77,8 +112,6 @@ minor_tick <- function(major, n_minor){
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
-#' @importFrom grid grid.newpage grid.draw
-#' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @importFrom scales rescale_none
 #' @import ggplot2
 #' @examples
@@ -357,18 +390,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   ## finalize the plot
   grid.newpage()
   if (rightsideY){ # add the right-side y axis
-    # extract gtable
-    pltgtb <- ggplot_gtable(ggplot_build(plt))
-    # add the right side y axis
-    Aa <- which(pltgtb$layout$name == "axis-l")
-    pltgtb_a <- pltgtb$grobs[[Aa]]
-    axs <- pltgtb_a$children[[2]]
-    axs$widths <- rev(axs$widths)
-    axs$grobs <- rev(axs$grobs)
-    axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-    Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-    pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-    pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+    pltgtb <- rightside_y(plt)
   } else { # no right side y-axis
     pltgtb <- plt
   }
