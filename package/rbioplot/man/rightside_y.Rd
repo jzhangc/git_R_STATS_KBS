@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbioplot.R
 \name{rightside_y}
 \alias{rightside_y}
-\title{rightside_y()}
+\title{rightside_y}
 \usage{
 rightside_y(ggobject)
 }

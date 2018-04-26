@@ -34,7 +34,7 @@ minor_tick <- function(major, n_minor){
 }
 
 
-#' @title rightside_y()
+#' @title rightside_y
 #'
 #' @description A function to calculate space for minor ticks
 #' @param ggobject Input ggplot2 object.
@@ -48,7 +48,7 @@ minor_tick <- function(major, n_minor){
 #' @export
 rightside_y <- function(ggobject){
   # check object type
-  if (!class(ggobject) %in% c("gg", "gglot")){
+  if (!any(class(ggobject) %in% c("gg", "gglot"))){
     stop("this rightside y-axis function only works on ggplot2 objects.")
   }
 
