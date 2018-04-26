@@ -17,8 +17,6 @@ set_hue <- function(n) {  # colour picking function if !greyScale
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
-#' @importFrom grid grid.newpage grid.draw
-#' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @importFrom scales rescale_none
 #' @importFrom colourpicker colourInput
 #' @import ggplot2
@@ -163,7 +161,9 @@ rbioplot_app <- function(){
                       numericInput(inputId = "xLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "xTickLblSize", label = "Tick label size", value = 10),
                       numericInput(inputId = "xAngle", label = "Tick label angle", value = 0, step = 15),
-                      radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                      radioButtons("xhAlign", "Tick label horizontal alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                                   selected = 0.5),
+                      radioButtons("xvAlign", "Tick label vetical alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                                    selected = 0.5),
 
                       # Space ----
@@ -225,7 +225,6 @@ rbioplot_app <- function(){
         }
       })
 
-
       ## Plot
       output$barCol <- renderUI({  # colour picker
         lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
@@ -254,7 +253,6 @@ rbioplot_app <- function(){
           )
         })
       })
-
 
       pltdata <- reactive({
         # validate
@@ -423,7 +421,8 @@ rbioplot_app <- function(){
                 axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
                 legend.position = "bottom",
                 legend.text = element_text(size = input$legendSize),
-                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
+                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle,
+                                           hjust = input$xhAlign, vjust = input$xvAlign),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
 
         if (input$greyScale){
@@ -488,20 +487,7 @@ rbioplot_app <- function(){
         grid.newpage()
 
         if (input$rightsideY){ # add the right-side y axis
-          # extract gtable
-          pltgtb <- ggplot_gtable(ggplot_build(plt))
-
-          # add the right side y axis
-          Aa <- which(pltgtb$layout$name == "axis-l")
-          pltgtb_a <- pltgtb$grobs[[Aa]]
-          axs <- pltgtb_a$children[[2]]
-          axs$widths <- rev(axs$widths)
-          axs$grobs <- rev(axs$grobs)
-          axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-          Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-          pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-          pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
-
+          pltgtb <- rightside_y(plt)
         } else { # no right side y-axis
           pltgtb <- plt
         }
@@ -533,7 +519,6 @@ rbioplot_app <- function(){
       output$Summary <- renderTable({
         return(pltdata())
       })
-
 
       # stop and close window
       observe({

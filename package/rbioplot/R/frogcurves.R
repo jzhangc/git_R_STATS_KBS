@@ -13,7 +13,8 @@
 #' @param xTickItalic Set x axis tick font to italic. Default is \code{FALSE}.
 #' @param xTickBold Set x axis tick font to bold. Default is \code{FALSE}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
-#' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xhAlign The horizontal alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}, as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xvAlign The vertical alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1},  as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param rightsideY If to display the right side y-axis. Default is \code{TRUE}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yLabelSize y axis label size. Default is \code{10}
@@ -50,7 +51,8 @@
 #' @export
 rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
                            symbolSize = 2,
-                           xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0, xAlign = 0.5,
+                           xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
+                           xhAlign = 0.5, xvAlign = 0.5,
                            rightsideY = TRUE,
                            yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
                            legendSize = 9, legendTtl=FALSE, legendTtlSize = 9,
@@ -175,7 +177,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
           legend.position = "bottom", legend.text = element_text(size = legendSize),
           legend.title = element_blank(),
           legend.key = element_blank(),
-          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign),
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xhAlign, vjust = xvAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5)) +
     scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(DfPlt$Condition))))) +
     scale_linetype_manual(name = cNm[1],values = c(1:(1 + length(unique(DfPlt$Condition)))))
@@ -212,19 +214,7 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   grid.newpage()
 
   if (rightsideY){ # add the right-side y axis
-    # extract gtable
-    pltgtb <- ggplot_gtable(ggplot_build(plt))
-
-    # add the right side y axis
-    Aa <- which(pltgtb$layout$name == "axis-l")
-    pltgtb_a <- pltgtb$grobs[[Aa]]
-    axs <- pltgtb_a$children[[2]]
-    axs$widths <- rev(axs$widths)
-    axs$grobs <- rev(axs$grobs)
-    axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-    Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-    pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-    pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+    pltgtb <- rightside_y(plt)
   } else { # no right side y-axis
     pltgtb <- plt
   }

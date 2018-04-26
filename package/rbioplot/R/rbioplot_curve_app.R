@@ -136,7 +136,9 @@ rbioplot_curve_app <- function(){
                                    value = 10),
                       numericInput(inputId = "xAngle", label = "Tick label angle",
                                    value = 0, step = 15),
-                      radioButtons("xAlign", "Tick label alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                      radioButtons("xhAlign", "Tick label horizontal alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
+                                   selected = 0.5),
+                      radioButtons("xvAlign", "Tick label vertical alignment", choices = c(`0` = 0, `0.5` = 0.5, `1` = 1),
                                    selected = 0.5),
                       numericInput(inputId = "x_lower_limit", label = "Axis lower limit",
                                    value = 0, step = 0.25),
@@ -324,7 +326,8 @@ rbioplot_curve_app <- function(){
                 legend.text = element_text(size = input$legendSize),
                 legend.title = element_blank(),
                 legend.key = element_blank(),
-                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
+                axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle,
+                                           hjust = input$xhAlign, vjust = input$xvAlign),
                 axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5)) +
           scale_shape_manual(name = cNm[1], values = c(5:(5 + length(unique(pltdata()$Condition))))) +
           scale_linetype_manual(name = cNm[1],values = c(1:(1 + length(unique(pltdata()$Condition)))))
@@ -361,18 +364,7 @@ rbioplot_curve_app <- function(){
         grid.newpage()
 
         if (input$rightsideY){ # add the right-side y axis
-          # extract gtable
-          pltgtb <- ggplot_gtable(ggplot_build(plt))
-          # add the right side y axis
-          Aa <- which(pltgtb$layout$name == "axis-l")
-          pltgtb_a <- pltgtb$grobs[[Aa]]
-          axs <- pltgtb_a$children[[2]]
-          axs$widths <- rev(axs$widths)
-          axs$grobs <- rev(axs$grobs)
-          axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-          Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-          pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-          pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
+          pltgtb <- rightside_y(plt)
         } else { # no right side y-axis
           pltgtb <- plt
         }

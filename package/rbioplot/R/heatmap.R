@@ -19,7 +19,8 @@
 #' @param xTickBold Set x axis tick font to bold. Default is \code{FALSE}.
 #' @param xSpace Set the space between the plot and the x-axis tick marks. Default is \code{5}.
 #' @param xAngle The rotation angle (degrees) of the x axis marks. Default is \code{0} - horizontal.
-#' @param xAlign The alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xhAlign The horizontal alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1}, as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
+#' @param xvAlign The vertical alignment type of the x axis marks. Options are \code{0}, \code{0.5} and \code{1},  as well as the values in-between. The default value at \code{0} is especially useful when \code{xAngle = 90}.
 #' @param yLabel y axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param yLabelSize y axis label size. Default is \code{10}.
 #' @param yTickLblSize Font size of y axis ticks. Default is 10.
@@ -45,33 +46,17 @@
 #' @import ggplot2
 #' @examples
 #' \dontrun{
-#' rbioplot("data.csv", Tp = "Tukey",
+#' rbioplot_heatmap("data.csv", Tp = "Tukey",
 #' yLabel = "Relative fluorescence level")
 #'
-#' rbioplot("data2.csv", Tp = "t-test", xAngle = -90,
-#' xAlign=0,yLabel="Relative fluorescence level")
-#'
-#' rbioplot("data3.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level")
-#'
-#' rbioplot("data4.csv", Tp = "Dunnett",
-#' yLabel = "Relative fluorescence level")
-#'
-#' rbioplot("data5.csv", Tp = "Tukey",
-#' yLabel = "Relative fluorescence level", plotWidth = 300)
-#'
-#' rbioplot("data8.csv", Tp = "Tukey", errorbar = "SD"
-#' yLabel = "Relative fluorescence level",
-#' y_custom_tick_range = TRUE, y_upper_limit = 4,
-#' y_lower_limit = 0, y_major_tick_range = 1,
-#' y_n_minor_ticks = 4)
 #' }
 #' @export
 rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
                              Title = NULL,  fontType = "sans",
                              tileLow = "skyblue", tileHigh = "midnightblue",
                              tileLbl = TRUE, tileLblSize = 10, tileTxtColour = "white", tileLblPos = 0.5,
-                             xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xSpace = 5, xAngle = 0, xAlign = 0.5,
+                             xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xSpace = 5, xAngle = 0,
+                             xhAlign = 0.5, xvAlign = 0.5,
                              yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
                              legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,legendPos = "bottom",
                              plotWidth = 170, plotHeight = 150){
@@ -186,7 +171,8 @@ rbioplot_heatmap <- function(fileName, Tp = "Dunnett", rmCntl = FALSE,
           axis.title.y = element_text(face = "bold", family = fontType, size = yLabelSize),
           legend.position = legendPos,
           legend.text = element_text(size = legendSize),
-          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xAlign,
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle,
+                                     hjust = xhAlign, vjust = xvAlign,
                                      margin = margin(t = 5, r = 5, b = xSpace, l = 5, unit = "pt")),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
 

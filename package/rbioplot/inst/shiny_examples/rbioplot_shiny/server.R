@@ -38,7 +38,6 @@ server = function(input, output, session){
     }
   })
 
-
   ## Plot
   output$barCol <- renderUI({  # colour picker
     lev <- sort(unique(pltdata()$Condition)) # sorting so that "things" are unambigious
@@ -67,7 +66,6 @@ server = function(input, output, session){
       )
     })
   })
-
 
   pltdata <- reactive({
     # validate
@@ -346,7 +344,6 @@ server = function(input, output, session){
   output$Summary <- renderTable({
     return(pltdata())
   })
-
 
   # stop and close window
   observe({

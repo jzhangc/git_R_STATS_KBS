@@ -25,7 +25,11 @@ Installation
 
 Change Log
 
-    0.5.0 (Dec.1.2017)
+    0.5.1 (4.26.2018)
+      - rightside y-axis now a seperate function: rightside_y()
+      - Bug fixes
+
+    0.5.0
       - Shiny app interface overhaul with navigation bar at top
       - Manual colour change added for rbioplot_app()
       - Reset bar colour button added for rbioplot_app()
