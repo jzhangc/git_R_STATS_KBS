@@ -24,6 +24,12 @@ Installation
 
 
 Change Log
+
+    0.5.3 (update preview)
+    (ICEBOX)
+      - Tick label alignment option added for both horizontal and vertical directions, for all the plotting functions and web apps
+      - Manual curve colour change added for rbioplot_curve_app()
+      - Manual bar colour change added for rbioplot() via argument barCol
       
     0.5.2 (5.1.2018)
       - multi_plot_shared_legend() added in preparation for multi-panel figure functionality: share one set of legend between multiple plots
