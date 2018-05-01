@@ -24,8 +24,12 @@ Installation
 
 
 Change Log
+      
+    0.5.2 (5.1.2018)
+      - multi_plot_shared_legend() added in preparation for multi-panel figure functionality: share one set of legend between multiple plots
+      - Shared functions added to the sharedfunctions.R file
 
-    0.5.1 (4.26.2018)
+    0.5.1
       - rightside y-axis now a seperate function: rightside_y()
       - Bug fixes
 
