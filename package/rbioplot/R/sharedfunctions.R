@@ -80,6 +80,7 @@ rightside_y <- function(ggobject){
 #' @details This is a modified version from tidyverse: \url{https://github.com/tidyverse/ggplot2/wiki/Share-a-legend-between-two-ggplot2-grap}
 #' @import gridExtra
 #' @import ggplot2
+#' @importFrom grid unit.c
 #' @importFrom gtable gtable_add_cols gtable_add_grob
 #' @examples
 #' \dontrun{
