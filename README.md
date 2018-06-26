@@ -35,9 +35,8 @@ Change Log
         - rbioplot_density()
         
       - new functions to stats model
-        - rbiostats_equalvar(): equal vairance bartlett test and others
-        - rbiostats_normal(): Shapiro-Wilk normality and others
-      
+        - rbiostats_equalvar(): stand-alone equal vairance test, methods including Bartlett test and anothers
+
       - Updates to stats model
         - rbiostats() now accepts R objects (non-shiny)
       
@@ -48,6 +47,8 @@ Change Log
         - Manual bar colour change added for rbioplot() via argument barCol
       
     (ADDED)
+      - new functions to stats model
+        - rbiostats_normal(): stand-alone Shapiro-Wilk normality test function
       
       
     0.5.2 (5.1.2018)
