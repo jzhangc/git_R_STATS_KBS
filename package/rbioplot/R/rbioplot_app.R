@@ -390,14 +390,14 @@ rbioplot_app <- function(){
           DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
           DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
         }
-
+        updateNumericInput(session, "y_upper_limit", value = with(DfPlt, ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5))
         return(DfPlt)
         })
 
       ggplotdata <- reactive({
         y_Mx <- input$y_upper_limit
         cNm <- colnames(data())
-        if (y_Mx < with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)){
+        if (y_Mx <= with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)){
           y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
         } else {
           y_axis_Mx <- y_Mx
