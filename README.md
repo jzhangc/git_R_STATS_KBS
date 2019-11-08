@@ -50,6 +50,9 @@ Change Log
       - new functions to stats model
         - rbiostats_normal(): stand-alone Shapiro-Wilk normality test function
       
+      - Updates to shiny apps
+        - rbioplot_app(): y_upper_limit now functional
+      
       
     0.5.2 (5.1.2018)
       - multi_plot_shared_legend() added in preparation for multi-panel figure functionality: share one set of legend between multiple plots

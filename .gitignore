@@ -37,3 +37,4 @@ rsconnect/
 
 # macOS things
 .DS_store
+.Rproj.user
