@@ -19,7 +19,7 @@ set_hue <- function(n) {  # colour picking function if !greyScale
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
 #' @importFrom scales rescale_none
-#' @importFrom colourpicker colourInput
+#' @importFrom colourpicker colourInput updateColourInput
 #' @import ggplot2
 #' @import shiny
 #' @examples

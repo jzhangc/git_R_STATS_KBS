@@ -52,6 +52,7 @@ Change Log
       
       - Updates to shiny apps
         - rbioplot_app(): y_upper_limit now functional
+        - rbioplot_app(): colourpicker pacakge now imports updateColourInput function (due to: updateColourInput moved from Shiny to colourpicker)
       
       
     0.5.2 (5.1.2018)
