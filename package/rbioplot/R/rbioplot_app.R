@@ -19,7 +19,7 @@ set_hue <- function(n) {  # colour picking function if !greyScale
 #' @importFrom multcomp glht mcp
 #' @importFrom grid grid.newpage grid.draw
 #' @importFrom scales rescale_none
-#' @importFrom colourpicker colourInput
+#' @importFrom colourpicker colourInput updateColourInput
 #' @import ggplot2
 #' @import shiny
 #' @examples
@@ -178,7 +178,7 @@ rbioplot_app <- function(){
                       numericInput(inputId = "yLabelSize", label = "Axis label size", value = 10),
                       numericInput(inputId = "yTickLblSize", label = "Tick label size", value = 10),
                       numericInput(inputId = "y_lower_limit", label = "Axis lower limit", value = 0, step = 0.25),
-                      numericInput(inputId = "y_upper_limit", label = "Axis upper limit", value = NULL, step = 0.25),
+                      numericInput(inputId = "y_upper_limit", label = "Axis upper limit", value = 0, step = 0.25),
                       numericInput(inputId = "y_major_tick_range", label = "Major tick range", value = 0.5, step = 0.25),
                       numericInput(inputId = "y_n_minor_ticks", label = "Number of minor ticks", value = 4)
                     ),
@@ -390,14 +390,19 @@ rbioplot_app <- function(){
           DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
           DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
         }
-
+        updateNumericInput(session, "y_upper_limit", value = with(DfPlt, ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5))
         return(DfPlt)
         })
 
       ggplotdata <- reactive({
+        y_Mx <- input$y_upper_limit
         cNm <- colnames(data())
-
-        y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
+        if (y_Mx <= with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)){
+          y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
+        } else {
+          y_axis_Mx <- y_Mx
+        }
+        # y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
         y_axis_Mn <- input$y_lower_limit
         major_tick_range <- input$y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
         n_minor_ticks <- input$y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options

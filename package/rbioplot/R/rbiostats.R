@@ -72,3 +72,93 @@ rbiostats <- function(fileName, Tp = "ANOVA"){
 
   cat("Done!\n") # final message
 }
+
+
+#' @title rbiostats_normal
+#'
+#' @description A simple to use function for Shapiro-Wilk test for normality.
+#' @param x Input data frame or matrix for test data.
+#' @param method Shaprio-Wilk test method. Options are \code{"residual"} and \code{"group"}. Default is \code{"residual"}.
+#' @param group Set only when \code{method = "group"}, a factor vector for the sample data groupping.
+#' @return Outputs a data frame object containing normality test results to the environment.
+#' @details When \code{method = "residual"}, the residual for each data point is calculated using \code{residual(i) = x(i) - mean(X)} before Shapiro_Wilk test.
+#' In such case, the test is done on all the data points regardless of groupping. Regarding \code{method = "group"}, the raw data is used. However, the test is done
+#' according to the groupping.
+#' @import foreach
+#' @examples
+#' \dontrun{
+#'
+#' rbiostats_normal(x = data, method = "group", group = group)
+#'
+#' }
+#' @export
+rbiostats_normal <- function(x, method = c("residual", "group"), group){
+  ## arugment check
+  if (missing(x)) stop("Input data missing.")
+  if (is.null(group)) stop("Please provide value for \"group\" valiable.")
+  if (!method %in% c("residual", "group")) stop("Invalid method. Please use \"residual\" or \"group\".")
+  if (!class(x) %in% c("matrix", "data.frame")) stop("x needs to be either a matrix or a data frame.")
+
+  ## pre-processing x
+  if (is.null(colnames)) {
+    cat("No column names found for x. Use column numbers as variable names. \n")
+    colnames(x) <- seq(ncol(x))
+    }
+
+  ## normality test
+  if (missing(group) | method == "residual"){
+    # set up data
+    test_dfm <- as.data.frame(x)
+
+    # normality test
+    cat("Testing data normality by residuals using Shapiro-Wilk test...")
+    normal_test_results <- foreach(i = 1:ncol(test_dfm), .combine = "rbind") %do% {
+      tmp <- test_dfm[, i] - mean(test_dfm[, i], na.rm = TRUE) # residual calculation
+      sp <- shapiro.test(tmp)
+      sp$data.name <- colnames(test_dfm)[i]
+      sp_dfm <- data.frame(Variable = sp$data.name, W.statistic = sp$statistic, p.value = signif(sp$p.value, 4), row.names = NULL,
+                           check.names = FALSE)
+      sp_dfm$Normal <- ifelse(sp_dfm$p.value < 0.05, "N", "Y")
+      sp_dfm
+    }
+  } else {
+    # check group argument
+    if (!is.null(dim(group))) stop("the group vector needs to be a vector.")
+
+    # set up data
+    if (class(group) != "factor"){
+      y <- factor(group, levels = unique(group))
+    } else {
+      y <- group
+    }
+    test_dfm <- data.frame(group = y, x)
+
+    # normality test
+    cat("Testing data normality according to grouping using Shapiro-Wilk test...")
+    normal_test_results <- foreach(i = 1:ncol(test_dfm[, -1, drop = FALSE]), .combine = "rbind") %do% {
+      out <- foreach(j = 1:length(levels(test_dfm$group)), .combine = "rbind") %do% {
+        sp <- shapiro.test(test_dfm[, -1, drop = FALSE][, j][test_dfm$group %in% levels(test_dfm$group)[j]])
+        sp$data.name <- colnames(ric[, c(11:20)])[i]
+        sp_dfm <- data.frame(Variable = sp$data.name, Conditions = levels(test_dfm$group)[j],
+                             W.statistic = sp$statistic, p.value = signif(sp$p.value, 4), row.names = NULL, check.names = FALSE)
+        sp_dfm$Normal <- ifelse(sp_dfm$p.value < 0.05, "N", "Y")
+        sp_dfm
+      }
+      out
+    }
+  }
+
+  ## output
+  cat("Done!\n")
+  cat(paste0("Number of variables ", ifelse(method == "residual", "(as per residual) ","(as per group) "),
+             "failed to pass normality test: ",
+             length(which(normal_test_results$Normal == "N")), ".\n"))
+  cat("\n")
+  cat("Results: \n")
+  print(normal_test_results)
+
+  out <- list(method = paste0("Shapiro-Wilk Nomality based on ", method), `failed to pass` = length(which(normal_test_results$Normal == "N")),
+              results = normal_test_results)
+  class(out) <- "rbiostats_normality"
+  assign(paste0(deparse(substitute(x)), "_normality"), out, envir = .GlobalEnv)
+}

@@ -10,11 +10,12 @@ rbioplot(fileName, Tp = "Tukey", Nrm = TRUE, Title = NULL,
   errorbarLblSpace = 0.07, fontType = "sans", xLabel = NULL,
   xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE,
   xTickBold = FALSE, xAngle = 0, xhAlign = 0.5, xvAlign = 0.5,
-  rightsideY = TRUE, yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
-  yTickItalic = FALSE, yTickBold = FALSE, legendSize = 9,
-  legendTtl = FALSE, legendTtlSize = 9, plotWidth = 170,
-  plotHeight = 150, y_custom_tick_range = FALSE, y_lower_limit = 0,
-  y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4)
+  rightsideY = TRUE, yLabel = NULL, yLabelSize = 10,
+  yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
+  legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
+  plotWidth = 170, plotHeight = 150, y_custom_tick_range = FALSE,
+  y_lower_limit = 0, y_upper_limit, y_major_tick_range,
+  y_n_minor_ticks = 4)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
