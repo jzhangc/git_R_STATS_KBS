@@ -4,8 +4,12 @@
 \alias{multi_plot_shared_legend}
 \title{multi_plot_shared_legend}
 \usage{
-multi_plot_shared_legend(ggobject_list, ncol = length(ggobject_list),
-  nrow = 1, position = c("bottom", "right"))
+multi_plot_shared_legend(
+  ggobject_list,
+  ncol = length(ggobject_list),
+  nrow = 1,
+  position = c("bottom", "right")
+)
 }
 \arguments{
 \item{ggobject_list}{Input ggplot2 object list containing multiple ggplot objectes.}

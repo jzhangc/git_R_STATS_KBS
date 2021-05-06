@@ -4,18 +4,43 @@
 \alias{rbioplot_curve}
 \title{rbioplot_curve}
 \usage{
-rbioplot_curve(fileName, Title = NULL, errorbar = "SEM",
-  errorbarWidth = 0.2, fontType = "sans", symbolSize = 2,
-  xLabel = NULL, xLabelSize = 10, xTickLblSize = 10,
-  xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
-  xhAlign = 0.5, xvAlign = 0.5, rightsideY = TRUE, yLabel = NULL,
-  yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE,
-  yTickBold = FALSE, legendSize = 9, legendTtl = FALSE,
-  legendTtlSize = 9, plotWidth = 170, plotHeight = 150,
-  x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit,
-  x_major_tick_range, x_n_minor_ticks = 0, y_custom_tick_range = FALSE,
-  y_lower_limit = 0, y_upper_limit, y_major_tick_range,
-  y_n_minor_ticks = 4)
+rbioplot_curve(
+  fileName,
+  Title = NULL,
+  errorbar = "SEM",
+  errorbarWidth = 0.2,
+  fontType = "sans",
+  symbolSize = 2,
+  xLabel = NULL,
+  xLabelSize = 10,
+  xTickLblSize = 10,
+  xTickItalic = FALSE,
+  xTickBold = FALSE,
+  xAngle = 0,
+  xhAlign = 0.5,
+  xvAlign = 0.5,
+  rightsideY = TRUE,
+  yLabel = NULL,
+  yLabelSize = 10,
+  yTickLblSize = 10,
+  yTickItalic = FALSE,
+  yTickBold = FALSE,
+  legendSize = 9,
+  legendTtl = FALSE,
+  legendTtlSize = 9,
+  plotWidth = 170,
+  plotHeight = 150,
+  x_custom_tick_range = FALSE,
+  x_lower_limit = 0,
+  x_upper_limit,
+  x_major_tick_range,
+  x_n_minor_ticks = 0,
+  y_custom_tick_range = FALSE,
+  y_lower_limit = 0,
+  y_upper_limit,
+  y_major_tick_range,
+  y_n_minor_ticks = 4
+)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}

@@ -262,7 +262,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
           axis.title.y = element_text(face = "bold", size = xLabelSize, family = fontType),
           legend.position = "bottom",
           legend.text = element_text(size = legendSize),
-          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xhAlign, vjust = xvAligh),
+          axis.text.x = element_text(size = xTickLblSize, family = fontType, angle = xAngle, hjust = xhAlign, vjust = xvAlign),
           axis.text.y = element_text(size = yTickLblSize, family = fontType, hjust = 0.5))
 
   if (greyScale){

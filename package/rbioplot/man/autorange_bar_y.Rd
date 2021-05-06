@@ -4,8 +4,13 @@
 \alias{autorange_bar_y}
 \title{autorange_bar_y}
 \usage{
-autorange_bar_y(fileName, Nrm = TRUE, errorbar = "SEM",
-  nMajorTicks = 5, DfltZero = TRUE)
+autorange_bar_y(
+  fileName,
+  Nrm = TRUE,
+  errorbar = "SEM",
+  nMajorTicks = 5,
+  DfltZero = TRUE
+)
 }
 \arguments{
 \item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}

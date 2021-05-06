@@ -4,8 +4,14 @@
 \alias{autorange_curve}
 \title{autorange_curve}
 \usage{
-autorange_curve(fileName, errorbar = "SEM", x_nMajorTicks = 5,
-  x_DfltZero = TRUE, y_nMajorTicks = 10, y_DfltZero = TRUE)
+autorange_curve(
+  fileName,
+  errorbar = "SEM",
+  x_nMajorTicks = 5,
+  x_DfltZero = TRUE,
+  y_nMajorTicks = 10,
+  y_DfltZero = TRUE
+)
 }
 \arguments{
 \item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}

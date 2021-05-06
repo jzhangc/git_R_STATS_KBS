@@ -4,16 +4,39 @@
 \alias{rbioplot_heatmap}
 \title{rbioplot_heatmap}
 \usage{
-rbioplot_heatmap(fileName, Tp = "Dunnett", rmCntl = FALSE,
-  Title = NULL, fontType = "sans", tileLow = "skyblue",
-  tileHigh = "midnightblue", tileLbl = TRUE, tileLblSize = 10,
-  tileTxtColour = "white", tileLblPos = 0.5, xLabel = NULL,
-  xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE,
-  xTickBold = FALSE, xSpace = 5, xAngle = 0, xhAlign = 0.5,
-  xvAlign = 0.5, yLabel = NULL, yLabelSize = 10, yTickLblSize = 10,
-  yTickItalic = FALSE, yTickBold = FALSE, legendSize = 9,
-  legendTtl = FALSE, legendTtlSize = 9, legendPos = "bottom",
-  plotWidth = 170, plotHeight = 150)
+rbioplot_heatmap(
+  fileName,
+  Tp = "Dunnett",
+  rmCntl = FALSE,
+  Title = NULL,
+  fontType = "sans",
+  tileLow = "skyblue",
+  tileHigh = "midnightblue",
+  tileLbl = TRUE,
+  tileLblSize = 10,
+  tileTxtColour = "white",
+  tileLblPos = 0.5,
+  xLabel = NULL,
+  xLabelSize = 10,
+  xTickLblSize = 10,
+  xTickItalic = FALSE,
+  xTickBold = FALSE,
+  xSpace = 5,
+  xAngle = 0,
+  xhAlign = 0.5,
+  xvAlign = 0.5,
+  yLabel = NULL,
+  yLabelSize = 10,
+  yTickLblSize = 10,
+  yTickItalic = FALSE,
+  yTickBold = FALSE,
+  legendSize = 9,
+  legendTtl = FALSE,
+  legendTtlSize = 9,
+  legendPos = "bottom",
+  plotWidth = 170,
+  plotHeight = 150
+)
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}

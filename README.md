@@ -25,6 +25,11 @@ Installation
 
 Change Log
 
+    0.5.4 (5.6.2021) 
+       - General fix
+        - namespace updated with foreach pacakge
+        
+      
     0.5.3 (11.11.2019)
       - new functions to stats model
         - rbiostats_normal(): stand-alone Shapiro-Wilk normality test function
