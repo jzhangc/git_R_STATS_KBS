@@ -25,30 +25,7 @@ Installation
 
 Change Log
 
-    0.5.4 (update preview)
-    (ICEBOX)
-      - Updates to shiny apps
-        - Manual curve colour change added for rbioplot_curve_app()
-        
-      - glmm (generalized linear mixed model) functions added:
-        - rbiostats_glmm()
-        - rbiostats_glmm_plot()
-        
-      - data diagnostic plot functions added
-        - rbioplot_density()
-        
-      - new functions to stats model
-        - rbiostats_equalvar(): stand-alone equal vairance test, methods including Bartlett test and anothers
-
-      - Updates to stats model
-        - rbiostats() now accepts R objects
-      
-      - Updates to plotting functions
-        - all plotting functions now accept R ojects
-        - Tick label alignment option added for both horizontal and vertical directions, for all the plotting functions and web apps
-        - Manual bar colour change added for rbioplot() via argument barCol
-      
-    (ADD)
+    0.5.4 (5.6.2021) 
        - General fix
         - namespace updated with foreach pacakge
         
