@@ -14,4 +14,4 @@ Imports:
     gtable (>= 0.2.0), grid (>= 3.2.4), gridExtra (>= 2.3),
     scales (>= 0.4.1), shiny (>= 1.0.5), colourpicker (>= 0.3), 
     foreach (>= 1.4.7)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
