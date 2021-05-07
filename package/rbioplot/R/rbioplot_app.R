@@ -360,7 +360,7 @@ rbioplot_app <- function(){
                      }, simplify = FALSE)
 
         cTt <- Reduce(function(x, y) merge(x, y, all = TRUE, by = colnames(data())[1], sort = FALSE),
-                      Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
+                      Tt, accumulate = FALSE) # Reduce() higher level function to contain other functions in functional programming
         colnames(cTt)[-1] <- sapply(colnames(data())[-1], function(x)paste(x, "Lbl", sep=""))
 
         # plot
