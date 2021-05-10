@@ -47,12 +47,15 @@ Change Log
         - all plotting functions now accept R ojects
         - Tick label alignment option added for both horizontal and vertical directions, for all the plotting functions and web apps
         - Manual bar colour change added for rbioplot() via argument barCol
+      
+      - Updates to shiny apps
+        - All shiny apps are integrated into one app (via tabs on the side)
         
         
     0.5.5 (5.10.2021)
       - Updates to plotting functions
         - All plotting functions now accept data.frames
-        - rbioplot() now will automatically adjust figures for data only have one variable
+        - rbioplot() and rbiplot_app() now will automatically adjust figures for data only have one variable
         
 
     0.5.4 (5.6.2021) 
