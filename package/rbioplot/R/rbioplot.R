@@ -2,6 +2,8 @@
 #'
 #' @description A simple to use function for plotting basing on the statistical analysis of choice.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.
+#' @param df Input data frame. Instead of a \code{csv} file,a data frame can be used directly within R.
+#' @param df_export_name Effective only when \code{df} is set, prefix for the export file name.
 #' @param Tp Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".
 #' @param Nrm When \code{TRUE}, normalize data to control/first group (as 1). Default is \code{TRUE}.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
@@ -33,11 +35,13 @@
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
-#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_bar_y}}.
-#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.
+#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limit for y axis. Value can be obtained from \code{\link{autorange_bar_y}}.
+#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limit for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
+#' @details For input data, only one of \code{fileName} and \code{df} can be set.
+#'          For data with only one variable (protein, tissue, etc), the function will automatelly use the X-axis for groups and hide the legend.
 #' @importFrom reshape2 melt
 #' @importFrom multcompView multcompLetters
 #' @importFrom multcomp glht mcp
@@ -68,23 +72,39 @@
 #' y_n_minor_ticks = 4)
 #' }
 #' @export
-rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
-                     Title = NULL, TitleSize = 10,
-                     outlineCol = "black",
-                     greyScale = TRUE,
-                     errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
-                     fontType = "sans",
-                     xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
-                     xhAlign = 0.5, xvAlign = 0.5,
-                     rightsideY = TRUE,
-                     yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
-                     legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
-                     plotWidth = 170, plotHeight = 150,
-                     y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+rbioplot <- function(fileName = NULL,
+                    df = NULL, export_name = "data",
+                    Tp = "Tukey", Nrm = TRUE,
+                    Title = NULL, TitleSize = 10,
+                    outlineCol = "black",
+                    greyScale = TRUE,
+                    errorbar = "SEM", errorbarWidth = 0.2, errorbarLblSize = 6, errorbarLblSpace = 0.07,
+                    fontType = "sans",
+                    xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
+                    xhAlign = 0.5, xvAlign = 0.5,
+                    rightsideY = TRUE,
+                    yLabel = NULL, yLabelSize = 10, yTickLblSize = 10, yTickItalic = FALSE, yTickBold = FALSE,
+                    legendSize = 9, legendTtl = FALSE, legendTtlSize = 9,
+                    plotWidth = 170, plotHeight = 150,
+                    y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+  # check arguments
+  if (is.null(fileName) && is.null(df)) stop("fileName or df should be set.")
+  if (!is.null(fileName) && !is.null(df)) stop("Only one can be set, either fileName or df.")
+  if (!is.null(df)) {
+    if (!any(class(df) %in% "data.frame")) stop("df should be a data.frame objecti.")
+    export_name <- export_name
+  } else {
+    export_name <- substr(noquote(fileName), 1, nchar(fileName) - 4)
+  }
+
   ## load file
-  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
+  if (!is.null(df)) {
+    rawData <- df
+  } else {
+    rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
+  }
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]]))) # avoid R's automatic re-ordering the factors automatically - it will keep the "typed-in" order
-  c <- length(unique(rawData[[1]])) # store the number of conditons
+  c <- length(unique(rawData[[1]])) # store the number of conditions
 
   ## check if the data only has one condition
   if (c < 2){
@@ -192,7 +212,7 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
                },simplify = FALSE)
   cTt <- Reduce(function(x, y) merge(x, y, all = TRUE,
                                      by = colnames(rawData)[1],sort = FALSE),
-                Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
+                Tt, accumulate = FALSE) # Reduce() higher level function to contain other functions in functional programming
   colnames(cTt)[-1] <- sapply(colnames(rawData)[-1],
                               function(x)paste(x, "Lbl", sep=""))
 
@@ -224,13 +244,13 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
-  cat(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.csv ...", sep = "")) # initail message
-  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".histogram.csv", sep = ""),
+  cat(paste("Plot results saved to file: ", export_name, ".histogram.csv ...", sep = "")) # initail message
+  write.csv(DfPlt,file = paste(export_name, ".histogram.csv", sep = ""),
             quote = FALSE, na = "NA", row.names = FALSE)
   cat("Done!\n") # final message
 
   ## plotting
-  if (y_custom_tick_range == TRUE){ # custome y range and tick settings
+  if (y_custom_tick_range == TRUE){ # custom y range and tick settings
     y_axis_Mx <- y_upper_limit
     y_axis_Mn <- y_lower_limit
     major_tick_range <- y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
@@ -243,9 +263,14 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   }
 
   loclEnv <- environment()
-  baseplt <- ggplot(data = DfPlt, aes(x= variable, y= NrmMean, fill = Condition),
-                    environment = loclEnv) +
-    geom_bar(position = "dodge", stat = "identity", color = outlineCol) +
+  if (nlevels(DfPlt$variable) == 1) {
+    baseplt <- ggplot(data = DfPlt, aes(x = Condition, y = NrmMean, fill = Condition))
+  } else {
+    baseplt <- ggplot(data = DfPlt, aes(x = variable, y = NrmMean, fill = Condition))
+  }
+
+  baseplt <- baseplt +
+    geom_bar(position = "dodge", stat = "identity", color = outlineCol)  +
     geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = errorbarWidth,
                   position = position_dodge(0.9)) +
     scale_y_continuous(expand = c(0, 0),
@@ -310,9 +335,9 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
 
   if (nlevels(DfPlt$variable) == 1){
     plt <- pltLbl +
-      theme(axis.text.x = element_blank()) +
-      coord_equal(ratio = 0.5) +
-      scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
+      # theme(axis.text.x = element_blank()) + # coord_fixed(ratio = 0.01) +
+      # scale_x_discrete(expand = c(0.25, 0.25)) + # space between y axis and fist/last bar
+      theme(legend.position = "none")  # hide legend
   } else {
     plt <- pltLbl
   }
@@ -326,11 +351,11 @@ rbioplot <- function(fileName, Tp = "Tukey", Nrm = TRUE,
   }
 
   ## export the file and draw a preview
-  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".bar.pdf", sep = "")) # initial message
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".bar.pdf", sep = ""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", export_name, ".bar.pdf", sep = "")) # initial message
+  ggsave(filename = paste(export_name,".bar.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   cat("Done!\n") # final message
-
   grid.draw(pltgtb) # preview
 }
+
 

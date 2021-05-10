@@ -5,7 +5,9 @@
 \title{rbioplot}
 \usage{
 rbioplot(
-  fileName,
+  fileName = NULL,
+  df = NULL,
+  export_name = "data",
   Tp = "Tukey",
   Nrm = TRUE,
   Title = NULL,
@@ -45,6 +47,8 @@ rbioplot(
 }
 \arguments{
 \item{fileName}{Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files.}
+
+\item{df}{Input data frame. Instead of a \code{csv} file,a data frame can be used directly within R.}
 
 \item{Tp}{Type of the intended statistical test. Be sure to type with quotation marks. Options are: "t-test", "Tukey" and "Dunnett" (Case insensitive). Default is "Tukey".}
 
@@ -108,19 +112,25 @@ rbioplot(
 
 \item{y_custom_tick_range}{To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.}
 
-\item{y_lower_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.}
+\item{y_lower_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limit for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_bar_y}}.}
 
-\item{y_upper_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_bar_y}}.}
+\item{y_upper_limit}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limit for y axis. Value can be obtained from \code{\link{autorange_bar_y}}.}
 
 \item{y_major_tick_range}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_bar_y}}.}
 
 \item{y_n_minor_ticks}{Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_bar_y}}.}
+
+\item{df_export_name}{Effective only when \code{df} is set, prefix for the export file name.}
 }
 \value{
 Outputs a \code{.csv} file with detailed metrics for the plot, including Mean, SEM and significance labels, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
 }
 \description{
 A simple to use function for plotting basing on the statistical analysis of choice.
+}
+\details{
+For input data, only one of \code{fileName} and \code{df} can be set.
+         For data with only one variable (protein, tissue, etc), the function will automatelly use the X-axis for groups and hide the legend.
 }
 \examples{
 \dontrun{

@@ -360,7 +360,7 @@ rbioplot_app <- function(){
                      }, simplify = FALSE)
 
         cTt <- Reduce(function(x, y) merge(x, y, all = TRUE, by = colnames(data())[1], sort = FALSE),
-                      Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
+                      Tt, accumulate = FALSE) # Reduce() higher level function to contain other functions in functional programming
         colnames(cTt)[-1] <- sapply(colnames(data())[-1], function(x)paste(x, "Lbl", sep=""))
 
         # plot
@@ -408,8 +408,15 @@ rbioplot_app <- function(){
         n_minor_ticks <- input$y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
 
         loclEnv <- environment()
-        baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
-                          environment = loclEnv) +
+        if (nlevels(pltdata()$variable) == 1) {
+          baseplt <- ggplot(data = pltdata(), aes(x= Condition, y= NrmMean, fill = Condition),
+                            environment = loclEnv)
+        } else {
+          baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
+                            environment = loclEnv)
+        }
+
+        baseplt <- baseplt +
           geom_bar(position = "dodge", stat = "identity", color = input$barOutline) +
           geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = input$errorbarWidth,
                         position = position_dodge(0.9))+
@@ -480,11 +487,17 @@ rbioplot_app <- function(){
           pltLbl <- pltLbl + theme(legend.title = element_blank())
         }
 
+        # if (nlevels(pltdata()$variable) == 1){
+        #   plt <- pltLbl +
+        #     theme(axis.text.x = element_blank()) +
+        #     coord_equal(ratio = 0.5) +
+        #     scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
+        # } else {
+        #   plt <- pltLbl
+        # }
         if (nlevels(pltdata()$variable) == 1){
           plt <- pltLbl +
-            theme(axis.text.x = element_blank()) +
-            coord_equal(ratio = 0.5) +
-            scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
+            theme(legend.position = "none")  # hide legend
         } else {
           plt <- pltLbl
         }

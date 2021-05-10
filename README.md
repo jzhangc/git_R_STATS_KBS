@@ -25,6 +25,12 @@ Installation
 
 Change Log
 
+    0.5.5 (5.10.2021)
+      - Updates to plotting functions
+        - All plotting functions now accepts data.frames
+        - rbioplot() now will automatically adjust figures for data only have one variable
+        
+
     0.5.4 (5.6.2021) 
        - General fix
         - namespace updated with foreach pacakge

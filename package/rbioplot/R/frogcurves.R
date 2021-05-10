@@ -2,11 +2,13 @@
 #'
 #' @description A simple to use function for plotting joining-point curve figures with continuous x and y axises values.
 #' @param fileName Input file name. Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
+#' @param df Input data frame. Instead of a \code{csv} file,a data frame can be used directly within R.
+#' @param df_export_name Effective only when \code{df} is set, prefix for the export file name.
 #' @param Title The displayed title on top of the plot. Be sure to type with quotation marks. Default is \code{NULL}.
 #' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param errorbarWidth Set the width for errorbar. Default is \code{0.2}.
 #' @param symbolSize Set the size of symbols. Default is \code{2}.
-#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is avaiable on the website: \url{http://kenstoreylab.com/?page_id=2448}.
+#' @param fontType The type of font in the figure. Default is "sans". For all options please refer to R font table, which is available on the website: \url{http://kenstoreylab.com/?page_id=2448}.
 #' @param xLabel x axis label. Type with quotation marks. Default is \code{NULL}.
 #' @param xLabelSize x axis label size. Default is \code{10}.
 #' @param xTickLblSize Font size of x axis ticks. Default is \code{10}.
@@ -27,16 +29,17 @@
 #' @param plotWidth The width of the plot (unit: mm). Default is 170. Default will fit most of the cases.
 #' @param plotHeight The height of the plot (unit: mm). Default is 150. Default will fit most of the cases.
 #' @param x_custom_tick_range To initiate setting the custom \code{x_upper_limit}, \code{x_lower_limit}, \code{x_major_tick_range}, \code{x_n_minor_ticks}. Default is \code{FALSE}.
-#' @param x_upper_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom upper limt for x axis. Value can be obtained from \code{\link{autorange_curve}}.
-#' @param x_lower_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom lower limt for x axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
+#' @param x_upper_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom upper limit for x axis. Value can be obtained from \code{\link{autorange_curve}}.
+#' @param x_lower_limit Can only be set when \code{x_custom_tick_range = TRUE}. Set custom lower limit for x axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param x_major_tick_range Can only be set when \code{x_custom_tick_range = TRUE}. Set custom major tick range for x axis.  Value can be obtained from \code{\link{autorange_curve}}.
 #' @param x_n_minor_ticks Can only be set when \code{x_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param y_custom_tick_range To initiate setting the custom \code{y_upper_limit}, \code{y_lower_limit}, \code{y_major_tick_range}, \code{y_n_minor_ticks}. Default is \code{FALSE}.
-#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limt for y axis. Value can be obtained from \code{\link{autorange_curve}}.
-#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limt for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
+#' @param y_upper_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom upper limit for y axis. Value can be obtained from \code{\link{autorange_curve}}.
+#' @param y_lower_limit Can only be set when \code{y_custom_tick_range = TRUE}. Set custom lower limit for y axis. Default is \code{0}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @param y_major_tick_range Can only be set when \code{y_custom_tick_range = TRUE}. Set custom major tick range for y axis.  Value can be obtained from \code{\link{autorange_curve}}.
 #' @param y_n_minor_ticks Can only be set when \code{y_custom_tick_range = TRUE}. Set custom numbers of minor ticks. Default is \code{4}. Value can be obtained from \code{\link{autorange_curve}}.
 #' @return Outputs a \code{.csv} file with detailed metrics for the plot, including Mean and SEM, as well as a plot image file (\code{.pdf}), with 600 dpi resolution.
+#' @details For input data, only one of \code{fileName} and \code{df} can be set.
 #' @importFrom reshape2 melt
 #' @importFrom grid grid.newpage grid.draw
 #' @import ggplot2
@@ -50,7 +53,9 @@
 #'           x_major_tick_range = 5)
 #' }
 #' @export
-rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
+rbioplot_curve <- function(fileName,
+                           df = NULL, export_name = "data",
+                           Title = NULL, errorbar = "SEM", errorbarWidth = 0.2, fontType = "sans",
                            symbolSize = 2,
                            xLabel = NULL, xLabelSize = 10, xTickLblSize = 10, xTickItalic = FALSE, xTickBold = FALSE, xAngle = 0,
                            xhAlign = 0.5, xvAlign = 0.5,
@@ -60,8 +65,22 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
                            plotWidth = 170, plotHeight = 150,
                            x_custom_tick_range = FALSE, x_lower_limit = 0, x_upper_limit, x_major_tick_range, x_n_minor_ticks = 0,
                            y_custom_tick_range = FALSE, y_lower_limit = 0, y_upper_limit, y_major_tick_range, y_n_minor_ticks = 4){
+  # check arguments
+  if (is.null(fileName) && is.null(df)) stop("fileName or df should be set.")
+  if (!is.null(fileName) && !is.null(df)) stop("Only one can be set, either fileName or df.")
+  if (!is.null(df)) {
+    if (!any(class(df) %in% "data.frame")) stop("df should be a data.frame objecti.")
+    export_name <- export_name
+  } else {
+    export_name <- substr(noquote(fileName), 1, nchar(fileName) - 4)
+  }
+
   ## load file
-  rawData <- read.csv(file=fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  if (!is.null(df)) {
+    rawData <- df
+  } else {
+    rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
+  }
   rawData[[1]] <- factor(rawData[[1]],levels = c(unique(rawData[[1]])))
   cNm <- colnames(rawData) # load all the column names
 
@@ -119,8 +138,8 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   } else {stop("Please properly specify the error bar type, SEM or SD")}
 
   # dump all data into a file
-  cat(paste("Plot results saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.csv ...", sep = "")) # initail message
-  write.csv(DfPlt,file = paste(substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.csv", sep = ""),
+  cat(paste("Plot results saved to file: ", export_name, ".curve.csv ...", sep = "")) # initail message
+  write.csv(DfPlt,file = paste(export_name, ".curve.csv", sep = ""),
             quote = FALSE, na = "NA", row.names = FALSE)
   cat("Done!\n") # final message
 
@@ -221,8 +240,8 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
   }
 
   ## export the file and draw a preview
-  cat(paste("Plot saved to file: ", substr(noquote(fileName), 1, nchar(fileName) - 4), ".curve.pdf ...", sep = "")) # initial message
-  ggsave(filename = paste(substr(noquote(fileName), 1, nchar(fileName) - 4),".curve.pdf", sep = ""), plot = pltgtb,
+  cat(paste("Plot saved to file: ", export_name, ".curve.pdf ...", sep = "")) # initial message
+  ggsave(filename = paste(export_name,".curve.pdf", sep = ""), plot = pltgtb,
          width = plotWidth, height = plotHeight, units = "mm",dpi = 600)
   cat("Done!\n") # final message
 
@@ -231,8 +250,9 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 
 #' @title autorange_curve
 #'
-#' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
+#' @description A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-point curve with continuous x AND y values, based on a user-defined major tick number.
 #' @param fileName Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.
+#' @param df Input data frame. Instead of a \code{csv} file,a data frame can be used directly within R.
 #' @param errorbar Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.
 #' @param x_nMajorTicks Number of major ticks intended to use for the x axis. Note that the input number should be major tick number EXCLUDING 0 (or x axis lower limit if not using 0). Default is \code{5}. Note: Depending on the raw range, the last label may or may not show up due to plotting optimization, see \code{\link{rbioplot_curve}}.
 #' @param x_DfltZero When \code{TRUE}, start x axis from \code{0}. Default is \code{TRUE}.
@@ -240,16 +260,30 @@ rbioplot_curve <- function(fileName, Title = NULL, errorbar = "SEM", errorbarWid
 #' @param y_DfltZero When \code{TRUE}, start y axis from \code{0}. Default is \code{TRUE}.
 #' @importFrom reshape2 melt
 #' @return A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.
+#' @details For input data, only one of \code{fileName} and \code{df} can be set.
 #' @examples
 #' \dontrun{
 #' autorange_curve("data6.csv", errorbar = "SD", x_nMajorTicks = 6, x_DfltZero = FALSE,
 #' y_nMajorTicks = 8, y_DfltZero = TRUE)
 #' }
 #' @export
-autorange_curve <- function(fileName, errorbar = "SEM", x_nMajorTicks = 5, x_DfltZero = TRUE,
-                      y_nMajorTicks = 10, y_DfltZero = TRUE){
+autorange_curve <- function(fileName,
+                            df = NULL,
+                            errorbar = "SEM", x_nMajorTicks = 5, x_DfltZero = TRUE,
+                            y_nMajorTicks = 10, y_DfltZero = TRUE){
+  # check arguments
+  if (is.null(fileName) && is.null(df)) stop("fileName or df should be set.")
+  if (!is.null(fileName) && !is.null(df)) stop("Only one can be set, either fileName or df.")
+  if (!is.null(df)) {
+    if (!any(class(df) %in% "data.frame")) stop("df should be a data.frame objecti.")
+  }
+
   ## load file
-  rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA",stringsAsFactors = FALSE)
+  if (!is.null(df)) {
+    rawData <- df
+  } else {
+    rawData <- read.csv(file = fileName, header = TRUE, na.strings = "NA", stringsAsFactors = FALSE, check.names = FALSE)
+  }
   rawData[[1]] <- factor(rawData[[1]], levels = c(unique(rawData[[1]])))
 
   ## calculate mean and SEM
