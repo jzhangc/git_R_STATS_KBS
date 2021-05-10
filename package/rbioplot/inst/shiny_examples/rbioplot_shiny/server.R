@@ -27,8 +27,8 @@ server = function(input, output, session){
   output$contents <- renderTable({
     c <- length(unique(data()[[1]]))
     validate(need(c >= 2, "Error: \n
-                  rbioplot() requires more than one group (e.g. experimental condition).\n
-                  Try again."))
+                      rbioplot() requires more than one group (e.g. experimental condition).\n
+                      Try again."))
 
     if(input$disp == "head"){
       return(head(data()))
@@ -71,12 +71,12 @@ server = function(input, output, session){
     # validate
     if (input$Tp == "t-test"){
       validate(need(nlevels(data()[[1]]) == 2, "Error: \n
-                    T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).\n
-                    Try again."))
+                        T-TEST CAN ONLY BE DONE FOR A TWO-GROUP COMPARISON (hint: try Tukey or Dunnett).\n
+                        Try again."))
     } else {
       validate(need(nlevels(data()[[1]]) != 2, "Error: \n
-                    USE T-TEST FOR A TWO-GROUP COMPARISON.\n
-                    Try again."))
+                        USE T-TEST FOR A TWO-GROUP COMPARISON.\n
+                        Try again."))
     }
 
     # calculations for the metrics
@@ -172,7 +172,7 @@ server = function(input, output, session){
                  }, simplify = FALSE)
 
     cTt <- Reduce(function(x, y) merge(x, y, all = TRUE, by = colnames(data())[1], sort = FALSE),
-                  Tt, accumulate = FALSE) # Reduce() higher level funtion to contain other fucntions in functional programming
+                  Tt, accumulate = FALSE) # Reduce() higher level function to contain other functions in functional programming
     colnames(cTt)[-1] <- sapply(colnames(data())[-1], function(x)paste(x, "Lbl", sep=""))
 
     # plot
@@ -202,21 +202,33 @@ server = function(input, output, session){
       DfPlt <- merge(MeanNrmMLT, SDNrmMLT, by = c("id", "Condition"), sort = FALSE)
       DfPlt <- merge(DfPlt, cTtMLT, by = c("id", "Condition"), sort = FALSE)
     }
-
+    updateNumericInput(session, "y_upper_limit", value = with(DfPlt, ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5))
     return(DfPlt)
-    })
+  })
 
   ggplotdata <- reactive({
+    y_Mx <- input$y_upper_limit
     cNm <- colnames(data())
-
-    y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
+    if (y_Mx <= with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)){
+      y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
+    } else {
+      y_axis_Mx <- y_Mx
+    }
+    # y_axis_Mx <- with(pltdata(), ceiling((max(NrmMean + NrmErr) + 0.09) / 0.5) * 0.5)
     y_axis_Mn <- input$y_lower_limit
     major_tick_range <- input$y_major_tick_range # determined by the autorange_bar_y() function - major_tick_range
     n_minor_ticks <- input$y_n_minor_ticks # chosen by the autorange_bar_y() function - minor_tick_options
 
     loclEnv <- environment()
-    baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
-                      environment = loclEnv) +
+    if (nlevels(pltdata()$variable) == 1) {
+      baseplt <- ggplot(data = pltdata(), aes(x= Condition, y= NrmMean, fill = Condition),
+                        environment = loclEnv)
+    } else {
+      baseplt <- ggplot(data = pltdata(), aes(x= variable, y= NrmMean, fill = Condition),
+                        environment = loclEnv)
+    }
+
+    baseplt <- baseplt +
       geom_bar(position = "dodge", stat = "identity", color = input$barOutline) +
       geom_errorbar(aes(ymin = NrmMean - NrmErr, ymax = NrmMean + NrmErr), width = input$errorbarWidth,
                     position = position_dodge(0.9))+
@@ -234,7 +246,8 @@ server = function(input, output, session){
             axis.title.y = element_text(face = "bold", family = input$fontType, size = input$yLabelSize),
             legend.position = "bottom",
             legend.text = element_text(size = input$legendSize),
-            axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle, hjust = input$xAlign),
+            axis.text.x = element_text(size = input$xTickLblSize, family = input$fontType, angle = input$xAngle,
+                                       hjust = input$xhAlign, vjust = input$xvAlign),
             axis.text.y = element_text(size = input$yTickLblSize, family = input$fontType, hjust = 0.5))
 
     if (input$greyScale){
@@ -286,11 +299,17 @@ server = function(input, output, session){
       pltLbl <- pltLbl + theme(legend.title = element_blank())
     }
 
+    # if (nlevels(pltdata()$variable) == 1){
+    #   plt <- pltLbl +
+    #     theme(axis.text.x = element_blank()) +
+    #     coord_equal(ratio = 0.5) +
+    #     scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
+    # } else {
+    #   plt <- pltLbl
+    # }
     if (nlevels(pltdata()$variable) == 1){
       plt <- pltLbl +
-        theme(axis.text.x = element_blank()) +
-        coord_equal(ratio = 0.5) +
-        scale_x_discrete(expand = c(0.1, 0.1)) # space between y axis and fist/last bar
+        theme(legend.position = "none")  # hide legend
     } else {
       plt <- pltLbl
     }
@@ -299,20 +318,7 @@ server = function(input, output, session){
     grid.newpage()
 
     if (input$rightsideY){ # add the right-side y axis
-      # extract gtable
-      pltgtb <- ggplot_gtable(ggplot_build(plt))
-
-      # add the right side y axis
-      Aa <- which(pltgtb$layout$name == "axis-l")
-      pltgtb_a <- pltgtb$grobs[[Aa]]
-      axs <- pltgtb_a$children[[2]]
-      axs$widths <- rev(axs$widths)
-      axs$grobs <- rev(axs$grobs)
-      axs$grobs[[1]]$x <- axs$grobs[[1]]$x - unit(1, "npc") + unit(0.08, "cm")
-      Ap <- c(subset(pltgtb$layout, name == "panel", select = t:r))
-      pltgtb <- gtable_add_cols(pltgtb, pltgtb$widths[pltgtb$layout[Aa, ]$l], length(pltgtb$widths) - 1)
-      pltgtb <- gtable_add_grob(pltgtb, axs, Ap$t, length(pltgtb$widths) - 1, Ap$b)
-
+      pltgtb <- rightside_y(plt)
     } else { # no right side y-axis
       pltgtb <- plt
     }
