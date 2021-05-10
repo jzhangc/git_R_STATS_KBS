@@ -6,6 +6,7 @@
 \usage{
 autorange_curve(
   fileName,
+  df = NULL,
   errorbar = "SEM",
   x_nMajorTicks = 5,
   x_DfltZero = TRUE,
@@ -15,6 +16,8 @@ autorange_curve(
 }
 \arguments{
 \item{fileName}{Input file name. Data should be arranged same as the input file for \code{\link{rbioplot_curve}}.Case sensitive and be sure to type with quotation marks. Currently only takes \code{.csv} files. Note that the column names (excluding the first column) need to be numeric.}
+
+\item{df}{Input data frame. Instead of a \code{csv} file,a data frame can be used directly within R.}
 
 \item{errorbar}{Set the type of errorbar. Options are standard error of the mean (\code{"SEM"}, \code{"standard error"}, \code{"standard error of the mean"}), or standard deviation (\code{"SD"}, \code{"standard deviation"}), case insensitive. Default is \code{"SEM"}.}
 
@@ -30,7 +33,10 @@ autorange_curve(
 A list object containing \code{lower_limit}, \code{upper_limit}, \code{major_tick_range} and \code{minor_tick_options} for both axises.
 }
 \description{
-A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-piont curve with continuous x AND y values, based on a user-defined major tick number.
+A function to get custom lower/upper limit, major tick range, as well as minor tick options for both axises of a joint-point curve with continuous x AND y values, based on a user-defined major tick number.
+}
+\details{
+For input data, only one of \code{fileName} and \code{df} can be set.
 }
 \examples{
 \dontrun{

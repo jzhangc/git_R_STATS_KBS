@@ -47,6 +47,11 @@ Change Log
         - all plotting functions now accept R ojects
         - Tick label alignment option added for both horizontal and vertical directions, for all the plotting functions and web apps
         - Manual bar colour change added for rbioplot() via argument barCol
+      
+      (ADDED)
+      - Updates to plotting functions
+        - All plotting functions now accepts data.frames
+        - rbioplot() now will automatically adjust figures for data only have one variable
         
 
     0.5.4 (5.6.2021) 
